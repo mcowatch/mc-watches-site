@@ -9,5 +9,5 @@
   height: auto;
 }
 .brand {
-  background: transparent !important;
+  background: transparent ; padding : 0;
 }
