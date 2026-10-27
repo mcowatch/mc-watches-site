@@ -10,8 +10,15 @@
 }
 .home-image {
   display: block;
-  width: auto;
-  height: auto;
-  object-fit: cover;
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+}
+.visual {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background-color: #F5F2EB;
 }
 
