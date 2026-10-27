@@ -4,9 +4,9 @@
 @media(max-width:760px){.hero{grid-template-columns:1fr;padding-top:28px}.visual{max-width:480px}.cards{grid-template-columns:1fr}.order{grid-template-columns:1fr}.reassurance{grid-template-columns:1fr;text-align:left}.reassurance div{border-right:0;border-bottom:1px solid var(--line)}footer{flex-direction:column}.site-header{padding:18px 20px}.hero,.section{padding-left:20px;padding-right:20px}.order li{grid-template-columns:1fr;gap:4px}}
 .header-logo {
   display: block;
-  width: 70px;
+  width: 10px;
   height: auto;
-  max-height: 70px;
+  max-height: 10px;
    object-fit: contain;
    display: block;
 }
