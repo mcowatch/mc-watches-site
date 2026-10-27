@@ -4,19 +4,20 @@
 @media(max-width:760px){.hero{grid-template-columns:1fr;padding-top:28px}.visual{max-width:480px}.cards{grid-template-columns:1fr}.order{grid-template-columns:1fr}.reassurance{grid-template-columns:1fr;text-align:left}.reassurance div{border-right:0;border-bottom:1px solid var(--line)}footer{flex-direction:column}.site-header{padding:18px 20px}.hero,.section{padding-left:20px;padding-right:20px}.order li{grid-template-columns:1fr;gap:4px}}
 .header-logo { v
 }
-.home-image {
+.hero-image {
+  width: 85%;
+  height: 85%;
+  object-fit: contain;
+  object-position: center;
   display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  objectposition: Centre
 }
 .visual {
-  width: 100%;
   aspect-ratio: 4 / 5;
+  display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
   background-color: #F5F2EB;
+  border: 1px solid #D9D5CC;
 }
 
