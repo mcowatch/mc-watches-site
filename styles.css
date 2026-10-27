@@ -10,8 +10,8 @@
 }
 .home-image {
   display: block;
-  width: 30%;
-  height: 30%;
+  width: auto;
+  height: auto;
   object-fit: contain;
 }
 .visual {
