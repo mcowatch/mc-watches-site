@@ -18,12 +18,12 @@
   display: block;
 }
 .visual {
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1 / 1;
   display: flex;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  background-color: #F5F2EB;
+  background: #F5F2EB;
   border: none;
   box-shadow: none;
 }
