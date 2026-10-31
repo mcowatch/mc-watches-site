@@ -13,7 +13,7 @@ window.catalogueProduits = [
   {
     reference: "MC-02",
     nom: "Collection MC-02",
-    prix: 249,
+    prix: 229,
     couleurs: [
       { nom: "Vert", code: "#3E7560", photos: ["images/mc02/VERT1.jpg","images/mc02/VERT2.jpg","images/mc02/VERT3.jpg","images/mc02/VERT4.jpg","images/mc02/VERT5.jpg"] },
       { nom: "Blanc", code: "#F4F1E8", bordure: true, photos: ["images/mc02/blanc1.jpg","images/mc02/blanc2.jpg","images/mc02/blanc4.jpg","images/mc02/blanc5.jpg"] },
