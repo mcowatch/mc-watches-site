@@ -61,3 +61,14 @@
   background: #F5F2EB;
   color: #111315;
 }
+.free-delivery {
+  margin: -12px 0 20px;
+  color: #347052;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.free-delivery::before {
+  content: "✓";
+  margin-right: 7px;
+}
