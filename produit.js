@@ -71,7 +71,8 @@
     }, { passive: true });
 
     const message = `Bonjour MC Watches, je souhaite commander ${produit.reference}, couleur ${couleur.nom}, au prix de ${produit.prix} DH. Pouvez-vous confirmer la disponibilite et la livraison ?`;
-    card.querySelector(".order-one").href = `https://wa.me/${tel}?text=${encodeURIComponent(message)}`;
+   card.querySelector(".order-one").href =
+  `https://wa.me/${tel}?text=${encodeURIComponent(message)}`;
 
     show();
     list.appendChild(card);
