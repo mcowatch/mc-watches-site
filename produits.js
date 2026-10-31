@@ -22,7 +22,8 @@ window.catalogueProduits = [
     photosCommunes: ["images/mc02/CASIO2.jpg","images/mc02/CASIO3.jpg","images/mc02/CASIO5.jpg","images/mc02/CASIO6.jpg"]
   },
  {
-  reference: "BOX-06",
+window.catalogueProduits = [
+  reference: "Boîte 6 montres",
   nom: "Boîte 6 montres",
   prix: 200,
   couleur: "Noir",
@@ -34,7 +35,7 @@ window.catalogueProduits = [
   ]
 },
 {
-  reference: "BOX-12",
+  reference: "Boîte 12 montres",
   nom: "Boîte 12 montres",
   prix: 280,
   couleur: "Noir",
