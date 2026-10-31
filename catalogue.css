@@ -1,14 +1,27 @@
-.catalogue-section{max-width:1180px;margin:auto;padding:76px 28px;border-top:1px solid #d9d5cc}.catalogue-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:36px}.catalogue-card{background:rgba(255,255,255,.48);border:1px solid #d9d5cc;overflow:hidden}.catalogue-media{position:relative;aspect-ratio:4/5;background:#f5f2eb;display:flex;align-items:center;justify-content:center;overflow:hidden}.catalogue-image{width:100%;height:100%;object-fit:cover;display:block}.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border:0;border-radius:50%;background:rgba(17,19,21,.78);color:white;font-size:22px;cursor:pointer}.carousel-btn.prev{left:12px}.carousel-btn.next{right:12px}.carousel-count{position:absolute;right:12px;bottom:12px;padding:5px 9px;background:rgba(17,19,21,.75);color:white;font-size:.8rem}.catalogue-info{padding:24px}.catalogue-ref{color:#a6813b;font-size:.76rem;font-weight:800;letter-spacing:.18em;margin:0 0 8px}.catalogue-info h3{font-size:1.4rem;margin:0 0 8px}.catalogue-price{font-size:1.45rem;font-weight:900;margin:0 0 20px}.color-label{font-size:.92rem;margin-bottom:10px}.color-options{display:flex;gap:12px;margin-bottom:22px}.color-dot{width:30px;height:30px;border-radius:50%;border:2px solid transparent;box-shadow:0 0 0 1px #b9b5ac;cursor:pointer}.color-dot.light{box-shadow:0 0 0 1px #777}.color-dot.active{border-color:#f5f2eb;box-shadow:0 0 0 3px #111315}.catalogue-whatsapp{display:block;text-align:center;padding:14px 18px;background:#111315;color:white;text-decoration:none;font-weight:800}.catalogue-whatsapp:hover{background:#a6813b}@media(max-width:760px){.catalogue-section{padding:58px 20px}.catalogue-grid{grid-template-columns:1fr}.carousel-btn{width:38px;height:38px}}
-catalogue-more {
-  display: block;
+.catalogue-section{max-width:1180px;margin:auto;padding:76px 28px;border-top:1px solid #d9d5cc}.catalogue-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;margin-top:36px}.catalogue-card{background:rgba(255,255,255,.48);border:1px solid #d9d5cc;overflow:hidden}.catalogue-media{position:relative;aspect-ratio:4/5;background:#f5f2eb;display:flex;align-items:center;justify-content:center;overflow:hidden}.catalogue-image{width:100%;height:100%;object-fit:cover;display:block}.carousel-btn{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border:0;border-radius:50%;background:rgba(17,19,21,.78);color:white;font-size:22px;cursor:pointer}.carousel-btn.prev{left:12px}.carousel-btn.next{right:12px}.carousel-count{position:absolute;right:12px;bottom:12px;padding:5px 9px;background:rgba(17,19,21,.75);color:white;font-size:.8rem}.catalogue-info{padding:24px}.catalogue-ref{color:#a6813b;font-size:.76rem;font-weight:800;letter-spacing:.18em;margin:0 0 8px}.catalogue-info h3{font-size:1.4rem;margin:0 0 8px}.catalogue-price{font-size:1.45rem;font-weight:900;margin:0 0 20px}.color-label{font-size:.92rem;margin-bottom:10px}.color-options{display:flex;gap:12px;margin-bottom:22px}.color-dot{width:30px;height:30px;border-radius:50%;border:2px solid transparent;box-shadow:0 0 0 1px #b9b5ac;cursor:pointer}.color-dot.light{box-shadow:0 0 0 1px #777}.color-dot.active{border-color:#f5f2eb;box-shadow:0 0 0 3px #111315}.catalogue-whatsapp{display:block;text-align:center;padding:14px 18px;background:#111315;color:white;text-decoration:none;font-weight:800}.catalogue-whatsapp:hover{background:#a6813b}@media(max-width:760px){.catalogue-section{padding:58px 20px}.catalogue-grid{grid-template-columns:1fr}.carousel-btn{width:38px;height:38px}}.catalogue-more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   margin-bottom: 10px;
-  padding: 13px 18px;
-  border: 1px solid #111315;
+  padding: 14px 18px;
+  background: transparent;
   color: #111315;
+  border: 1px solid #111315;
   text-align: center;
   text-decoration: none;
   font-weight: 800;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.catalogue-more::after {
+  content: "→";
+  font-size: 20px;
+  transition: transform 0.2s ease;
 }
 .catalogue-more:hover {
-  background: #F5F2EB;
+  background: #111315;
+  color: #FFFFFF;
+}
+.catalogue-more:hover::after {
+  transform: translateX(4px);
 }
