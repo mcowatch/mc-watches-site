@@ -22,13 +22,13 @@ const catalogueProduits = [
     photosCommunes: ["images/mc02/CASIO2.jpg","images/mc02/CASIO3.jpg","images/mc02/CASIO5.jpg","images/mc02/CASIO6.jpg"]
   },
   {
-    reference: "Boîte 6 montres",
+    reference: "Boite de rangement - 6 montres",
     nom: "Boite de rangement - 6 montres",
     prix: 229,
     photos: ["images/boite-6/BOITEPETIT1.jpg","images/boite-6/BOITEPETIT2.jpg","images/boite-6/BOITEPETIT3.jpg","images/boite-6/BOITEPETIT4.jpg"]
   },
   {
-    reference: "Boîte 6 montres",
+    reference: "Boite de rangement - 12 montres",
     nom: "Boite de rangement - 12 montres",
     prix: 299,
     photos: ["images/boite-12/BG1.jpg","images/boite-12/BG2.jpg","images/boite-12/BG3.jpg"]
