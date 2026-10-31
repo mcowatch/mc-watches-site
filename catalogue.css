@@ -25,3 +25,31 @@
 .catalogue-more:hover::after {
   transform: translateX(4px);
 }
+.box-order-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 50px;
+  margin-bottom: 10px;
+  padding: 13px 18px;
+  box-sizing: border-box;
+
+  color: #111315;
+  background: transparent;
+  border: 1px solid #111315;
+
+  text-align: center;
+  text-decoration: none;
+  font-weight: 800;
+}
+
+.box-order-form::after {
+  content: "→";
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+.box-order-form:hover {
+  color: #ffffff;
+  background: #111315;
+}
