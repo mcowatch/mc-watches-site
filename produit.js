@@ -36,8 +36,8 @@
         <div class="variant-color"><span class="variant-dot"></span><strong>${couleur.nom}</strong></div>
         <h2>${produit.reference} - ${couleur.nom}</h2>
         <p>Photos de cette couleur, suivies des photos communes du modele.</p>
-<a class="order-form" target="_blank" rel="noopener">Commander cette couleur</a>
-<a class="order-whatsapp" target="_blank" rel="noopener">Commander directement sur WhatsApp</a>
+        <a class="order-one" target="_blank" rel="noopener">Commander cette couleur sur WhatsApp</a>
+      </div>`;
 
     card.querySelector(".variant-dot").style.backgroundColor = couleur.code;
     const image = card.querySelector(".variant-image");
@@ -70,13 +70,8 @@
       show();
     }, { passive: true });
 
-const formulaireBase = "https://docs.google.com/forms/d/e/1FAIpQLSerO_SjWbLOsfbOhFkFcDC0gSQHaS_0Ss3w8ePUO94eo3wCzQ/viewform";
-const formulaireCommande =
-  `${formulaireBase}?usp=pp_url` +
-  `&entry.1548138927=${encodeURIComponent(produit.reference)}` +
-  `&entry.549343203=${encodeURIComponent(couleur.nom)}` +
-  `&entry.1447288487=${encodeURIComponent(produit.prix)}`;
-card.querySelector(".order-one").href = formulaireCommande;
+    const message = `Bonjour MC Watches, je souhaite commander ${produit.reference}, couleur ${couleur.nom}, au prix de ${produit.prix} DH. Pouvez-vous confirmer la disponibilite et la livraison ?`;
+    card.querySelector(".order-one").href = `https://wa.me/${tel}?text=${encodeURIComponent(message)}`;
 
     show();
     list.appendChild(card);
