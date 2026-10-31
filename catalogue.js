@@ -62,7 +62,9 @@ const catalogueProduits = [
         <h3>${produit.nom}</h3>
         <p class="catalogue-price">${produit.prix} DH</p>
         ${avecCouleurs ? '<div class="color-label">Couleur : <strong class="selected-color"></strong></div><div class="color-options" aria-label="Choisir une couleur"></div>' : ''}
-        <a class="catalogue-whatsapp" target="_blank" rel="noopener">Commander sur WhatsApp</a>
+        ${avecCouleurs ? `<a class="catalogue-more" href="produit.html?ref=${encodeURIComponent(produit.reference)}">Voir plus</a>` : ""}
+<a class="catalogue-whatsapp" target="_blank" rel="noopener">Commander sur WhatsApp</a>
+
       </div>`;
 
     const image = carte.querySelector(".catalogue-image");
