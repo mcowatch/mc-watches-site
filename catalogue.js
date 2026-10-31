@@ -22,13 +22,13 @@ const catalogueProduits = [
     photosCommunes: ["images/mc02/CASIO2.jpg","images/mc02/CASIO3.jpg","images/mc02/CASIO5.jpg","images/mc02/CASIO6.jpg"]
   },
   {
-    reference: "BOX-06",
+    reference: "Boîte 6 montres",
     nom: "Boite de rangement - 6 montres",
     prix: 200,
     photos: ["images/boite-6/BOITEPETIT1.jpg","images/boite-6/BOITEPETIT2.jpg","images/boite-6/BOITEPETIT3.jpg","images/boite-6/BOITEPETIT4.jpg"]
   },
   {
-    reference: "BOX-12",
+    reference: "Boîte 6 montres",
     nom: "Boite de rangement - 12 montres",
     prix: 280,
     photos: ["images/boite-12/BG1.jpg","images/boite-12/BG2.jpg","images/boite-12/BG3.jpg"]
@@ -93,7 +93,7 @@ const catalogueProduits = [
   boutonFormulaire.href =
     `${formulaireBase}?usp=pp_url` +
     `&entry.1548138927=${encodeURIComponent(produit.reference)}` +
-    `&entry.549343203=${encodeURIComponent("Sans couleur")}` +
+    `&entry.549343203=${encodeURIComponent(produit.couleur || "Noir")}` +
     `&entry.1447288487=${encodeURIComponent(produit.prix)}`;
 }
       boutonWhatsapp.href = `https://wa.me/${tel}?text=${encodeURIComponent(message)}`;
