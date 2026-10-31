@@ -43,13 +43,21 @@
   font-weight: 800;
 }
 
-.box-order-form::after {
-  content: "→";
-  margin-left: 10px;
-  font-size: 20px;
+.box-order-form {
+  display: block;
+  margin-bottom: 10px;
+  padding: 14px 18px;
+
+  background: #FFFFFF;
+  color: #111315;
+  border: 1px solid #111315;
+
+  text-align: center;
+  text-decoration: none;
+  font-weight: 800;
 }
 
 .box-order-form:hover {
-  color: #ffffff;
-  background: #111315;
+  background: #F5F2EB;
+  color: #111315;
 }
