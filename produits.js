@@ -2,7 +2,7 @@ window.catalogueProduits = [
   {
     reference: "MC-01",
     nom: "Collection MC-01",
-    prix: 280,
+    prix: 299,
     couleurs: [
       { nom: "Noir", code: "#171717", photos: ["images/mc01/NOIRT1.jpg","images/mc01/NOIRT2.jpg","images/mc01/NOIRT3.jpg","images/mc01/NOIRT4.jpg"] },
       { nom: "Blanc", code: "#F4F1E8", bordure: true, photos: ["images/mc01/BLANCT1.jpg","images/mc01/BLANCT2.jpg","images/mc01/BLANCT3.jpg","images/mc01/BLANCT4.jpg","images/mc01/BLANCT5.jpg"] },
@@ -13,7 +13,7 @@ window.catalogueProduits = [
   {
     reference: "MC-02",
     nom: "Collection MC-02",
-    prix: 200,
+    prix: 249,
     couleurs: [
       { nom: "Vert", code: "#3E7560", photos: ["images/mc02/VERT1.jpg","images/mc02/VERT2.jpg","images/mc02/VERT3.jpg","images/mc02/VERT4.jpg","images/mc02/VERT5.jpg"] },
       { nom: "Blanc", code: "#F4F1E8", bordure: true, photos: ["images/mc02/blanc1.jpg","images/mc02/blanc2.jpg","images/mc02/blanc4.jpg","images/mc02/blanc5.jpg"] },
@@ -25,7 +25,7 @@ window.catalogueProduits = [
 window.catalogueProduits = [
   reference: "Boîte 6 montres",
   nom: "Boîte 6 montres",
-  prix: 200,
+  prix: 229,
   couleur: "Noir",
   photos: [
     "images/boite-6/BOITEPETIT1.jpg",
@@ -37,7 +37,7 @@ window.catalogueProduits = [
 {
   reference: "Boîte 12 montres",
   nom: "Boîte 12 montres",
-  prix: 280,
+  prix: 299,
   couleur: "Noir",
   photos: [
     "images/boite-12/BG1.jpg",
