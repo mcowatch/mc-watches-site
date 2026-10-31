@@ -63,6 +63,7 @@ const catalogueProduits = [
         <p class="catalogue-price">${produit.prix} DH</p>
         ${avecCouleurs ? '<div class="color-label">Couleur : <strong class="selected-color"></strong></div><div class="color-options" aria-label="Choisir une couleur"></div>' : ''}
         ${avecCouleurs ? `<a class="catalogue-more" href="produit.html?ref=${encodeURIComponent(produit.reference)}">Voir plus</a>` : ""}
+        ${!avecCouleurs ? '<a class="box-order-form" target="_blank" rel="noopener">Commander</a>' : ''}
 <a class="catalogue-whatsapp" target="_blank" rel="noopener">Commander sur WhatsApp</a>
 
       </div>`;
