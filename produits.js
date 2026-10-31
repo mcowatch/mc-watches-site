@@ -23,8 +23,8 @@ window.catalogueProduits = [
   },
  {
 window.catalogueProduits = [
-  reference: "Boîte 6 montres",
-  nom: "Boîte 6 montres",
+  reference: "Boite de rangement - 6 montres",
+  nom: "Boite de rangement - 6 montress",
   prix: 229,
   couleur: "Noir",
   photos: [
@@ -35,8 +35,8 @@ window.catalogueProduits = [
   ]
 },
 {
-  reference: "Boîte 12 montres",
-  nom: "Boîte 12 montres",
+  reference: "Boite de rangement -12 montres",
+  nom: "Boite de rangement - 12 montres",
   prix: 299,
   couleur: "Noir",
   photos: [
