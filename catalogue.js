@@ -84,6 +84,18 @@ const catalogueProduits = [
       const message = avecCouleurs
         ? `Bonjour MC Watches, je souhaite commander ${produit.reference}, couleur ${couleur}, au prix de ${produit.prix} DH. Pouvez-vous confirmer la disponibilite et la livraison ?`
         : `Bonjour MC Watches, je souhaite commander ${produit.nom} au prix de ${produit.prix} DH. Pouvez-vous confirmer la disponibilite et la livraison ?`;
+     if (!avecCouleurs) {
+  const boutonFormulaire = carte.querySelector(".box-order-form");
+
+  const formulaireBase =
+    "https://docs.google.com/forms/d/e/1FAIpQLSerO_SjWbLOsfbOhFkFcDC0gSQHaS_0Ss3w8ePUO94eo3wCzQ/viewform";
+
+  boutonFormulaire.href =
+    `${formulaireBase}?usp=pp_url` +
+    `&entry.1548138927=${encodeURIComponent(produit.reference)}` +
+    `&entry.549343203=${encodeURIComponent("Sans couleur")}` +
+    `&entry.1447288487=${encodeURIComponent(produit.prix)}`;
+}
       boutonWhatsapp.href = `https://wa.me/${tel}?text=${encodeURIComponent(message)}`;
     }
 
