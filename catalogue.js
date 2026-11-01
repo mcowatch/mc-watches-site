@@ -2,7 +2,7 @@ const catalogueProduits = [
   {
     reference: "MC-01",
     nom: "Collection MC-01",
-    prix: 299,
+    prix: 249,
     couleurs: [
       { nom: "Noir", code: "#171717", photos: ["images/mc01/NOIRT1.jpg","images/mc01/NOIRT2.jpg","images/mc01/NOIRT3.jpg","images/mc01/NOIRT4.jpg"] },
       { nom: "Blanc", code: "#F4F1E8", bordure: true, photos: ["images/mc01/BLANCT1.jpg","images/mc01/BLANCT2.jpg","images/mc01/BLANCT3.jpg","images/mc01/BLANCT4.jpg","images/mc01/BLANCT5.jpg"] },
@@ -24,7 +24,7 @@ const catalogueProduits = [
   {
   reference: "MC-03",
   nom: "Collection MC-03",
-  prix: 299,
+  prix: 249,
 
   couleurs: [
     {
@@ -80,7 +80,7 @@ const catalogueProduits = [
   {
     reference: "Boite de rangement - 6 montres",
     nom: "Boite de rangement - 6 montres",
-    prix: 229,
+    prix: 199,
     photos: ["images/boite-6/BOITEPETIT1.jpg","images/boite-6/BOITEPETIT2.jpg","images/boite-6/BOITEPETIT3.jpg","images/boite-6/BOITEPETIT4.jpg"]
   },
   {
