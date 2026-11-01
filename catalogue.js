@@ -22,6 +22,62 @@ const catalogueProduits = [
     photosCommunes: ["images/mc02/CASIO2.jpg","images/mc02/CASIO3.jpg","images/mc02/CASIO5.jpg","images/mc02/CASIO6.jpg"]
   },
   {
+  reference: "MC-03",
+  nom: "Collection MC-03",
+  prix: 299,
+
+  couleurs: [
+    {
+      nom: "Gris",
+      code: "#9A9A8F",
+      photos: [
+        "images/mc03/GRIS1.jpg",
+        "images/mc03/GRIS2.jpg",
+        "images/mc03/GRIS3.jpg",
+        "images/mc03/GRIS4.jpg",
+        "images/mc03/GRIS5.jpg",
+        "images/mc03/GRIS6.jpg",
+        "images/mc03/GRIS7.jpg",
+        "images/mc03/GRIS8.jpg"
+      ]
+    },
+    {
+      nom: "Bleu avec cadran blanc",
+      code: "#EDE9DC",
+      bordure: true,
+      photos: [
+        "images/mc03/BLEUBLANC1.jpg",
+        "images/mc03/BLEUBLANC2.jpg",
+        "images/mc03/BLEUBLANC3.jpg",
+        "images/mc03/BLEUBLANC4.jpg",
+        "images/mc03/BLEUBLANC5.jpg"
+      ]
+    },
+    {
+      nom: "Bleu",
+      code: "#243D68",
+      photos: [
+        "images/mc03/BLEU1.jpg",
+        "images/mc03/BLEU2.jpg",
+        "images/mc03/BLEU3.jpg",
+        "images/mc03/BLEU4.jpg",
+        "images/mc03/BLEU5.jpg",
+        "images/mc03/BLEU6.jpg",
+        "images/mc03/BLEU7.jpg"
+      ]
+    }
+  ],
+
+  photosCommunes: [
+    "images/mc03/20261101_122552.jpg",
+    "images/mc03/20261101_122644.jpg",
+    "images/mc03/20261101_122757.jpg",
+    "images/mc03/20261101_122911.jpg",
+    "images/mc03/20261101_122917.jpg",
+    "images/mc03/20261101_122936.jpg"
+  ]
+},
+  {
     reference: "Boite de rangement - 6 montres",
     nom: "Boite de rangement - 6 montres",
     prix: 229,
