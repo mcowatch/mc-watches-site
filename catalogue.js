@@ -80,7 +80,7 @@ const catalogueProduits = [
   {
     reference: "Boite de rangement - 6 montres",
     nom: "Boite de rangement - 6 montres",
-    prix: 199,
+    prix: 219,
     photos: ["images/boite-6/BOITEPETIT1.jpg","images/boite-6/BOITEPETIT2.jpg","images/boite-6/BOITEPETIT3.jpg","images/boite-6/BOITEPETIT4.jpg"]
   },
   {
