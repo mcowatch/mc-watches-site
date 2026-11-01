@@ -2,7 +2,7 @@ window.catalogueProduits = [
   {
     reference: "MC-01",
     nom: "Collection MC-01",
-    prix: 299,
+    prix: 249,
 
     couleurs: [
       {
@@ -99,7 +99,7 @@ window.catalogueProduits = [
   {
   reference: "MC-03",
   nom: "Collection MC-03",
-  prix: 299,
+  prix: 249,
 
   couleurs: [
     {
@@ -156,7 +156,7 @@ window.catalogueProduits = [
   {
     reference: "Boîte 6 montres",
     nom: "Boîte 6 montres",
-    prix: 229,
+    prix: 219,
     couleur: "Noir",
 
     photos: [
