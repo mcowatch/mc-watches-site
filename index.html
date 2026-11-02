@@ -19,11 +19,29 @@
   </div>
 </div>
   <header class="site-header">
-    <a class="brand" href="#accueil" aria-label="MC Watches accueil">
-      <img src="LOGOMC.png" alt="MC Watches logo" class="header-logo">
-</a>
-    <a class="small-link" href="https://www.instagram.com/mcowatches/" target="_blank" rel="noopener">Instagram</a>
-  </header>
+  <a class="brand" href="#accueil" aria-label="MC Watches accueil">
+    <img src="LOGOMC.png" alt="Logo MC Watches" class="header-logo">
+  </a>
+
+  <button
+    type="button"
+    class="menu-toggle"
+    aria-label="Ouvrir le menu"
+    aria-expanded="false"
+    aria-controls="main-navigation"
+  >
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <nav class="main-navigation" id="main-navigation" aria-label="Navigation principale">
+    <a href="#accueil">Accueil</a>
+    <a href="#catalogue">Produits</a>
+    <a href="#about">À propos</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
 
   <main>
     <section class="hero" id="accueil">
@@ -59,6 +77,50 @@
         <article class="card"><span>03</span><h3>Choix de couleurs</h3><p>Disponibilite confirmee avant chaque commande.</p></article>
       </div>
     </section>
+    <section class="section about-section" id="about">
+  <div class="about-content">
+    <p class="eyebrow">À PROPOS DE NOUS</p>
+
+    <h2>Des produits sélectionnés pour votre style.</h2>
+
+    <p>
+      MC Watches est une boutique basée à Casablanca proposant une sélection
+      de montres et de boîtes de rangement à des prix accessibles.
+    </p>
+
+    <p>
+      Notre objectif est de vous proposer différents styles et couleurs,
+      avec une commande simple, une livraison gratuite partout au Maroc
+      et le paiement à la livraison.
+    </p>
+
+    #catalogue
+      Découvrir nos produits
+    </a>
+  </div>
+
+  <div class="about-values">
+    <article class="about-value">
+      <strong>Produits sélectionnés</strong>
+      <span>Des modèles choisis pour leur design et leur style.</span>
+    </article>
+
+    <article class="about-value">
+      <strong>Livraison gratuite</strong>
+      <span>La livraison est offerte partout au Maroc.</span>
+    </article>
+
+    <article class="about-value">
+      <strong>Commande simple</strong>
+      <span>Commandez sur le site, par formulaire ou sur WhatsApp.</span>
+    </article>
+
+    <article class="about-value">
+      <strong>Paiement à la livraison</strong>
+      <span>Payez votre commande au moment de la réception.</span>
+    </article>
+  </div>
+</section>
     <section class="section order" id="commande">
       <div>
         <p class="eyebrow">COMMANDER</p>
