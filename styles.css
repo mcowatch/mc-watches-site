@@ -93,38 +93,104 @@
   z-index: 100;
 }
 
-.main-navigation {
+/* MENU DÉROULANT */
+
+.site-header {
+  position: relative;
+  z-index: 100;
+}
+
+.dropdown-menu {
+  position: relative;
+}
+
+.menu-toggle {
   display: flex;
+  min-width: 125px;
+  min-height: 44px;
   align-items: center;
-  gap: 30px;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 11px 16px;
+
+  color: #111315;
+  background: transparent;
+  border: 1px solid #111315;
+
+  font: inherit;
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.menu-toggle:hover {
+  color: #ffffff;
+  background: #111315;
+}
+
+.menu-arrow {
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+.menu-toggle[aria-expanded="true"] .menu-arrow {
+  transform: rotate(180deg);
+}
+
+.main-navigation {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+
+  display: none;
+  width: 220px;
+  overflow: hidden;
+
+  background: #f5f2eb;
+  border: 1px solid #d9d5cc;
+  box-shadow: 0 14px 35px rgba(17, 19, 21, 0.15);
+}
+
+.main-navigation.open {
+  display: flex;
+  flex-direction: column;
 }
 
 .main-navigation a {
-  position: relative;
+  display: block;
+  padding: 15px 18px;
+
   color: #111315;
+  border-bottom: 1px solid #d9d5cc;
+
   text-decoration: none;
   font-size: 0.92rem;
   font-weight: 700;
 }
 
-.main-navigation a::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: -7px;
-  left: 0;
-  height: 2px;
-  background: #a6813b;
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform 0.2s ease;
+.main-navigation a:last-child {
+  border-bottom: none;
 }
 
-.main-navigation a:hover::after,
-.main-navigation a:focus-visible::after {
-  transform: scaleX(1);
+.main-navigation a:hover,
+.main-navigation a:focus-visible {
+  color: #ffffff;
+  background: #111315;
 }
 
+/* Version téléphone */
+
+@media (max-width: 560px) {
+  .menu-toggle {
+    min-width: 105px;
+    padding: 10px 13px;
+  }
+
+  .main-navigation {
+    right: 0;
+    width: min(230px, calc(100vw - 40px));
+  }
+}
 .menu-toggle {
   display: none;
   width: 42px;
@@ -133,14 +199,6 @@
   border: 1px solid #111315;
   background: transparent;
   cursor: pointer;
-}
-
-.menu-toggle span {
-  display: block;
-  width: 100%;
-  height: 2px;
-  margin: 5px 0;
-  background: #111315;
 }
 
 
