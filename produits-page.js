@@ -1,15 +1,25 @@
 (() => {
   const root = document.getElementById("products-grid");
+  const produits = window.catalogueProduits || [];
+  const telephone = "212708275864";
 
   if (!root) {
     return;
   }
 
-  const produits = window.catalogueProduits || [];
-  const telephone = "212708275864";
+  if (!produits.length) {
+    root.innerHTML = `
+      <p class="products-error">
+        Aucun produit n’est disponible pour le moment.
+      </p>
+    `;
+    return;
+  }
 
   produits.forEach((produit) => {
-    const avecCouleurs = Array.isArray(produit.couleurs);
+    const avecCouleurs =
+      Array.isArray(produit.couleurs) &&
+      produit.couleurs.length > 0;
 
     if (avecCouleurs) {
       produit.couleurs.forEach((couleur) => {
@@ -54,7 +64,10 @@
           &#10095;
         </button>
 
-        <span class="variant-carousel-count"></span>
+        <span
+          class="variant-carousel-count"
+          aria-live="polite"
+        ></span>
       </div>
 
       <div class="product-variant-info">
@@ -63,7 +76,7 @@
         </p>
 
         <h2>
-          ${produit.nom}
+          ${produit.nom} - ${couleur.nom}
         </h2>
 
         <div class="product-color-line">
@@ -80,7 +93,9 @@
         </p>
 
         <div class="product-actions">
-          "
+          <a
+            class="product-more"
+            href="produit.html?ref=${encodeURIComponent(produit.reference)}"
           >
             Voir plus
           </a>
@@ -96,12 +111,23 @@
       </div>
     `;
 
-    const image = carte.querySelector(".product-variant-image");
-    const compteur = carte.querySelector(".variant-carousel-count");
-    const media = carte.querySelector(".product-variant-media");
+    const image =
+      carte.querySelector(".product-variant-image");
 
-    carte.querySelector(".product-color-dot").style.backgroundColor =
-      couleur.code;
+    const compteur =
+      carte.querySelector(".variant-carousel-count");
+
+    const media =
+      carte.querySelector(".product-variant-media");
+
+    const couleurCercle =
+      carte.querySelector(".product-color-dot");
+
+    const boutonWhatsApp =
+      carte.querySelector(".product-whatsapp");
+
+    couleurCercle.style.backgroundColor =
+      couleur.code || "#111315";
 
     function afficherPhoto() {
       if (!photos.length) {
@@ -112,6 +138,7 @@
       }
 
       image.src = photos[photoIndex];
+      image.alt = `${produit.nom} - ${couleur.nom}`;
 
       compteur.textContent =
         `${photoIndex + 1} / ${photos.length}`;
@@ -120,6 +147,10 @@
     carte
       .querySelector(".variant-carousel-prev")
       .addEventListener("click", () => {
+        if (!photos.length) {
+          return;
+        }
+
         photoIndex =
           (photoIndex - 1 + photos.length) %
           photos.length;
@@ -130,6 +161,10 @@
     carte
       .querySelector(".variant-carousel-next")
       .addEventListener("click", () => {
+        if (!photos.length) {
+          return;
+        }
+
         photoIndex =
           (photoIndex + 1) %
           photos.length;
@@ -150,18 +185,24 @@
     media.addEventListener(
       "touchend",
       (event) => {
+        if (!photos.length) {
+          return;
+        }
+
         const ecart =
-          event.changedTouches[0].clientX -
-          debutX;
+          event.changedTouches[0].clientX - debutX;
 
         if (Math.abs(ecart) < 45) {
           return;
         }
 
-        photoIndex =
-          ecart < 0
-            ? (photoIndex + 1) % photos.length
-            : (photoIndex - 1 + photos.length) % photos.length;
+   x + 1) %
+            photos.length;
+        } else {
+          photoIndex =
+            (photoIndex - 1 + photos.length) %
+            photos.length;
+        }
 
         afficherPhoto();
       },
@@ -174,7 +215,7 @@
       `au prix de ${produit.prix} DH, livraison incluse. ` +
       `Pouvez-vous confirmer la disponibilité ?`;
 
-    carte.querySelector(".product-whatsapp").href =
+    boutonWhatsApp.href =
       `https://wa.me/${telephone}?text=${encodeURIComponent(message)}`;
 
     afficherPhoto();
@@ -211,7 +252,10 @@
           &#10095;
         </button>
 
-        <span class="variant-carousel-count"></span>
+        <span
+          class="variant-carousel-count"
+          aria-live="polite"
+        ></span>
       </div>
 
       <div class="product-variant-info">
@@ -226,7 +270,7 @@
         <div class="product-color-line">
           <span
             class="product-color-dot"
-            style="background:#171717"
+            style="background-color: #171717"
           ></span>
 
           <strong>
@@ -254,17 +298,28 @@
       </div>
     `;
 
-    const image = carte.querySelector(".product-variant-image");
-    const compteur = carte.querySelector(".variant-carousel-count");
+    const image =
+      carte.querySelector(".product-variant-image");
+
+    const compteur =
+      carte.querySelector(".variant-carousel-count");
+
+    const media =
+      carte.querySelector(".product-variant-media");
+
+    const boutonWhatsApp =
+      carte.querySelector(".product-whatsapp");
 
     function afficherPhoto() {
       if (!photos.length) {
         image.removeAttribute("src");
+        image.alt = "Photo indisponible";
         compteur.textContent = "0 / 0";
         return;
       }
 
       image.src = photos[photoIndex];
+      image.alt = produit.nom;
 
       compteur.textContent =
         `${photoIndex + 1} / ${photos.length}`;
@@ -273,6 +328,10 @@
     carte
       .querySelector(".variant-carousel-prev")
       .addEventListener("click", () => {
+        if (!photos.length) {
+          return;
+        }
+
         photoIndex =
           (photoIndex - 1 + photos.length) %
           photos.length;
@@ -283,6 +342,10 @@
     carte
       .querySelector(".variant-carousel-next")
       .addEventListener("click", () => {
+        if (!photos.length) {
+          return;
+        }
+
         photoIndex =
           (photoIndex + 1) %
           photos.length;
@@ -290,12 +353,51 @@
         afficherPhoto();
       });
 
+    let debutX = 0;
+
+    media.addEventListener(
+      "touchstart",
+      (event) => {
+        debutX = event.changedTouches[0].clientX;
+      },
+      { passive: true }
+    );
+
+    media.addEventListener(
+      "touchend",
+      (event) => {
+        if (!photos.length) {
+          return;
+        }
+
+        const ecart =
+          event.changedTouches[0].clientX - debutX;
+
+        if (Math.abs(ecart) < 45) {
+          return;
+        }
+
+        if (ecart < 0) {
+          photoIndex =
+            (photoIndex + 1) %
+            photos.length;
+        } else {
+          photoIndex =
+            (photoIndex - 1 + photos.length) %
+            photos.length;
+        }
+
+        afficherPhoto();
+      },
+      { passive: true }
+    );
+
     const message =
       `Bonjour MC Watches, je souhaite commander ` +
       `${produit.nom}, au prix de ${produit.prix} DH, ` +
       `livraison incluse. Pouvez-vous confirmer la disponibilité ?`;
 
-    carte.querySelector(".product-whatsapp").href =
+    boutonWhatsApp.href =
       `https://wa.me/${telephone}?text=${encodeURIComponent(message)}`;
 
     afficherPhoto();
