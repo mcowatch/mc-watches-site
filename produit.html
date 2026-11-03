@@ -17,14 +17,15 @@
   <title>Produit | MC Watches</title>
 
   <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./produit.css?v=48">
+  <link rel="stylesheet" href="./produit.css?v=81">
 
-  <script src="./produits.js?v=48" defer></script>
-  <script src="./produit.js?v=48" defer></script>
+  <script src="./produits.js?v=81" defer></script>
+  <script src="./produit.js?v=81" defer></script>
 </head>
 
+<body>
 
-  <!-- Barre de livraison -->
+  <!-- BARRE DE LIVRAISON -->
 
   <div
     class="shipping-bar"
@@ -38,23 +39,23 @@
     </div>
   </div>
 
-  <!-- Header -->
+  <!-- HEADER -->
 
   <header class="site-header">
 
     <a
       class="brand"
-      href="index.html"
+      href="./index.html"
       aria-label="Accueil MC Watches"
     >
       <img
-        src="LOGOMC.png"
+        src="./LOGOMC.png"
         alt="Logo MC Watches"
         class="header-logo"
       >
     </a>
 
-    <!-- Menu déroulant -->
+    <!-- MENU DÉROULANT -->
 
     <div class="dropdown-menu">
 
@@ -79,50 +80,46 @@
         id="main-navigation"
         aria-label="Navigation principale"
       >
-        <a href="index.html">Accueil</a>
-        <a href="produits.html">Produits</a>
-        <a href="about.html">À propos</a>
-        <a href="contact.html">Contact</a>
+        <a href="./index.html">Accueil</a>
+        <a href="./produits.html">Produits</a>
+        <a href="./about.html">À propos</a>
+        <a href="./contact.html">Contact</a>
       </nav>
 
     </div>
 
   </header>
 
-  <!-- Contenu du produit -->
+  <!-- CONTENU DYNAMIQUE DU PRODUIT -->
 
   <main
     id="fiche-produit"
     class="product-page"
-    aria-live="polite"
-  ></main>
-
-  <!-- Footer simple de la page produit -->
-
-  <footer class="product-footer">
-    <span>MC Watches</span>
-
-    <a
-      href="https://www.instagram.com/mcowatches/"
-      target="_blank"
-      rel="noopener"
-    >
-      Instagram : @mcowatches
+    ariac-watches.com
     </a>
 
-    <a href="https://www.mc-watches.com">
-      mc-watches.com
-    </a>
-
-    <a href="tel:+212708275864">
+    tel:+212708275864
       +212 708 275 864
     </a>
+
   </footer>
 
-  <!onst menuButton = document.querySelector(".menu-toggle");
-    const navigation = document.querySelector(".main-navigation");
+  <!-- FONCTIONNEMENT DU MENU -->
 
-    if (menuButton && navigation) {
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuButton = document.querySelector(".menu-toggle");
+      const navigation = document.querySelector(".main-navigation");
+
+      if (!menuButton || !navigation) {
+        return;
+      }
+
+      function closeMenu() {
+        navigation.classList.remove("open");
+        menuButton.setAttribute("aria-expanded", "false");
+      }
+
       menuButton.addEventListener("click", function (event) {
         event.stopPropagation();
 
@@ -134,16 +131,11 @@
         );
       });
 
-      navigation.querySelectorAll("a").forEach(function (link) {
-        link.addEventListener("click", function () {
-          navigation.classList.remove("open");
-
-          menuButton.setAttribute(
-            "aria-expanded",
-            "false"
-          );
+      navigation
+        .querySelectorAll("a")
+        .forEach(function (link) {
+          link.addEventListener("click", closeMenu);
         });
-      });
 
       document.addEventListener("click", function (event) {
         const clickInsideMenu =
@@ -151,28 +143,17 @@
           menuButton.contains(event.target);
 
         if (!clickInsideMenu) {
-          navigation.classList.remove("open");
-
-          menuButton.setAttribute(
-            "aria-expanded",
-            "false"
-          );
+          closeMenu();
         }
       });
 
       document.addEventListener("keydown", function (event) {
         if (event.key === "Escape") {
-          navigation.classList.remove("open");
-
-          menuButton.setAttribute(
-            "aria-expanded",
-            "false"
-          );
-
+          closeMenu();
           menuButton.focus();
         }
       });
-    }
+    });
   </script>
 
 </body>
