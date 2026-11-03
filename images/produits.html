@@ -1,1 +1,208 @@
+<!doctype html>
+<html lang="fr">
 
+<head>
+  <meta charset="utf-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1"
+  >
+
+  <meta
+    name="description"
+    content="Découvrez les montres et boîtes de rangement MC Watches avec livraison gratuite partout au Maroc."
+  >
+
+  <title>Nos produits | MC Watches</title>
+
+  <link rel="stylesheet" hrefcss
+
+  ./catalogue.js?v=12script>
+</head>
+
+<body>
+
+  <!-- Barre de livraison -->
+
+  <div
+    class="shipping-bar"
+    aria-label="Livraison gratuite partout au Maroc"
+  >
+    <div class="shipping-track">
+      <span>Livraison gratuite partout au Maroc</span>
+      <span>Paiement à la livraison</span>
+      <span>Livraison gratuite partout au Maroc</span>
+      <span>Paiement à la livraison</span>
+    </div>
+  </div>
+
+  <!-- Header -->
+
+  <header class="site-header">
+
+    ./index.html
+      ./LOGOMC.png
+    </a>
+
+    <div class="dropdown-menu">
+
+      <button
+        type="button"
+        class="menu-toggle"
+        aria-expanded="false"
+        aria-controls="main-navigation"
+      >
+        <span>Menu</span>
+
+        <span
+          class="menu-arrow"
+          aria-hidden="true"
+        >
+          ⌄
+        </span>
+      </button>
+
+      <nav
+        class="main-navigation"
+        id="main-navigation"
+        aria-label="Navigation principale"
+      >
+        ./index.htmlAccueil</a>
+        ./produits.htmlProduits</a>
+        ./about.htmlÀ propos</a>
+        ./contact.htmlContact</a>
+      </nav>
+
+    </div>
+
+  </header>
+
+  <!-- Catalogue -->
+
+  <main>
+
+    <section
+      class="catalogue-section"
+      id="catalogue"
+    >
+      <p class="eyebrow">
+        NOS PRODUITS
+      </p>
+
+      <h1>
+        Choisissez votre style.
+      </h1>
+
+      <p class="section-copy">
+        Découvrez nos montres et nos boîtes de rangement.
+        Livraison gratuite partout au Maroc et paiement à la livraison.
+      </p>
+
+      <div
+        class="catalogue-grid"
+        id="catalogue-produits"
+      ></div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+
+  <footer class="product-footer">
+
+    <span>MC Watches</span>
+
+    <a
+      href="https://www.instagram.com/mcowatches/"
+      target="_blank"
+      rel="noopener"
+    >
+      Instagram : @mcowatches
+    </a>
+
+    <a href="https://www.mc-watches.com">
+      mc-watches.com
+    </a>
+
+    tel:+212708275864
+      +212 708 275 864
+    </a>
+
+  </footer>
+
+  <!-- Menu déroulant -->
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuButton =
+        document.querySelector(".menu-toggle");
+
+      const navigation =
+        document.querySelector(".main-navigation");
+
+      if (!menuButton || !navigation) {
+        return;
+      }
+
+      function closeMenu() {
+        navigation.classList.remove("open");
+
+        menuButton.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+      }
+
+      menuButton.addEventListener(
+        "click",
+        function (event) {
+          event.stopPropagation();
+
+          const isOpen =
+            navigation.classList.toggle("open");
+
+          menuButton.setAttribute(
+            "aria-expanded",
+            String(isOpen)
+          );
+        }
+      );
+
+      navigation
+        .querySelectorAll("a")
+        .forEach(function (link) {
+          link.addEventListener(
+            "click",
+            closeMenu
+          );
+        });
+
+      document.addEventListener(
+        "click",
+        function (event) {
+          const clickInsideMenu =
+            navigation.contains(event.target) ||
+            menuButton.contains(event.target);
+
+          if (!clickInsideMenu) {
+            closeMenu();
+          }
+        }
+      );
+
+      document.addEventListener(
+        "keydown",
+        function (event) {
+          if (event.key === "Escape") {
+            closeMenu();
+            menuButton.focus();
+          }
+        }
+      );
+    });
+  </script>
+
+</body>
+
+</html>
