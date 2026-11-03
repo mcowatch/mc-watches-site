@@ -16,9 +16,11 @@
 
   <title>Nos produits | MC Watches</title>
 
-  <link rel="stylesheet" hrefcss
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="produits-page.css">
 
-  ./catalogue.js?v=12script>
+  <script src="produits.js?v=40" defer></script>
+  <script src="produits-page.js?v=40" defer></script>
 </head>
 
 <body>
@@ -41,8 +43,16 @@
 
   <header class="site-header">
 
-    ./index.html
-      ./LOGOMC.png
+    <a
+      class="brand"
+      href="index.html"
+      aria-label="Accueil MC Watches"
+    >
+      <img
+        src="LOGOMC.png"
+        alt="Logo MC Watches"
+        class="header-logo"
+      >
     </a>
 
     <div class="dropdown-menu">
@@ -68,24 +78,22 @@
         id="main-navigation"
         aria-label="Navigation principale"
       >
-        ./index.htmlAccueil</a>
-        ./produits.htmlProduits</a>
-        ./about.htmlÀ propos</a>
-        ./contact.htmlContact</a>
+        <a href="index.html">Accueil</a>
+        <a href="produits.html">Produits</a>
+        <a href="about.html">À propos</a>
+        <a href="contact.html">Contact</a>
       </nav>
 
     </div>
 
   </header>
 
-  <!-- Catalogue -->
+  <!-- Contenu -->
 
-  <main>
+  <main class="products-page">
 
-    <section
-      class="catalogue-section"
-      id="catalogue"
-    >
+    <section class="products-heading">
+
       <p class="eyebrow">
         NOS PRODUITS
       </p>
@@ -94,16 +102,23 @@
         Choisissez votre style.
       </h1>
 
-      <p class="section-copy">
-        Découvrez nos montres et nos boîtes de rangement.
-        Livraison gratuite partout au Maroc et paiement à la livraison.
+      <p>
+        Chaque couleur est présentée séparément pour vous permettre
+        de consulter ses photos et de commander facilement.
       </p>
 
-      <div
-        class="catalogue-grid"
-        id="catalogue-produits"
-      ></div>
+      <div class="products-benefits">
+        <span>Livraison gratuite partout au Maroc</span>
+        <span>Paiement à la livraison</span>
+      </div>
+
     </section>
+
+    <section
+      class="products-grid"
+      id="products-grid"
+      aria-live="polite"
+    ></section>
 
   </main>
 
@@ -125,7 +140,7 @@
       mc-watches.com
     </a>
 
-    tel:+212708275864
+    <a href="tel:+212708275864">
       +212 708 275 864
     </a>
 
@@ -135,11 +150,8 @@
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const menuButton =
-        document.querySelector(".menu-toggle");
-
-      const navigation =
-        document.querySelector(".main-navigation");
+      const menuButton = document.querySelector(".menu-toggle");
+      const navigation = document.querySelector(".main-navigation");
 
       if (!menuButton || !navigation) {
         return;
@@ -147,59 +159,42 @@
 
       function closeMenu() {
         navigation.classList.remove("open");
+        menuButton.setAttribute("aria-expanded", "false");
+      }
+
+      menuButton.addEventListener("click", function (event) {
+        event.stopPropagation();
+
+        const isOpen = navigation.classList.toggle("open");
 
         menuButton.setAttribute(
           "aria-expanded",
-          "false"
+          String(isOpen)
         );
-      }
-
-      menuButton.addEventListener(
-        "click",
-        function (event) {
-          event.stopPropagation();
-
-          const isOpen =
-            navigation.classList.toggle("open");
-
-          menuButton.setAttribute(
-            "aria-expanded",
-            String(isOpen)
-          );
-        }
-      );
+      });
 
       navigation
         .querySelectorAll("a")
         .forEach(function (link) {
-          link.addEventListener(
-            "click",
-            closeMenu
-          );
+          link.addEventListener("click", closeMenu);
         });
 
-      document.addEventListener(
-        "click",
-        function (event) {
-          const clickInsideMenu =
-            navigation.contains(event.target) ||
-            menuButton.contains(event.target);
+      document.addEventListener("click", function (event) {
+        const clickInside =
+          navigation.contains(event.target) ||
+          menuButton.contains(event.target);
 
-          if (!clickInsideMenu) {
-            closeMenu();
-          }
+        if (!clickInside) {
+          closeMenu();
         }
-      );
+      });
 
-      document.addEventListener(
-        "keydown",
-        function (event) {
-          if (event.key === "Escape") {
-            closeMenu();
-            menuButton.focus();
-          }
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape") {
+          closeMenu();
+          menuButton.focus();
         }
-      );
+      });
     });
   </script>
 
