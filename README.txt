@@ -8,6 +8,7 @@ PAGES
   index.html      accueil
   produits.html   tous les produits (montres + boîtes)
   produit.html    fiche d'une collection (ex. produit.html?ref=MC-01)
+  livraison.html  livraison, paiement et questions fréquentes
   404.html        page affichée quand un lien est cassé
 
 FICHIERS À MODIFIER
@@ -28,10 +29,24 @@ NUMÉRO WHATSAPP
   flottant, pied de page). Si vous le changez, remplacez 212708275864 partout.
 
 MISE EN LIGNE (GitHub Pages)
-  1. Remplacez le contenu du dépôt par ces fichiers (gardez CNAME).
+  1. Dézippez, puis envoyez TOUT sur GitHub : les fichiers ET le dossier images
+     (un zip ne se décompresse pas tout seul sur GitHub).
+     Vérifiez ensuite : www.mc-watches.com/logo-light.png doit afficher le logo.
   2. Settings > Pages : Deploy from a branch, main, /root.
 
 AVANT LE LANCEMENT (à confirmer par vous)
   - Délais de livraison et conditions de retour : pas encore sur le site.
   - Ne pas publier de marque, d'authenticité, de matière, d'étanchéité ni de
     garantie sans les avoir vérifiées.
+
+COMMANDE SUR LE SITE
+  Le bouton "Commander" ouvre un formulaire (nom, téléphone, ville, adresse,
+  quantité). Il ouvre ensuite WhatsApp avec le message de commande déjà écrit.
+  Ces commandes arrivent sur WhatsApp ; le formulaire Google reste proposé en
+  alternative dans la même fenêtre.
+
+PAGE LIVRAISON : À COMPLÉTER
+  Les réponses "délai de livraison" et "échange / retour" disent seulement
+  que les conditions sont confirmées avant la commande. Quand vous aurez vos
+  vraies règles, modifiez ces deux réponses dans livraison.html (et le même
+  texte dans le bloc <script type="application/ld+json"> du même fichier).

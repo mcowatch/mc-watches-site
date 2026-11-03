@@ -49,6 +49,162 @@
   const ICON_PREV = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const ICON_NEXT = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
+  /* ---------- Fenêtre de commande ----------
+     Le client remplit ses coordonnées ; un message WhatsApp complet
+     (produit, couleur, quantité, adresse) s'ouvre, prêt à envoyer.   */
+
+  const messageQuestion = (p, couleur) =>
+    `Bonjour MC Watches, j'ai une question sur ${p.nom}${couleur ? `, couleur ${couleur}` : ""}.`;
+
+  const messageDetaille = (p, couleur, qte, f) =>
+    [
+      "Bonjour MC Watches, je souhaite passer commande :",
+      "",
+      `Produit : ${p.nom}`,
+      couleur ? `Couleur : ${couleur}` : null,
+      `Quantité : ${qte}`,
+      `Prix : ${p.prix} DH (livraison gratuite)`,
+      `Total : ${p.prix * qte} DH`,
+      "",
+      `Nom : ${f.nom}`,
+      `Téléphone : ${f.tel}`,
+      `Ville : ${f.ville}`,
+      `Adresse : ${f.adresse}`,
+      "",
+      "Pouvez-vous confirmer la disponibilité et la livraison ?"
+    ].filter((l) => l !== null).join("\n");
+
+  const telValide = (v) => /^(?:\+?212|0)[5-7]\d{8}$/.test(v.replace(/[\s.\-()]/g, ""));
+
+  const CHAMPS = [
+    { id: "nom", label: "Nom complet", auto: "name", erreur: "Indiquez votre nom." },
+    { id: "tel", label: "Téléphone", auto: "tel", type: "tel", aide: "Exemple : 06 12 34 56 78",
+      erreur: "Entrez un numéro marocain valide, par exemple 06 12 34 56 78." },
+    { id: "ville", label: "Ville", auto: "address-level2", erreur: "Indiquez votre ville." },
+    { id: "adresse", label: "Adresse de livraison", auto: "street-address", zone: true,
+      aide: "Quartier, rue, numéro, repère.", erreur: "Indiquez votre adresse de livraison." }
+  ];
+
+  const ICON_CLOSE = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+
+  let dlg = null;
+
+  function creerDialogue() {
+    const champs = CHAMPS.map((c) => `
+      <div class="field">
+        <label for="of-${c.id}">${c.label}</label>
+        ${c.zone
+          ? `<textarea id="of-${c.id}" name="${c.id}" rows="2" autocomplete="${c.auto}" required aria-describedby="of-${c.id}-aide of-${c.id}-err"></textarea>`
+          : `<input id="of-${c.id}" name="${c.id}" type="${c.type || "text"}" autocomplete="${c.auto}" ${c.type === "tel" ? 'inputmode="tel"' : ""} required aria-describedby="of-${c.id}-aide of-${c.id}-err">`}
+        <p class="field-help" id="of-${c.id}-aide">${c.aide || ""}</p>
+        <p class="field-error" id="of-${c.id}-err" role="alert"></p>
+      </div>`).join("");
+
+    const el = html(`
+      <dialog class="order-dialog" aria-labelledby="order-title">
+        <form class="order-form" novalidate>
+          <div class="order-head">
+            <h2 id="order-title">Passer commande</h2>
+            <button type="button" class="order-close" aria-label="Fermer">${ICON_CLOSE}</button>
+          </div>
+
+          <div class="order-summary"></div>
+
+          ${champs}
+
+          <button type="submit" class="btn btn-solid order-submit">Envoyer ma commande sur WhatsApp</button>
+          <p class="order-fine">WhatsApp s'ouvre avec votre message déjà écrit : vous pouvez le relire avant de l'envoyer. Le prix, la disponibilité et la livraison sont confirmés avant la commande.</p>
+          <p class="order-alt"><a data-alt-form target="_blank" rel="noopener">Commander avec le formulaire Google</a></p>
+        </form>
+
+        <div class="order-done" hidden>
+          <div class="order-head">
+            <h2 id="order-done-title">Votre message est prêt</h2>
+            <button type="button" class="order-close" aria-label="Fermer">${ICON_CLOSE}</button>
+          </div>
+          <p>Envoyez-le dans WhatsApp pour valider votre demande. Nous vous confirmons ensuite le prix, la disponibilité et la livraison.</p>
+          <a class="btn btn-solid" data-open-wa target="_blank" rel="noopener">Ouvrir WhatsApp</a>
+          <button type="button" class="btn btn-ghost order-close-2">Fermer</button>
+        </div>
+      </dialog>`);
+
+    document.body.appendChild(el);
+    const form = el.querySelector("form");
+    const done = el.querySelector(".order-done");
+    const resume = el.querySelector(".order-summary");
+    const etat = { p: null, couleur: "" };
+
+    const dessiner = () => {
+      const { p, couleur } = etat;
+      resume.innerHTML = `
+        <p class="order-product"><strong>${esc(p.nom)}</strong>${couleur ? `<span>${esc(couleur)}</span>` : ""}</p>
+        <div class="order-line">
+          <label for="of-qte">Quantité</label>
+          <select id="of-qte" name="qte">${[1, 2, 3, 4, 5].map((n) => `<option value="${n}">${n}</option>`).join("")}</select>
+          <span class="order-total"><span class="order-unit">${prix(p.prix)} l'unité</span><strong data-total>${prix(p.prix)}</strong></span>
+        </div>
+        <p class="order-note">Livraison gratuite. Paiement à la livraison.</p>`;
+      resume.querySelector("#of-qte").addEventListener("change", (e) => {
+        resume.querySelector("[data-total]").textContent = prix(p.prix * Number(e.target.value));
+      });
+    };
+
+    const fermer = () => el.close();
+    el.querySelectorAll(".order-close, .order-close-2").forEach((b) => b.addEventListener("click", fermer));
+    el.addEventListener("click", (e) => { if (e.target === el) fermer(); });
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const valeurs = {};
+      let premier = null;
+      CHAMPS.forEach((c) => {
+        const champ = form.elements[c.id];
+        const v = champ.value.trim();
+        valeurs[c.id] = v;
+        const ok = c.id === "tel" ? telValide(v) : v.length > 1;
+        champ.setAttribute("aria-invalid", String(!ok));
+        form.querySelector(`#of-${c.id}-err`).textContent = ok ? "" : c.erreur;
+        if (!ok && !premier) premier = champ;
+      });
+      if (premier) { premier.focus(); return; }
+
+      const qte = Number(form.elements.qte.value) || 1;
+      const lien = lienWhatsApp(messageDetaille(etat.p, etat.couleur, qte, valeurs));
+      done.querySelector("[data-open-wa]").href = lien;
+      window.open(lien, "_blank", "noopener");
+      form.hidden = true;
+      done.hidden = false;
+      el.setAttribute("aria-labelledby", "order-done-title");
+      done.querySelector(".btn").focus();
+    });
+
+    return {
+      ouvrir(p, couleur) {
+        etat.p = p;
+        etat.couleur = couleur || "";
+        dessiner();
+        form.hidden = false;
+        done.hidden = true;
+        el.setAttribute("aria-labelledby", "order-title");
+        form.querySelectorAll(".field-error").forEach((x) => (x.textContent = ""));
+        form.querySelectorAll("[aria-invalid]").forEach((x) => x.removeAttribute("aria-invalid"));
+        el.querySelector("[data-alt-form]").href = lienFormulaire(p.reference, couleur || p.couleur || "", p.prix);
+        el.showModal();
+        form.elements.nom.focus();
+      },
+      supporte: typeof el.showModal === "function"
+    };
+  }
+
+  function ouvrirCommande(p, couleur) {
+    if (!dlg) dlg = creerDialogue();
+    if (!dlg.supporte) {
+      window.open(lienWhatsApp(messageCommande(p, couleur)), "_blank", "noopener");
+      return;
+    }
+    dlg.ouvrir(p, couleur);
+  }
+
   /* ---------- Menu ---------- */
 
   function initMenu() {
@@ -145,10 +301,10 @@
       : "";
 
     const actions = avecCouleurs
-      ? `<a class="btn btn-ghost" data-details>Voir les détails</a>
-         <a class="btn btn-solid" data-wa target="_blank" rel="noopener">Commander sur WhatsApp</a>`
-      : `<a class="btn btn-ghost" data-form target="_blank" rel="noopener">Commander par formulaire</a>
-         <a class="btn btn-solid" data-wa target="_blank" rel="noopener">Commander sur WhatsApp</a>`;
+      ? `<button type="button" class="btn btn-solid" data-order>Commander</button>
+         <a class="btn btn-ghost" data-details>Voir les détails</a>`
+      : `<button type="button" class="btn btn-solid" data-order>Commander</button>
+         <a class="btn btn-ghost" data-wa target="_blank" rel="noopener">Poser une question sur WhatsApp</a>`;
 
     const carte = html(`
       <article class="card">
@@ -159,7 +315,7 @@
           <span class="count" aria-live="polite"></span>
         </div>
         <div class="card-body">
-          <p class="card-ref">${esc(p.reference)}</p>
+          <p class="card-ref">${esc(p.categorie || "")}</p>
           <h3 class="card-title">${esc(p.nom)}</h3>
           <p class="card-price">${prix(p.prix)}</p>
           <p class="card-delivery">Livraison gratuite</p>
@@ -169,19 +325,20 @@
       </article>`);
 
     const media = carte.querySelector(".card-media");
-    const wa = carte.querySelector("[data-wa]");
-
     const mettreAJourLiens = () => {
       const c = avecCouleurs ? p.couleurs[ci].nom : "";
-      wa.href = lienWhatsApp(messageCommande(p, c));
       if (avecCouleurs) {
         carte.querySelector("[data-details]").href =
           `produit.html?ref=${encodeURIComponent(p.reference)}&couleur=${encodeURIComponent(c)}`;
         carte.querySelector("[data-couleur]").textContent = c;
       } else {
-        carte.querySelector("[data-form]").href = lienFormulaire(p.reference, p.couleur || "Noir", p.prix);
+        carte.querySelector("[data-wa]").href = lienWhatsApp(messageQuestion(p, ""));
       }
     };
+
+    carte.querySelector("[data-order]").addEventListener("click", () =>
+      ouvrirCommande(p, avecCouleurs ? p.couleurs[ci].nom : p.couleur || "")
+    );
 
     const car = carrousel({
       media,
@@ -309,7 +466,7 @@
         </div>
 
         <div class="detail-info">
-          <p class="card-ref">${esc(p.reference)}</p>
+          <p class="card-ref">${esc(p.categorie || "")}</p>
           <h1>${esc(p.nom)}</h1>
           <p class="detail-price">${prix(p.prix)}</p>
           <p class="card-delivery">Livraison gratuite partout au Maroc</p>
@@ -320,13 +477,14 @@
           </div>
 
           <div class="detail-actions">
-            <a class="btn btn-solid" data-wa target="_blank" rel="noopener">Commander sur WhatsApp</a>
-            <a class="btn btn-ghost" data-form target="_blank" rel="noopener">Commander par formulaire</a>
+            <button type="button" class="btn btn-solid" data-order>Commander</button>
+            <a class="btn btn-ghost" data-wa target="_blank" rel="noopener">Poser une question sur WhatsApp</a>
           </div>
 
           <ul class="facts">
             <li>Paiement à la livraison</li>
             <li>Prix, disponibilité et livraison confirmés avant la commande</li>
+            <li><a href="livraison.html">Livraison, paiement et questions fréquentes</a></li>
           </ul>
         </div>
       </div>
@@ -339,7 +497,6 @@
     const media = racine.querySelector(".detail-media");
     const thumbs = racine.querySelector(".thumbs");
     const wa = racine.querySelector("[data-wa]");
-    const form = racine.querySelector("[data-form]");
     const zone = racine.querySelector(".chips");
 
     const dessinerMiniatures = () => {
@@ -370,8 +527,7 @@
     const majCouleur = () => {
       const c = p.couleurs[ci].nom;
       racine.querySelector("[data-couleur]").textContent = c;
-      wa.href = lienWhatsApp(messageCommande(p, c));
-      form.href = lienFormulaire(p.reference, c, p.prix);
+      wa.href = lienWhatsApp(messageQuestion(p, c));
       zone.querySelectorAll(".chip").forEach((s, i) => s.setAttribute("aria-pressed", String(i === ci)));
       const url = new URL(window.location.href);
       url.searchParams.set("couleur", c);
@@ -387,6 +543,8 @@
       b.addEventListener("click", () => { ci = i; majCouleur(); });
       zone.appendChild(b);
     });
+
+    racine.querySelector("[data-order]").addEventListener("click", () => ouvrirCommande(p, p.couleurs[ci].nom));
 
     majCouleur();
   }

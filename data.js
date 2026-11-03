@@ -29,6 +29,7 @@ window.MC = {
   produits: [
     {
       type: "montre",
+      categorie: "Montre pour homme",
       reference: "MC-01",
       nom: "Collection MC-01",
       prix: 249,
@@ -44,6 +45,7 @@ window.MC = {
     },
     {
       type: "montre",
+      categorie: "Montre pour homme",
       reference: "MC-02",
       nom: "Collection MC-02",
       prix: 229,
@@ -59,6 +61,7 @@ window.MC = {
     },
     {
       type: "montre",
+      categorie: "Montre pour homme",
       reference: "MC-03",
       nom: "Collection MC-03",
       prix: 249,
@@ -74,6 +77,7 @@ window.MC = {
     },
     {
       type: "boite",
+      categorie: "Accessoire",
       reference: "Boîte de rangement - 6 montres",
       nom: "Boîte de rangement - 6 montres",
       prix: 219,
@@ -82,6 +86,7 @@ window.MC = {
     },
     {
       type: "boite",
+      categorie: "Accessoire",
       reference: "Boîte de rangement - 12 montres",
       nom: "Boîte de rangement - 12 montres",
       prix: 299,
