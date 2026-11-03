@@ -1,0 +1,311 @@
+/* =========================
+   PAGE PRODUITS
+========================= */
+
+.products-page {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 60px 28px 90px;
+}
+
+.products-heading {
+  max-width: 800px;
+  margin-bottom: 45px;
+}
+
+.products-heading h1 {
+  margin: 12px 0 20px;
+  font-size: clamp(3rem, 6vw, 5.5rem);
+}
+
+.products-heading > p:not(.eyebrow) {
+  max-width: 680px;
+  color: #55595b;
+  font-size: 1.08rem;
+  line-height: 1.7;
+}
+
+.products-benefits {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 25px;
+  margin-top: 24px;
+}
+
+.products-benefits span {
+  color: #347052;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.products-benefits span::before {
+  content: "✓";
+  margin-right: 8px;
+}
+
+/* =========================
+   GRILLE
+========================= */
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 26px;
+}
+
+.product-variant-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.48);
+  border: 1px solid #d9d5cc;
+}
+
+/* =========================
+   CARROUSEL
+========================= */
+
+.product-variant-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: #f5f2eb;
+}
+
+.product-variant-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.variant-carousel-button {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+
+  width: 40px;
+  height: 40px;
+
+  border: none;
+  border-radius: 50%;
+
+  color: #ffffff;
+  background: rgba(17, 19, 21, 0.78);
+
+  font-size: 20px;
+  cursor: pointer;
+
+  transform: translateY(-50%);
+}
+
+.variant-carousel-button:hover {
+  background: #111315;
+}
+
+.variant-carousel-prev {
+  left: 12px;
+}
+
+.variant-carousel-next {
+  right: 12px;
+}
+
+.variant-carousel-count {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+
+  padding: 5px 9px;
+
+  color: #ffffff;
+  background: rgba(17, 19, 21, 0.75);
+
+  font-size: 0.78rem;
+}
+
+/* =========================
+   INFORMATIONS
+========================= */
+
+.product-variant-info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 22px;
+}
+
+.product-reference {
+  margin: 0 0 7px;
+  color: #a6813b;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+}
+
+.product-variant-info h2 {
+  margin: 0 0 10px;
+  font-size: 1.35rem;
+  line-height: 1.2;
+  letter-spacing: 0;
+}
+
+.product-color-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  color: #55595b;
+  font-size: 0.9rem;
+}
+
+.product-color-dot {
+  display: block;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px #777;
+}
+
+.product-price {
+  margin: 0;
+  color: #111315;
+  font-size: 1.4rem;
+  font-weight: 900;
+}
+
+.product-delivery {
+  margin: 4px 0 22px;
+  color: #347052;
+  font-size: 0.86rem;
+  font-weight: 800;
+}
+
+.product-delivery::before {
+  content: "✓";
+  margin-right: 7px;
+}
+
+/* =========================
+   BOUTONS
+========================= */
+
+.product-actions {
+  display: grid;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.product-more,
+.product-whatsapp {
+  display: flex;
+  width: 100%;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+
+  padding: 12px 16px;
+  box-sizing: border-box;
+
+  text-align: center;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 800;
+}
+
+.product-more {
+  color: #111315;
+  background: #ffffff;
+  border: 1px solid #111315;
+}
+
+.product-more::after {
+  content: "→";
+  margin-left: 9px;
+  font-size: 18px;
+}
+
+.product-more:hover {
+  color: #ffffff;
+  background: #111315;
+}
+
+.product-whatsapp {
+  color: #ffffff;
+  background: #111315;
+  border: 1px solid #111315;
+}
+
+.product-whatsapp:hover {
+  background: #a6813b;
+  border-color: #a6813b;
+}
+
+/* =========================
+   FOOTER DE LA PAGE
+========================= */
+
+.product-footer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  gap: 12px 28px;
+  padding: 28px 20px;
+
+  color: #c8c9ca;
+  background: #111315;
+  border-top: 3px solid #a6813b;
+
+  font-size: 0.9rem;
+}
+
+.product-footer a {
+  color: #c8c9ca;
+  text-decoration: none;
+}
+
+.product-footer a:hover {
+  color: #c7a45a;
+}
+
+/* =========================
+   TABLETTE
+========================= */
+
+@media (max-width: 950px) {
+  .products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 620px) {
+  .products-page {
+    padding: 40px 20px 65px;
+  }
+
+  .products-heading h1 {
+    font-size: 2.8rem;
+  }
+
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .product-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 9px;
+  }
+}
