@@ -16,11 +16,13 @@
 
   <title>Nos produits | MC Watches</title>
 
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="produits-page.css">
+  <!-- Fichiers CSS -->
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./produits-page.css">
 
-  <script src="produits.js?v=41" defer></script>
-  <script src="produits-page.js?v=41" defer></script>
+  <!-- Données et affichage des produits -->
+  <script src="./produits.js?v=43" defer></script>
+  <script src="./produits-page.js?v=43" defer></script>
 </head>
 
 <body>
@@ -45,11 +47,11 @@
 
     <a
       class="brand"
-      href="index.html"
+      href="./index.html"
       aria-label="Accueil MC Watches"
     >
       <img
-        src="LOGOMC.png"
+        src="./LOGOMC.png"
         alt="Logo MC Watches"
         class="header-logo"
       >
@@ -78,10 +80,10 @@
         id="main-navigation"
         aria-label="Navigation principale"
       >
-        <a href="index.html">Accueil</a>
-        <a href="produits.html">Produits</a>
-        <a href="about.html">À propos</a>
-        <a href="contact.html">Contact</a>
+        <a href="./index.html">Accueil</a>
+        <a href="./produits.html">Produits</a>
+        <a href="./about.html">À propos</a>
+        <a href="./contact.html">Contact</a>
       </nav>
 
     </div>
@@ -103,23 +105,21 @@
       </h1>
 
       <p>
-        Chaque couleur est présentée séparément pour vous permettre
-        de consulter ses photos et de commander facilement.
-      </p>
-
-      <div class="products-benefits">
-        <span>Livraison gratuite partout aut à la livraison</span>
-      </div>
-
-    </section>
-
-    <!-- LES PRODUITS SERONT GÉNÉRÉS ICI -->
+        Chaque couleur ajoutés ici par produits-page.js -->
 
     <section
       class="products-grid"
       id="products-grid"
       aria-live="polite"
     ></section>
+
+    <!-- Message affiché uniquement si JavaScript est désactivé -->
+
+    <noscript>
+      <p>
+        JavaScript doit être activé pour afficher les produits.
+      </p>
+    </noscript>
 
   </main>
 
@@ -141,7 +141,7 @@
       mc-watches.com
     </a>
 
-    <a href="tel:+212708275864">
+    tel:+212708275864
       +212 708 275 864
     </a>
 
