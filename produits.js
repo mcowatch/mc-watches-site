@@ -1,192 +1,182 @@
-<!doctype html>
-<html lang="fr">
+window.catalogueProduits = [
+  {
+    reference: "MC-01",
+    nom: "Collection MC-01",
+    prix: 249,
 
-<head>
-  <meta charset="utf-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  >
-
-  <title>Produit | MC Watches</title>
-
-  <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./produit.css">
-
-  <script src="./produits.js?v=32" defer></script>
-  <script src="./produit.js?v=32" defer></script>
-</head>
-
-<body>
-
-  <!-- Barre de livraison -->
-
-  <div
-    class="shipping-bar"
-    aria-label="Livraison gratuite partout au Maroc"
-  >
-    <div class="shipping-track">
-      <span>Livraison gratuite partout au Maroc</span>
-      <span>Paiement à la livraison</span>
-      <span>Livraison gratuite partout au Maroc</span>
-      <span>Paiement à la livraison</span>
-    </div>
-  </div>
-
-  <!-- Header -->
-
-  <header class="site-header">
-
-    <a
-      class="brand"
-      href="./index.html"
-      aria-label="Accueil MC Watches"
-    >
-      <img
-        src="./LOGOMC.png"
-        alt="Logo MC Watches"
-        class="header-logo"
-      >
-    </a>
-
-    <div class="dropdown-menu">
-
-      <button
-        type="button"
-        class="menu-toggle"
-        aria-expanded="false"
-        aria-controls="main-navigation"
-      >
-        <span>Menu</span>
-
-        <span
-          class="menu-arrow"
-          aria-hidden="true"
-        >
-          ⌄
-        </span>
-      </button>
-
-      <nav
-        class="main-navigation"
-        id="main-navigation"
-        aria-label="Navigation principale"
-      >
-        <a href="./index.html">Accueil</a>
-        <a href="./produits.html">Produits</a>
-        <a href="./about.html">À propos</a>
-        <a href="./contact.html">Contact</a>
-      </nav>
-
-    </div>
-
-  </header>
-
-  <!-- Contenu dynamique du produit -->
-
-  <main
-    id="fiche-produit"
-    class="product-page"
-    aria-live="polite"
-  ></main>
-
-  <!-- Footer -->
-
-  <footer class="product-footer">
-
-    <span>MC Watches</span>
-
-    <a
-      href="https://www.instagram.com/mcowatches/"
-      target="_blank"
-      rel="noopener"
-    >
-      Instagram : @mcowatches
-    </a>
-
-    <a href="https://www.mc-watches.com">
-      mc-watches.com
-    </a>
-
-    <a href="tel:+212708275864">
-      +212 708 275 864
-    </a>
-
-  </footer>
-
-  <!-- Menu déroulant -->
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const menuButton =
-        document.querySelector(".menu-toggle");
-
-      const navigation =
-        document.querySelector(".main-navigation");
-
-      if (!menuButton || !navigation) {
-        return;
+    couleurs: [
+      {
+        nom: "Noir",
+        code: "#171717",
+        photos: [
+          "images/mc01/NOIRT1.jpg",
+          "images/mc01/NOIRT2.jpg",
+          "images/mc01/NOIRT3.jpg",
+          "images/mc01/NOIRT4.jpg"
+        ]
+      },
+      {
+        nom: "Blanc",
+        code: "#F4F1E8",
+        bordure: true,
+        photos: [
+          "images/mc01/BLANCT1.jpg",
+          "images/mc01/BLANCT2.jpg",
+          "images/mc01/BLANCT3.jpg",
+          "images/mc01/BLANCT4.jpg",
+          "images/mc01/BLANCT5.jpg"
+        ]
+      },
+      {
+        nom: "Blanc et bleu",
+        code: "#315A8C",
+        photos: [
+          "images/mc01/blancbleu2.jpg",
+          "images/mc01/blancbleu3.jpg",
+          "images/mc01/blancbleu4.jpg",
+          "images/mc01/blancbleu5.jpg",
+          "images/mc01/blancbleu6.jpg",
+          "images/mc01/blancbleu7.jpg"
+        ]
       }
+    ],
 
-      function closeMenu() {
-        navigation.classList.remove("open");
+    photosCommunes: [
+      "images/mc01/20261029_212605.jpg",
+      "images/mc01/20261029_212717.jpg",
+      "images/mc01/20261029_213002.jpg",
+      "images/mc01/20261029_213034.jpg"
+    ]
+  },
 
-        menuButton.setAttribute(
-          "aria-expanded",
-          "false"
-        );
+  {
+    reference: "MC-02",
+    nom: "Collection MC-02",
+    prix: 229,
+
+    couleurs: [
+      {
+        nom: "Vert",
+        code: "#3E7560",
+        photos: [
+          "images/mc02/VERT1.jpg",
+          "images/mc02/VERT2.jpg",
+          "images/mc02/VERT3.jpg",
+          "images/mc02/VERT4.jpg",
+          "images/mc02/VERT5.jpg"
+        ]
+      },
+      {
+        nom: "Blanc",
+        code: "#F4F1E8",
+        bordure: true,
+        photos: [
+          "images/mc02/blanc1.jpg",
+          "images/mc02/blanc2.jpg",
+          "images/mc02/blanc4.jpg",
+          "images/mc02/blanc5.jpg"
+        ]
+      },
+      {
+        nom: "Noir",
+        code: "#171717",
+        photos: [
+          "images/mc02/NOIR1.jpg",
+          "images/mc02/NOIR2.jpg",
+          "images/mc02/NOIR3.jpg",
+          "images/mc02/NOIR4.jpg"
+        ]
       }
+    ],
 
-      menuButton.addEventListener(
-        "click",
-        function (event) {
-          event.stopPropagation();
+    photosCommunes: [
+      "images/mc02/CASIO2.jpg",
+      "images/mc02/CASIO3.jpg",
+      "images/mc02/CASIO5.jpg",
+      "images/mc02/CASIO6.jpg"
+    ]
+  },
+  {
+  reference: "MC-03",
+  nom: "Collection MC-03",
+  prix: 249,
 
-          const isOpen =
-            navigation.classList.toggle("open");
+  couleurs: [
+    {
+      nom: "Gris",
+      code: "#9A9A8F",
+      photos: [
+        "images/mc03/GRIS1.jpg",
+        "images/mc03/GRIS2.jpg",
+        "images/mc03/GRIS3.jpg",
+        "images/mc03/GRIS4.jpg",
+        "images/mc03/GRIS5.jpg",
+        "images/mc03/GRIS6.jpg",
+        "images/mc03/GRIS7.jpg",
+        "images/mc03/GRIS8.jpg"
+      ]
+    },
+    {
+      nom: "Bleu avec cadran blanc",
+      code: "#EDE9DC",
+      bordure: true,
+      photos: [
+        "images/mc03/BLEUBLANC1.jpg",
+        "images/mc03/BLEUBLANC2.jpg",
+        "images/mc03/BLEUBLANC3.jpg",
+        "images/mc03/BLEUBLANC4.jpg",
+        "images/mc03/BLEUBLANC5.jpg"
+      ]
+    },
+    {
+      nom: "Bleu",
+      code: "#243D68",
+      photos: [
+        "images/mc03/BLEU1.jpg",
+        "images/mc03/BLEU2.jpg",
+        "images/mc03/BLEU3.jpg",
+        "images/mc03/BLEU4.jpg",
+        "images/mc03/BLEU5.jpg",
+        "images/mc03/BLEU6.jpg",
+        "images/mc03/BLEU7.jpg"
+      ]
+    }
+  ],
 
-          menuButton.setAttribute(
-            "aria-expanded",
-            String(isOpen)
-          );
-        }
-      );
+  photosCommunes: [
+    "images/mc03/20261101_122552.jpg",
+    "images/mc03/20261101_122644.jpg",
+    "images/mc03/20261101_122757.jpg",
+    "images/mc03/20261101_122911.jpg",
+    "images/mc03/20261101_122917.jpg",
+    "images/mc03/20261101_122936.jpg"
+  ]
+},
 
-      navigation
-        .querySelectorAll("a")
-        .forEach(function (link) {
-          link.addEventListener(
-            "click",
-            closeMenu
-          );
-        });
+  {
+    reference: "Boîte 6 montres",
+    nom: "Boîte 6 montres",
+    prix: 219,
+    couleur: "Noir",
 
-      document.addEventListener(
-        "click",
-        function (event) {
-          const clickInsideMenu =
-            navigation.contains(event.target) ||
-            menuButton.contains(event.target);
+    photos: [
+      "images/boite-6/BOITEPETIT1.jpg",
+      "images/boite-6/BOITEPETIT2.jpg",
+      "images/boite-6/BOITEPETIT3.jpg",
+      "images/boite-6/BOITEPETIT4.jpg"
+    ]
+  },
 
-          if (!clickInsideMenu) {
-            closeMenu();
-          }
-        }
-      );
+  {
+    reference: "Boîte 12 montres",
+    nom: "Boîte 12 montres",
+    prix: 299,
+    couleur: "Noir",
 
-      document.addEventListener(
-        "keydown",
-        function (event) {
-          if (event.key === "Escape") {
-            closeMenu();
-            menuButton.focus();
-          }
-        }
-      );
-    });
-  </script>
-
-</body>
-
-</html>
+    photos: [
+      "images/boite-12/BG1.jpg",
+      "images/boite-12/BG2.jpg",
+      "images/boite-12/BG3.jpg"
+    ]
+  }
+];
