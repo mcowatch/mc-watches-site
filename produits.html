@@ -19,13 +19,13 @@
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="produits-page.css">
 
-  <script src="produits.js?v=40" defer></script>
-  <script src="produits-page.js?v=40" defer></script>
+  <script src="produits.js?v=41" defer></script>
+  <script src="produits-page.js?v=41" defer></script>
 </head>
 
 <body>
 
-  <!-- Barre de livraison -->
+  <!-- BARRE DE LIVRAISON -->
 
   <div
     class="shipping-bar"
@@ -39,7 +39,7 @@
     </div>
   </div>
 
-  <!-- Header -->
+  <!-- HEADER -->
 
   <header class="site-header">
 
@@ -88,7 +88,7 @@
 
   </header>
 
-  <!-- Contenu -->
+  <!-- CONTENU PRINCIPAL -->
 
   <main class="products-page">
 
@@ -108,11 +108,12 @@
       </p>
 
       <div class="products-benefits">
-        <span>Livraison gratuite partout au Maroc</span>
-        <span>Paiement à la livraison</span>
+        <span>Livraison gratuite partout aut à la livraison</span>
       </div>
 
     </section>
+
+    <!-- LES PRODUITS SERONT GÉNÉRÉS ICI -->
 
     <section
       class="products-grid"
@@ -122,7 +123,7 @@
 
   </main>
 
-  <!-- Footer -->
+  <!-- FOOTER -->
 
   <footer class="product-footer">
 
@@ -146,7 +147,7 @@
 
   </footer>
 
-  <!-- Menu déroulant -->
+  <!-- FONCTIONNEMENT DU MENU -->
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -180,11 +181,11 @@
         });
 
       document.addEventListener("click", function (event) {
-        const clickInside =
+        const clickInsideMenu =
           navigation.contains(event.target) ||
           menuButton.contains(event.target);
 
-        if (!clickInside) {
+        if (!clickInsideMenu) {
           closeMenu();
         }
       });
