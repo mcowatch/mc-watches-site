@@ -1,110 +1,388 @@
 (() => {
-  const root = document.getElementById("fiche-produit");
-  const ref = new URLSearchParams(window.location.search).get("ref");
-  const produit = (window.catalogueProduits || []).find(
-    (item) => item.reference === ref && Array.isArray(item.couleurs)
-  );
+  const root = document.getElementById("products-grid");
+  const produits = window.catalogueProduits || [];
   const telephone = "212708275864";
-  const formulaireBase = "https://docs.google.com/forms/d/e/1FAIpQLSerO_SjWbLOsfbOhFkFcDC0gSQHaS_0Ss3w8ePUO94eo3wCzQ/viewform";
 
-  if (!root) return;
-
-  if (!produit) {
-    root.innerHTML = `
-      <div class="product-error">
-        <h1>Produit introuvable</h1>
-        <p>Retournez au catalogue pour choisir un modèle.</p>
-        <a href="index.html#catalogue">Retour au catalogue</a>
-      </div>`;
+  if (!root) {
     return;
   }
 
-  document.title = `${produit.reference} | MC Watches`;
-  root.innerHTML = `
-    <section class="product-heading">
-      <p class="eyebrow">${produit.reference}</p>
-      <h1>${produit.nom}</h1>
-      <p class="product-main-price">${produit.prix} DH</p>
-    </section>
-    <section class="variant-list"></section>`;
+  if (produits.length === 0) {
+    root.innerHTML = `
+      <p class="products-error">
+        Aucun produit n’est disponible pour le moment.
+      </p>
+    `;
+    return;
+  }
 
-  const list = root.querySelector(".variant-list");
+  produits.forEach((produit) => {
+    const avecCouleurs =
+      Array.isArray(produit.couleurs) &&
+      produit.couleurs.length > 0;
 
-  produit.couleurs.forEach((couleur) => {
-    let imageIndex = 0;
-    const photos = [...couleur.photos, ...(produit.photosCommunes || [])];
-    const card = document.createElement("article");
-    card.className = "variant-card";
-    card.innerHTML = `
-      <div class="variant-gallery">
-        <img class="variant-image" alt="${produit.nom} - ${couleur.nom}">
-        <button type="button" class="detail-nav detail-prev" aria-label="Photo précédente">&#10094;</button>
-        <button type="button" class="detail-nav detail-next" aria-label="Photo suivante">&#10095;</button>
-        <span class="detail-count" aria-live="polite"></span>
+    if (avecCouleurs) {
+      produit.couleurs.forEach((couleur) => {
+        creerCarteCouleur(produit, couleur);
+      });
+    } else {
+      creerCarteSimple(produit);
+    }
+  });
+
+  function creerCarteCouleur(produit, couleur) {
+    let photoIndex = 0;
+
+    const photos = [
+      ...(couleur.photos || []),
+      ...(produit.photosCommunes || [])
+    ];
+
+    const carte = document.createElement("article");
+    carte.className = "product-variant-card";
+
+    carte.innerHTML = `
+      <div class="product-variant-media">
+        <img
+          class="product-variant-image"
+          alt="${produit.nom} - ${couleur.nom}"
+        >
+
+        <button
+          type="button"
+          class="variant-carousel-button variant-carousel-prev"
+          aria-label="Photo précédente"
+        >
+          &#10094;
+        </button>
+
+        <button
+          type="button"
+          class="variant-carousel-button variant-carousel-next"
+          aria-label="Photo suivante"
+        >
+          &#10095;
+        </button>
+
+        <span
+          class="variant-carousel-count"
+          aria-live="polite"
+        ></span>
       </div>
-      <div class="variant-content">
-        <div class="variant-color">
-          <span class="variant-dot" aria-hidden="true"></span>
+
+      <div class="product-variant-info">
+        <p class="product-reference">
+          ${produit.reference}
+        </p>
+
+        <h2>
+          ${produit.nom} - ${couleur.nom}
+        </h2>
+
+        <div class="product-color-line">
+          <span class="product-color-dot"></span>
           <strong>${couleur.nom}</strong>
         </div>
-        <h2>${produit.reference} - ${couleur.nom}</h2>
-        <p>Découvrez les photos de cette couleur et les vues communes du modèle.</p>
-        <div class="variant-actions">
-          <a class="order-form" target="_blank" rel="noopener">Commander cette couleur</a>
-          <a class="order-whatsapp" target="_blank" rel="noopener">Commander directement sur WhatsApp</a>
+
+        <p class="product-price">
+          ${produit.prix} DH
+        </p>
+
+        <p class="product-delivery">
+          Livraison gratuite partout au Maroc
+        </p>
+
+        <div class="product-actions">
+          <a
+            class="product-more"
+            href="produit.html?ref=${encodeURIComponent(produit.reference)}"
+          >
+            Voir plus
+          </a>
+
+          <a
+            class="product-whatsapp"
+            target="_blank"
+            rel="noopener"
+          >
+            Commander sur WhatsApp
+          </a>
         </div>
-      </div>`;
+      </div>
+    `;
 
-    const image = card.querySelector(".variant-image");
-    const count = card.querySelector(".detail-count");
-    const gallery = card.querySelector(".variant-gallery");
-    card.querySelector(".variant-dot").style.backgroundColor = couleur.code;
+    const image = carte.querySelector(".product-variant-image");
+    const compteur = carte.querySelector(".variant-carousel-count");
+    const media = carte.querySelector(".product-variant-media");
+    const cercle = carte.querySelector(".product-color-dot");
+    const boutonWhatsApp = carte.querySelector(".product-whatsapp");
 
-    const afficherPhoto = () => {
-      if (!photos.length) return;
-      image.src = photos[imageIndex];
-      count.textContent = `${imageIndex + 1} / ${photos.length}`;
-    };
+    cercle.style.backgroundColor =
+      couleur.code || "#111315";
 
-    card.querySelector(".detail-prev").addEventListener("click", () => {
-      imageIndex = (imageIndex - 1 + photos.length) % photos.length;
-      afficherPhoto();
-    });
+    function afficherPhoto() {
+      if (photos.length === 0) {
+        image.removeAttribute("src");
+        image.alt = "Photo indisponible";
+        compteur.textContent = "0 / 0";
+        return;
+      }
 
-    card.querySelector(".detail-next").addEventListener("click", () => {
-      imageIndex = (imageIndex + 1) % photos.length;
-      afficherPhoto();
-    });
+      image.src = photos[photoIndex];
+      image.alt = `${produit.nom} - ${couleur.nom}`;
+      compteur.textContent =
+        `${photoIndex + 1} / ${photos.length}`;
+    }
+
+    carte
+      .querySelector(".variant-carousel-prev")
+      .addEventListener("click", () => {
+        if (photos.length === 0) {
+          return;
+        }
+
+        photoIndex =
+          (photoIndex - 1 + photos.length) %
+          photos.length;
+
+        afficherPhoto();
+      });
+
+    carte
+      .querySelector(".variant-carousel-next")
+      .addEventListener("click", () => {
+        if (photos.length === 0) {
+          return;
+        }
+
+        photoIndex =
+          (photoIndex + 1) %
+          photos.length;
+
+        afficherPhoto();
+      });
 
     let debutX = 0;
-    gallery.addEventListener("touchstart", (event) => {
-      debutX = event.changedTouches[0].clientX;
-    }, { passive: true });
-    gallery.addEventListener("touchend", (event) => {
-      const ecart = event.changedTouches[0].clientX - debutX;
-      if (Math.abs(ecart) < 45) return;
-      imageIndex = ecart < 0
-        ? (imageIndex + 1) % photos.length
-        : (imageIndex - 1 + photos.length) % photos.length;
-      afficherPhoto();
-    }, { passive: true });
 
-    const formulaire =
-      `${formulaireBase}?usp=pp_url` +
-      `&entry.1548138927=${encodeURIComponent(produit.reference)}` +
-      `&entry.549343203=${encodeURIComponent(couleur.nom)}` +
-      `&entry.1447288487=${encodeURIComponent(produit.prix)}`;
+    media.addEventListener(
+      "touchstart",
+      (event) => {
+        debutX = event.changedTouches[0].clientX;
+      },
+      { passive: true }
+    );
+
+    media.addEventListener(
+      "touchend",
+      (event) => {
+        if (photos.length === 0) {
+          return;
+        }
+
+        const ecart =
+          event.changedTouches[0].clientX - debutX;
+
+        if (Math.abs(ecart) < 45) {
+          return;
+        }
+
+        if (ecart < 0) {
+          photoIndex =
+            (photoIndex + 1) %
+            photos.length;
+        } else {
+          photoIndex =
+            (photoIndex - 1 + photos.length) %
+            photos.length;
+        }
+
+        afficherPhoto();
+      },
+      { passive: true }
+    );
 
     const message =
-      `Bonjour MC Watches, je souhaite commander ${produit.reference}, ` +
-      `couleur ${couleur.nom}, au prix de ${produit.prix} DH. ` +
-      `Pouvez-vous confirmer la disponibilité et la livraison ?`;
+      `Bonjour MC Watches, je souhaite commander ` +
+      `${produit.reference}, couleur ${couleur.nom},     `Pouvez-vous confirmer la disponibilité ?`;
 
-    card.querySelector(".order-form").href = formulaire;
-    card.querySelector(".order-whatsapp").href =
+    boutonWhatsApp.href =
       `https://wa.me/${telephone}?text=${encodeURIComponent(message)}`;
 
     afficherPhoto();
-    list.appendChild(card);
-  });
+    root.appendChild(carte);
+  }
+
+  function creerCarteSimple(produit) {
+    let photoIndex = 0;
+    const photos = produit.photos || [];
+
+    const carte = document.createElement("article");
+    carte.className = "product-variant-card";
+
+    carte.innerHTML = `
+      <div class="product-variant-media">
+        <img
+          class="product-variant-image"
+          alt="${produit.nom}"
+        >
+
+        <button
+          type="button"
+          class="variant-carousel-button variant-carousel-prev"
+          aria-label="Photo précédente"
+        >
+          &#10094;
+        </button>
+
+        <button
+          type="button"
+          class="variant-carousel-button variant-carousel-next"
+          aria-label="Photo suivante"
+        >
+          &#10095;
+        </button>
+
+        <span
+          class="variant-carousel-count"
+          aria-live="polite"
+        ></span>
+      </div>
+
+      <div class="product-variant-info">
+        <p class="product-reference">
+          ${produit.reference}
+        </p>
+
+        <h2>
+          ${produit.nom}
+        </h2>
+
+        <div class="product-color-line">
+          <span
+            class="product-color-dot"
+            style="background-color: #171717"
+          ></span>
+
+          <strong>
+            ${produit.couleur || "Noir"}
+          </strong>
+        </div>
+
+        <p class="product-price">
+          ${produit.prix} DH
+        </p>
+
+        <p class="product-delivery">
+          Livraison gratuite partout au Maroc
+        </p>
+
+        <div class="product-actions">
+          <a
+            class="product-whatsapp"
+            target="_blank"
+            rel="noopener"
+          >
+            Commander sur WhatsApp
+          </a>
+        </div>
+      </div>
+    `;
+
+    const image = carte.querySelector(".product-variant-image");
+    const compteur = carte.querySelector(".variant-carousel-count");
+    const media = carte.querySelector(".product-variant-media");
+    const boutonWhatsApp = carte.querySelector(".product-whatsapp");
+
+    function afficherPhoto() {
+      if (photos.length === 0) {
+        image.removeAttribute("src");
+        image.alt = "Photo indisponible";
+        compteur.textContent = "0 / 0";
+        return;
+      }
+
+      image.src = photos[photoIndex];
+      image.alt = produit.nom;
+      compteur.textContent =
+        `${photoIndex + 1} / ${photos.length}`;
+    }
+
+    carte
+      .querySelector(".variant-carousel-prev")
+      .addEventListener("click", () => {
+        if (photos.length === 0) {
+          return;
+        }
+
+        photoIndex =
+          (photoIndex - 1 + photos.length) %
+          photos.length;
+
+        afficherPhoto();
+      });
+
+    carte
+      .querySelector(".variant-carousel-next")
+      .addEventListener("click", () => {
+        if (photos.length === 0) {
+          return;
+        }
+
+        photoIndex =
+          (photoIndex + 1) %
+          photos.length;
+
+        afficherPhoto();
+      });
+
+    let debutX = 0;
+
+    media.addEventListener(
+      "touchstart",
+      (event) => {
+        debutX = event.changedTouches[0].clientX;
+      },
+      { passive: true }
+    );
+
+    media.addEventListener(
+      "touchend",
+      (event) => {
+        if (photos.length === 0) {
+          return;
+        }
+
+        const ecart =
+          event.changedTouches[0].clientX - debutX;
+
+        if (Math.abs(ecart) < 45) {
+          return;
+        }
+
+        if (ecart < 0) {
+          photoIndex =
+            (photoIndex + 1) %
+            photos.length;
+        } else {
+          photoIndex =
+            (photoIndex - 1 + photos.length) %
+            photos.length;
+        }
+
+        afficherPhoto();
+      },
+      { passive: true }
+    );
+
+    const message =
+      `Bonjour MC Watches, je souhaite commander ` +
+      `${produit.nom}, au prix de ${produit.prix} DH, ` +
+      `livraison incluse. Pouvez-vous confirmer la disponibilité ?`;
+
+    boutonWhatsApp.href =
+      `https://wa.me/${telephone}?text=${encodeURIComponent(message)}`;
+
+    afficherPhoto();
+    root.appendChild(carte);
+  }
 })();
