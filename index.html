@@ -1,505 +1,184 @@
 <!doctype html>
 <html lang="fr">
-
 <head>
   <meta charset="utf-8">
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1"
-  >
-
-  <meta
-    name="description"
-    content="MC Watches propose des montres et des boîtes de rangement avec livraison gratuite partout au Maroc et paiement à la livraison."
-  >
-
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="MC Watches - Des montres pour chaque style. Livraison au Maroc et paiement a la livraison.">
   <title>MC Watches | Des montres pour chaque style</title>
-
-  <link rel="stylesheet" href="./styles.css">
-  <link rel="stylesheet" href="./catalogue.css">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="catalogue.css">
+ 
 </head>
-
 <body>
-
-  <!-- BARRE DE LIVRAISON -->
-
-  <div
-    class="shipping-bar"
-    aria-label="Livraison gratuite partout au Maroc"
-  >
-    <div class="shipping-track">
-      <span>Livraison gratuite partout au Maroc</span>
-      <span>Paiement à la livraison</span>
-      <span>Livraison gratuite partout au Maroc</span>
-      <span>Paiement à la livraison</span>
-    </div>
+  <div class="shipping-bar" aria-label="Livraison gratuite partout au Maroc">
+  <div class="shipping-track">
+    <span>Livraison gratuite partout au Maroc</span>
+    <span>Paiement à la livraison</span>
+    <span>Livraison gratuite partout au Maroc</span>
+    <span>Paiement à la livraison</span>
   </div>
+</div>
+<header class="site-header">
+  <a class="brand" href="#accueil" aria-label="Accueil MC Watches">
+    <img src="LOGOMC.png" alt="Logo MC Watches" class="header-logo">
+  </a>
 
-  <!-- HEADER -->
-
-  <header class="site-header">
-
-    <a
-      class="brand"
-      href="./index.html"
-      aria-label="Accueil MC Watches"
+  <div class="dropdown-menu">
+    <button
+      type="button"
+      class="menu-toggle"
+      aria-expanded="false"
+      aria-controls="main-navigation"
     >
-      <img
-        src="./LOGOMC.png"
-        alt="Logo MC Watches"
-        class="header-logo"
-      >
-    </a>
+      <span>Menu</span>
+      <span class="menu-arrow">⌄</span>
+    </button>
 
-    <div class="dropdown-menu">
-
-      <button
-        type="button"
-        class="menu-toggle"
-        aria-expanded="false"
-        aria-controls="main-navigation"
-      >
-        <span>Menu</span>
-
-        <span
-          class="menu-arrow"
-          aria-hidden="true"
-        >
-          ⌄
-        </span>
-      </button>
-
-      <nav
-        class="main-navigation"
-        id="main-navigation"
-        aria-label="Navigation principale"
-      >
-        <a href="./index.html">Accueil</a>
-        <a href="./produits.html">Produits</a>
-        <a href="./about.html">À propos</a>
-        <a href="./contact.html">Contact</a>
-      </nav>
-
-    </div>
-
-  </header>
+    <nav
+      class="main-navigation"
+      id="main-navigation"
+      aria-label="Navigation principale"
+    >
+      <a href="#accueil">Accueil</a>
+      <a href="#catalogue">Produits</a>
+      <a href="#about">À propos</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
 
   <main>
-
-    <!-- HERO -->
-
-    <section
-      class="hero"
-      id="accueil"
-    >
+    <section class="hero" id="accueil">
       <div class="hero-copy">
-
-        <p class="eyebrow">
-          MEN'S CORNER WATCHES
-        </p>
-
-        <h1>
-          Des montres pour chaque style.
-        </h1>
-
-        <p class="lead">
-          Une sélection de montres au design soigné,
-          disponibles sur commande au Maroc.
-        </p>
-
+        <p class="eyebrow">MEN'S CORNER WATCHES</p>
+        <h1>Des montres pour chaque style.</h1>
+        <p class="lead">Une selection de montres au design soigne, disponibles sur commande au Maroc.</p>
         <div class="actions">
-
-          <a
-            class="button primary"
-            href="https://wa.me/212708275864?text=Bonjour%20MC%20Watches%2C%20je%20souhaite%20d%C3%A9couvrir%20les%20mod%C3%A8les%20disponibles."
-            target="_blank"
-            rel="noopener"
-          >
-            Voir les modèles sur WhatsApp
-          </a>
-
-          <a
-            class="button secondary"
-            href="https://www.instagram.com/mcowatches/"
-            target="_blank"
-            rel="noopener"
-          >
-            Suivre @mcowatches
-          </a>
-
+          <a class="button primary" href="https://wa.me/212708275864?text=Bonjour%20MC%20Watches%2C%20je%20souhaite%20decouvrir%20les%20modeles%20disponibles." target="_blank" rel="noopener">Voir les modeles sur WhatsApp</a>
+          <a class="button secondary" href="https://www.instagram.com/mcowatches/" target="_blank" rel="noopener">Suivre @mcowatches</a>
         </div>
-
       </div>
-
-      <div class="visual">
-
-        <img
-          src="./HOME.png"
-          alt="Sélection MC Watches"
-          class="hero-image"
-        >
-
-      </div>
-
+<div class="visual">
+  <img src="HOME.png" alt="MC Watches" class="hero-image">
+</div>
     </section>
 
-    <!-- CATALOGUE -->
-
-    <section
-      class="catalogue-section"
-      id="catalogue"
-    >
-      <p class="eyebrow">
-        CATALOGUE
-      </p>
-
-      <h2>
-        Découvrez nos produits
-      </h2>
-
-      <div
-        class="catalogue-grid"
-        id="catalogue-produits"
-      ></div>
-    </section>
-
-    <!-- NOUVEAUX PRODUITS -->
-
-    <section
-      class="section"
-      id="collections"
-    >
-      <p class="eyebrow">
-        COLLECTIONS
-      </p>
-
-      <h2>
-        Nouveaux produits bientôt disponibles.
-      </h2>
-
+    
+<section class="catalogue-section" id="catalogue">
+  <p class="eyebrow">CATALOGUE</p>
+  <h2>Découvrez nos produits</h2>
+  <div class="catalogue-grid" id="catalogue-produits"></div>
+</section>
+     <section class="section" id="collections">
+      <p class="eyebrow">COLLECTIONS</p>
+      <h2><h2>Nouveaux produits bientôt disponibles.</h2>
       <p class="section-copy">
-        De nouveaux modèles et accessoires arrivent prochainement.
-        Suivez-nous sur Instagram pour découvrir les prochaines nouveautés.
-      </p>
-
+  De nouveaux modèles et accessoires arrivent prochainement. Suivez-nous sur Instagram pour découvrir les prochaines nouveautés.
+</p>
       <div class="cards">
-
-        <article class="card">
-          <span>01</span>
-
-          <h3>
-            Style moderne
-          </h3>
-
-          <p>
-            Des lignes nettes pour un look quotidien.
-          </p>
-        </article>
-
-        <article class="card">
-          <span>02</span>
-
-          <h3>
-            Style classique
-          </h3>
-
-          <p>
-            Des designs sobres, faciles à porter.
-          </p>
-        </article>
-
-        <article class="card">
-          <span>03</span>
-
-          <h3>
-            Choix de couleurs
-          </h3>
-
-          <p>
-            Disponibilité confirmée avant chaque commande.
-          </p>
-        </article>
-
+        <article class="card"><span>01</span><h3>Style moderne</h3><p>Des lignes nettes pour un look quotidien.</p></article>
+        <article class="card"><span>02</span><h3>Style classique</h3><p>Des designs sobres, faciles a porter.</p></article>
+        <article class="card"><span>03</span><h3>Choix de couleurs</h3><p>Disponibilite confirmee avant chaque commande.</p></article>
       </div>
-
     </section>
+    <section class="section about-section" id="about">
+  <div class="about-content">
+    <p class="eyebrow">À PROPOS DE NOUS</p>
 
-    <!-- À PROPOS -->
+    <h2>Des produits sélectionnés pour votre style.</h2>
 
-    <section
-      class="section about-section"
-      id="about"
-    >
-      <div class="about-content">
+    <p>
+      MC Watches est une boutique basée à Casablanca proposant une sélection
+      de montres et de boîtes de rangement à des prix accessibles.
+    </p>
 
-        <p class="eyebrow">
-          À PROPOS DE NOUS
-        </p>
+    <p>
+      Notre objectif est de vous proposer différents styles et couleurs,
+      avec une commande simple, une livraison gratuite partout au Maroc
+      et le paiement à la livraison.
+    </p>
 
-        <h2>
-          Des produits sélectionnés pour votre style.
-        </h2>
+    #catalogue
+      Découvrir nos produits
+    </a>
+  </div>
 
-        <p>
-          MC Watches est une boutique basée à Casablanca proposant
-          une sélection de montres et de boîtes de rangement à des
-          prix accessibles.
-  Des modèles choisis pour leur design et leur style.
-          </span>
-        </article>
+  <div class="about-values">
+    <article class="about-value">
+      <strong>Produits sélectionnés</strong>
+      <span>Des modèles choisis pour leur design et leur style.</span>
+    </article>
 
-        <article class="about-value">
-          <strong>
-            Livraison gratuite
-          </strong>
+    <article class="about-value">
+      <strong>Livraison gratuite</strong>
+      <span>La livraison est offerte partout au Maroc.</span>
+    </article>
 
-          <span>
-            La livraison est offerte partout au Maroc.
-          </span>
-        </article>
+    <article class="about-value">
+      <strong>Commande simple</strong>
+      <span>Commandez sur le site, par formulaire ou sur WhatsApp.</span>
+    </article>
 
-        <article class="about-value">
-          <strong>
-            Commande simple
-          </strong>
-
-          <span>
-            Commandez sur le site, par formulaire ou sur WhatsApp.
-          </span>
-        </article>
-
-        <article class="about-value">
-          <strong>
-            Paiement à la livraison
-          </strong>
-
-          <span>
-            Payez votre commande au moment de la réception.
-          </span>
-        </article>
-
-      </div>
-
-    </section>
-
-    <!-- COMMENT COMMANDER -->
-
-    <section
-      class="section order"
-      id="commande"
-    >
+    <article class="about-value">
+      <strong>Paiement à la livraison</strong>
+      <span>Payez votre commande au moment de la réception.</span>
+    </article>
+  </div>
+</section>
+    <section class="section order" id="commande">
       <div>
-
-        <p class="eyebrow">
-          COMMANDER
-        </p>
-
-        <h2>
-          Simple et direct.
-        </h2>
-
+        <p class="eyebrow">COMMANDER</p>
+        <h2>Simple et direct.</h2>
       </div>
-
       <ol>
-
-        <li>
-          <strong>
-            Choisissez
-          </strong>
-
-          <span>
-            Consultez les modèles et sélectionnez votre couleur.
-          </span>
-        </li>
-
-        <li>
-          <strong>
-            Confirmez
-          </strong>
-
-          <span>
-            Validez le modèle, la couleur, le prix et vos coordonnées.
-          </span>
-        </li>
-
-        <li>
-          <strong>
-            Recevez
-          </strong>
-
-          <span>
-            Recevez votre commande et payez au moment de la livraison.
-          </span>
-        </li>
-
+        <li><strong>Choisissez</strong><span>Demandez les modeles disponibles.</span></li>
+        <li><strong>Confirmez</strong><span>Validez le modele, la couleur, le prix et la livraison.</span></li>
+        <li><strong>Recevez</strong><span>Paiement a la livraison selon les conditions confirmees.</span></li>
       </ol>
-
     </section>
-
-    <!-- RÉASSURANCE -->
+   
 
     <section class="section reassurance">
-
-      <div>
-        <strong>
-          Casablanca
-        </strong>
-
-        <span>
-          Base locale
-        </span>
-      </div>
-
-      <div>
-        <strong>
-          Gratuite
-        </strong>
-
-        <span>
-          Livraison partout au Maroc
-        </span>
-      </div>
-
-      <div>
-        <strong>
-          COD
-        </strong>
-
-        <span>
-          Paiement à la livraison
-        </span>
-      </div>
-
+      <div><strong>Casablanca</strong><span>Base locale</span></div>
+     <div>
+  <strong>Gratuite</strong>
+  <span>Livraison gratuite partout au Maroc</span>
+</div>
+      <div><strong>COD</strong><span>Paiement a la livraison</span></div>
     </section>
 
-    <!-- CONTACT -->
-
-    <section
-      class="section contact"
-      id="contact"
-    >
-      <p class="eyebrow">
-        CONTACT
-      </p>
-
-      <h2>
-        Une question sur un modèle ?
-      </h2>
-
-      <p>
-        Écrivez-nous. Le prix, la disponibilité et les conditions
-        sont confirmés avant la commande.
-      </p>
-
+    <section class="section contact" id="contact">
+      <p class="eyebrow">CONTACT</p>
+      <h2>Une question sur un modele ?</h2>
+      <p>Ecrivez-nous. Le prix, la disponibilite et les conditions sont confirmes avant la commande.</p>
       <div class="actions">
-
-        https://wa.me/212708275864?text=Bonjour%20MC%20Watches%2C%20j%27ai%20une%20question%20sur%20vos%20mod%C3%A8les.
-          WhatsApp
-        </a>
-
-        <a
-          class="button secondary"
-          href="mailto:mcowatches@gmail.com"
-        >
-          mcowatches@gmail.com
-        </a>
-
-        <a
-          class="button secondary"
-          href="https://www.instagram.com/mcowatches/"
-          target="_blank"
-          rel="noopener"
-        >
-          Instagram
-        </a>
-
+        <a class="button primary" href="https://wa.me/212708275864?text=Bonjour%20MC%20Watches%2C%20j%27ai%20une%20question%20sur%20vos%20modeles." target="_blank" rel="noopener">WhatsApp</a>
+        <a class="button secondary" href="mailto:mcowatches@gmail.com">mcowatches@gmail.com</a>
+        <a class="button primary" href="https://www.instagram.com/mcowatches/">Instagram</a>
       </div>
-
     </section>
-
   </main>
 
-  <!-- DONNÉES DES PRODUITS -->
 
-  ./produits.js?v=50script>
-
-  <!-- CATALOGUE DE LA PAGE D’ACCUEIL -->
-
-  ./catalogue.js?v=50script>
-
-  <!-- MENU DÉROULANT -->
-
+<script src="./catalogue.js?v=10" defer></script>
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const menuButton =
-        document.querySelector(".menu-toggle");
+  const menuButton = document.querySelector(".menu-toggle");
+  const navigation = document.querySelector(".main-navigation");
 
-      const navigation =
-        document.querySelector(".main-navigation");
+  if (menuButton && navigation) {
+    menuButton.addEventListener("click", () => {
+      const isOpen = navigation.classList.toggle("open");
 
-      if (!menuButton || !navigation) {
-        return;
-      }
-
-      function closeMenu() {
-        navigation.classList.remove("open");
-
-        menuButton.setAttribute(
-          "aria-expanded",
-          "false"
-        );
-      }
-
-      menuButton.addEventListener(
-        "click",
-        function (event) {
-          event.stopPropagation();
-
-          const isOpen =
-            navigation.classList.toggle("open");
-
-          menuButton.setAttribute(
-            "aria-expanded",
-            String(isOpen)
-          );
-        }
-      );
-
-      navigation
-        .querySelectorAll("a")
-        .forEach(function (link) {
-          link.addEventListener(
-            "click",
-            closeMenu
-          );
-        });
-
-      document.addEventListener(
-        "click",
-        function (event) {
-          const clickInsideMenu =
-            navigation.contains(event.target) ||
-            menuButton.contains(event.target);
-
-          if (!clickInsideMenu) {
-            closeMenu();
-          }
-        }
-      );
-
-      document.addEventListener(
-        "keydown",
-        function (event) {
-          if (event.key === "Escape") {
-            closeMenu();
-            menuButton.focus();
-          }
-        }
-      );
+      menuButton.setAttribute("aria-expanded", String(isOpen));
     });
-  </script>
 
+    navigation.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        navigation.classList.remove("open");
+        menuButton.setAttribute("aria-expanded", "false");
+      });
+    });
+  }
+</script>
 </body>
-
 </html>
