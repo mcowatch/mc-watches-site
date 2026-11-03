@@ -16,8 +16,8 @@
 
   <title>MC Watches | Des montres pour chaque style</title>
 
-  <link rel="stylesheet" href="styles.css">
-  <link rel="stylesheet" href="catalogue.css">
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./catalogue.css">
 </head>
 
 <body>
@@ -42,11 +42,11 @@
 
     <a
       class="brand"
-      href="index.html"
+      href="./index.html"
       aria-label="Accueil MC Watches"
     >
       <img
-        src="LOGOMC.png"
+        src="./LOGOMC.png"
         alt="Logo MC Watches"
         class="header-logo"
       >
@@ -75,10 +75,10 @@
         id="main-navigation"
         aria-label="Navigation principale"
       >
-        <a href="index.html">Accueil</a>
-        <a href="produits.html">Produits</a>
-        <a href="about.html">À propos</a>
-        <a href="contact.html">Contact</a>
+        <a href="./index.html">Accueil</a>
+        <a href="./produits.html">Produits</a>
+        <a href="./about.html">À propos</a>
+        <a href="./contact.html">Contact</a>
       </nav>
 
     </div>
@@ -104,7 +104,8 @@
         </h1>
 
         <p class="lead">
-          Une sélection de montres au design soigné, disponibles sur commande au Maroc.
+          Une sélection de montres au design soigné,
+          disponibles sur commande au Maroc.
         </p>
 
         <div class="actions">
@@ -132,11 +133,13 @@
       </div>
 
       <div class="visual">
+
         <img
-          src="HOME.png"
+          src="./HOME.png"
           alt="Sélection MC Watches"
           class="hero-image"
         >
+
       </div>
 
     </section>
@@ -219,6 +222,7 @@
         </article>
 
       </div>
+
     </section>
 
     <!-- À PROPOS -->
@@ -238,29 +242,10 @@
         </h2>
 
         <p>
-          MC Watches est une boutique basée à Casablanca proposant une sélection
-          de montres et de boîtes de rangement à des prix accessibles.
-        </p>
-
-        <p>
-          Notre objectif est de vous proposer différents styles et couleurs,
-          avec une commande simple, une livraison 
-          href="produits.html"
-        >
-          Découvrir nos produits
-        </a>
-
-      </div>
-
-      <div class="about-values">
-
-        <article class="about-value">
-          <strong>
-            Produits sélectionnés
-          </strong>
-
-          <span>
-            Des modèles choisis pour leur design et leur style.
+          MC Watches est une boutique basée à Casablanca proposant
+          une sélection de montres et de boîtes de rangement à des
+          prix accessibles.
+  Des modèles choisis pour leur design et leur style.
           </span>
         </article>
 
@@ -295,6 +280,7 @@
         </article>
 
       </div>
+
     </section>
 
     <!-- COMMENT COMMANDER -->
@@ -304,6 +290,7 @@
       id="commande"
     >
       <div>
+
         <p class="eyebrow">
           COMMANDER
         </p>
@@ -311,12 +298,15 @@
         <h2>
           Simple et direct.
         </h2>
+
       </div>
 
       <ol>
 
         <li>
-          <strong>Choisissez</strong>
+          <strong>
+            Choisissez
+          </strong>
 
           <span>
             Consultez les modèles et sélectionnez votre couleur.
@@ -324,7 +314,9 @@
         </li>
 
         <li>
-          <strong>Confirmez</strong>
+          <strong>
+            Confirmez
+          </strong>
 
           <span>
             Validez le modèle, la couleur, le prix et vos coordonnées.
@@ -332,7 +324,9 @@
         </li>
 
         <li>
-          <strong>Recevez</strong>
+          <strong>
+            Recevez
+          </strong>
 
           <span>
             Recevez votre commande et payez au moment de la livraison.
@@ -340,6 +334,7 @@
         </li>
 
       </ol>
+
     </section>
 
     <!-- RÉASSURANCE -->
@@ -347,18 +342,33 @@
     <section class="section reassurance">
 
       <div>
-        <strong>Casablanca</strong>
-        <span>Base locale</span>
+        <strong>
+          Casablanca
+        </strong>
+
+        <span>
+          Base locale
+        </span>
       </div>
 
       <div>
-        <strong>Gratuite</strong>
-        <span>Livraison partout au Maroc</span>
+        <strong>
+          Gratuite
+        </strong>
+
+        <span>
+          Livraison partout au Maroc
+        </span>
       </div>
 
       <div>
-        <strong>COD</strong>
-        <span>Paiement à la livraison</span>
+        <strong>
+          COD
+        </strong>
+
+        <span>
+          Paiement à la livraison
+        </span>
       </div>
 
     </section>
@@ -378,7 +388,8 @@
       </h2>
 
       <p>
-        Écrivez-nous. Le prix, la disponibilité et les conditions sont confirmés avant la commande.
+        Écrivez-nous. Le prix, la disponibilité et les conditions
+        sont confirmés avant la commande.
       </p>
 
       <div class="actions">
@@ -404,20 +415,28 @@
         </a>
 
       </div>
+
     </section>
 
   </main>
 
-  <!-- CATALOGUE DYNAMIQUE -->
+  <!-- DONNÉES DES PRODUITS -->
 
-  ./catalogue.js?v=11script>
+  ./produits.js?v=50script>
+
+  <!-- CATALOGUE DE LA PAGE D’ACCUEIL -->
+
+  ./catalogue.js?v=50script>
 
   <!-- MENU DÉROULANT -->
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const menuButton = document.querySelector(".menu-toggle");
-      const navigation = document.querySelector(".main-navigation");
+      const menuButton =
+        document.querySelector(".menu-toggle");
+
+      const navigation =
+        document.querySelector(".main-navigation");
 
       if (!menuButton || !navigation) {
         return;
@@ -425,42 +444,59 @@
 
       function closeMenu() {
         navigation.classList.remove("open");
-        menuButton.setAttribute("aria-expanded", "false");
-      }
-
-      menuButton.addEventListener("click", function (event) {
-        event.stopPropagation();
-
-        const isOpen = navigation.classList.toggle("open");
 
         menuButton.setAttribute(
           "aria-expanded",
-          String(isOpen)
+          "false"
         );
-      });
+      }
+
+      menuButton.addEventListener(
+        "click",
+        function (event) {
+          event.stopPropagation();
+
+          const isOpen =
+            navigation.classList.toggle("open");
+
+          menuButton.setAttribute(
+            "aria-expanded",
+            String(isOpen)
+          );
+        }
+      );
 
       navigation
         .querySelectorAll("a")
         .forEach(function (link) {
-          link.addEventListener("click", closeMenu);
+          link.addEventListener(
+            "click",
+            closeMenu
+          );
         });
 
-      document.addEventListener("click", function (event) {
-        const clickInsideMenu =
-          navigation.contains(event.target) ||
-          menuButton.contains(event.target);
+      document.addEventListener(
+        "click",
+        function (event) {
+          const clickInsideMenu =
+            navigation.contains(event.target) ||
+            menuButton.contains(event.target);
 
-        if (!clickInsideMenu) {
-          closeMenu();
+          if (!clickInsideMenu) {
+            closeMenu();
+          }
         }
-      });
+      );
 
-      document.addEventListener("keydown", function (event) {
-        if (event.key === "Escape") {
-          closeMenu();
-          menuButton.focus();
+      document.addEventListener(
+        "keydown",
+        function (event) {
+          if (event.key === "Escape") {
+            closeMenu();
+            menuButton.focus();
+          }
         }
-      });
+      );
     });
   </script>
 
