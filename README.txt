@@ -18,6 +18,17 @@ FICHIERS À MODIFIER
   styles.css      tout le design (couleurs en haut du fichier, section :root)
   site.js         comportement (menu, carrousels, fiche produit)
 
+AJOUTER UNE COLLECTION
+  1. Déposez ses photos dans un nouveau dossier : images/mc04
+  2. Dans data.js, copiez un bloc "montre" (de { type: "montre" jusqu'à son }),
+     collez-le à la suite et changez reference, nom, prix, couleurs, photos.
+  Tout le reste se met à jour tout seul : cartes de l'accueil et de la page
+  produits, fiche produit, formulaire de commande, "Quatre collections" sur
+  l'accueil.
+  À faire à la main (pour Google) : ajouter la nouvelle fiche dans sitemap.xml
+  (copier une ligne produit.html?ref=...) ; les descriptions des pages
+  mentionnent MC-01, MC-02, MC-03 dans produits.html (balise description).
+
 AJOUTER UNE COULEUR OU UNE PHOTO
   1. Déposez la photo dans le bon dossier : images/mc01, mc02, mc03...
   2. Ajoutez son chemin dans data.js, dans la liste "photos" de la couleur.
@@ -40,13 +51,19 @@ AVANT LE LANCEMENT (à confirmer par vous)
     garantie sans les avoir vérifiées.
 
 COMMANDE SUR LE SITE
-  Le bouton "Commander" ouvre un formulaire (nom, téléphone, ville, adresse,
-  quantité). Il ouvre ensuite WhatsApp avec le message de commande déjà écrit.
-  Ces commandes arrivent sur WhatsApp ; le formulaire Google reste proposé en
-  alternative dans la même fenêtre.
+  Le bouton "Commander" ouvre un formulaire (prénom, nom, téléphone, ville,
+  adresse, quantité). Au clic sur "Commander", la commande est envoyée
+  directement dans votre formulaire Google (les réponses arrivent dans
+  Google Forms / Google Sheets). WhatsApp reste proposé en option dans la
+  même fenêtre ("Je préfère commander sur WhatsApp").
+  Les identifiants des champs du formulaire Google sont dans data.js
+  (bloc "formulaire"). Si vous ajoutez ou renommez une question dans
+  Google Forms, mettez à jour ces identifiants.
 
-PAGE LIVRAISON : À COMPLÉTER
-  Les réponses "délai de livraison" et "échange / retour" disent seulement
-  que les conditions sont confirmées avant la commande. Quand vous aurez vos
-  vraies règles, modifiez ces deux réponses dans livraison.html (et le même
-  texte dans le bloc <script type="application/ld+json"> du même fichier).
+PAGE LIVRAISON : VALEURS À VÉRIFIER
+  Délais (24 à 48 h Casablanca/Rabat, 3 jours ailleurs), échange 45 DH,
+  retour 80 DH et délai de 7 jours sont écrits directement dans :
+  index.html, produits.html, produit.html, livraison.html, 404.html (bandeau
+  du haut) et site.js (fiche produit). Si une règle change, modifiez ces
+  fichiers. Dans livraison.html, le même texte existe aussi dans le bloc
+  <script type="application/ld+json"> (pour Google).

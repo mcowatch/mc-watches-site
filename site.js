@@ -26,31 +26,6 @@
   const lienWhatsApp = (message) =>
     `https://wa.me/${MC.whatsapp}?text=${encodeURIComponent(message)}`;
 
-  /* Lien du formulaire Google déjà rempli. `client` est facultatif :
-     { prenom, nom, tel, ville, adresse, qte }. Les champs vides ou sans
-     identifiant dans data.js sont simplement ignorés.                 */
-  const lienFormulaire = (reference, couleur, montant, client = {}) => {
-    const f = MC.formulaire;
-    const valeurs = [
-      [f.reference, reference],
-      [f.couleur, couleur],
-      [f.prix, montant],
-      [f.prenom, client.prenom],
-      [f.nom, client.nom],
-      [f.telephone, client.tel],
-      [f.ville, client.ville],
-      [f.adresse, client.adresse],
-      [f.quantite, client.qte]
-    ];
-    return (
-      `${f.base}?usp=pp_url` +
-      valeurs
-        .filter(([id, v]) => id && v !== undefined && v !== null && String(v).trim() !== "")
-        .map(([id, v]) => `&${id}=${encodeURIComponent(String(v).trim())}`)
-        .join("")
-    );
-  };
-
   const messageCommande = (p, couleur) =>
     couleur
       ? `Bonjour MC Watches, je souhaite commander ${p.reference}, couleur ${couleur}, au prix de ${p.prix} DH. Pouvez-vous confirmer la disponibilité et la livraison ?`
@@ -65,8 +40,10 @@
   const ICON_NEXT = '<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
   /* ---------- Fenêtre de commande ----------
-     Le client remplit ses coordonnées ; un message WhatsApp complet
-     (produit, couleur, quantité, adresse) s'ouvre, prêt à envoyer.   */
+     Le client remplit ses coordonnées et clique sur « Commander » : la
+     commande (produit, couleur, quantité, total, adresse) est envoyée
+     directement dans le formulaire Google. WhatsApp reste proposé en
+     option (« Je préfère commander sur WhatsApp »).                   */
 
   const messageQuestion = (p, couleur) =>
     `Bonjour MC Watches, j'ai une question sur ${p.nom}${couleur ? `, couleur ${couleur}` : ""}.`;
@@ -128,21 +105,21 @@
 
           ${champs}
 
-          <button type="submit" class="btn btn-solid order-submit">Envoyer ma commande sur WhatsApp</button>
-          <p class="order-fine">WhatsApp s'ouvre avec votre message déjà écrit : vous pouvez le relire avant de l'envoyer. Le prix, la disponibilité et la livraison sont confirmés avant la commande.</p>
-          <p class="order-alt"><a data-alt-form target="_blank" rel="noopener">Commander avec le formulaire Google</a></p>
+          <p class="field-error order-send-error" role="alert"></p>
+          <button type="submit" class="btn btn-solid order-submit">Commander</button>
+          <p class="order-fine">Votre commande nous est envoyée directement. Nous vous contactons pour confirmer la disponibilité et la livraison, puis vous payez à la réception.</p>
+          <p class="order-alt"><a data-alt-wa target="_blank" rel="noopener">Je préfère commander sur WhatsApp</a></p>
         </form>
 
         <div class="order-done" hidden>
           <div class="order-head">
-            <h2 id="order-done-title">Votre message est prêt</h2>
+            <h2 id="order-done-title">Commande envoyée</h2>
             <button type="button" class="order-close" aria-label="Fermer">${ICON_CLOSE}</button>
           </div>
-          <p>Envoyez-le dans WhatsApp pour valider votre demande. Nous vous confirmons ensuite le prix, la disponibilité et la livraison.</p>
-          <a class="btn btn-solid" data-open-wa target="_blank" rel="noopener">Ouvrir WhatsApp</a>
-          <p class="order-fine order-fine-tight">Le formulaire Google est aussi déjà rempli avec vos informations : il ne reste qu'à l'envoyer.</p>
-          <a class="btn btn-ghost" data-open-form target="_blank" rel="noopener">Ouvrir le formulaire Google</a>
-          <button type="button" class="btn btn-ghost order-close-2">Fermer</button>
+          <p>Merci ! Nous vous contactons très vite pour confirmer la disponibilité et la livraison. Vous payez à la réception de votre montre.</p>
+          <button type="button" class="btn btn-solid order-close-2">Fermer</button>
+          <p class="order-fine order-fine-tight">Pas de nouvelles de notre part ?</p>
+          <a class="btn btn-ghost" data-open-wa target="_blank" rel="noopener">Nous écrire sur WhatsApp</a>
         </div>
       </dialog>`);
 
@@ -177,19 +154,54 @@
       };
     };
 
-    /* Lien du formulaire Google, rempli avec la saisie actuelle. */
-    const lienGoogle = () => {
+    /* Message WhatsApp : détaillé si tout est rempli, simple sinon. */
+    const lienWa = () => {
       const c = saisie();
       const { p, couleur } = etat;
-      return lienFormulaire(p.reference, couleur || p.couleur || "", p.prix * c.qte, c);
+      const complet = c.prenom && c.nom && c.tel && c.ville && c.adresse;
+      return lienWhatsApp(complet ? messageDetaille(p, couleur, c.qte, c) : messageCommande(p, couleur));
     };
 
-    // Le lien est recalculé juste avant l'ouverture : il contient toujours
-    // les dernières informations saisies, même si le client a tout modifié.
-    const lienAlt = el.querySelector("[data-alt-form]");
+    // Le lien WhatsApp (option « je préfère ») est recalculé juste avant
+    // l'ouverture, avec les dernières informations saisies.
+    const lienAlt = el.querySelector("[data-alt-wa]");
     ["pointerdown", "focus", "click"].forEach((ev) =>
-      lienAlt.addEventListener(ev, () => { lienAlt.href = lienGoogle(); })
+      lienAlt.addEventListener(ev, () => { lienAlt.href = lienWa(); })
     );
+
+    const boutonEnvoi = form.querySelector(".order-submit");
+    const erreurEnvoi = form.querySelector(".order-send-error");
+
+    /* Envoie la commande au formulaire Google, sans quitter le site.
+       (mode no-cors : Google ne renvoie pas de réponse lisible, on sait
+       seulement si l'envoi a pu partir.)                              */
+    const envoyerCommande = (c) => {
+      const f = MC.formulaire;
+      const { p, couleur } = etat;
+      const corps = new URLSearchParams();
+      [
+        [f.reference, p.reference],
+        [f.couleur, couleur || p.couleur || ""],
+        [f.prix, p.prix * c.qte],
+        [f.prenom, c.prenom],
+        [f.nom, c.nom],
+        [f.telephone, c.tel],
+        [f.ville, c.ville],
+        [f.adresse, c.adresse],
+        [f.quantite, c.qte]
+      ].forEach(([id, v]) => { if (id && String(v).trim() !== "") corps.append(id, String(v).trim()); });
+      corps.append("fvv", "1");
+      corps.append("pageHistory", "0");
+
+      const ctrl = typeof AbortController === "function" ? new AbortController() : null;
+      const minuteur = setTimeout(() => ctrl && ctrl.abort(), 15000);
+      return fetch(f.base.replace(/\/viewform.*$/, "/formResponse"), {
+        method: "POST",
+        mode: "no-cors",
+        body: corps,
+        signal: ctrl ? ctrl.signal : undefined
+      }).finally(() => clearTimeout(minuteur));
+    };
 
     const fermer = () => el.close();
     el.querySelectorAll(".order-close, .order-close-2").forEach((b) => b.addEventListener("click", fermer));
@@ -210,15 +222,28 @@
       });
       if (premier) { premier.focus(); return; }
 
-      const qte = Number(form.elements.qte.value) || 1;
-      const lien = lienWhatsApp(messageDetaille(etat.p, etat.couleur, qte, valeurs));
-      done.querySelector("[data-open-wa]").href = lien;
-      done.querySelector("[data-open-form]").href = lienGoogle();
-      window.open(lien, "_blank", "noopener");
-      form.hidden = true;
-      done.hidden = false;
-      el.setAttribute("aria-labelledby", "order-done-title");
-      done.querySelector(".btn").focus();
+      const c = saisie();
+      done.querySelector("[data-open-wa]").href = lienWhatsApp(messageDetaille(etat.p, etat.couleur, c.qte, valeurs));
+      erreurEnvoi.textContent = "";
+      boutonEnvoi.disabled = true;
+      boutonEnvoi.textContent = "Envoi en cours…";
+
+      envoyerCommande(c)
+        .then(() => {
+          form.hidden = true;
+          done.hidden = false;
+          el.setAttribute("aria-labelledby", "order-done-title");
+          done.querySelector(".btn").focus();
+        })
+        .catch(() => {
+          erreurEnvoi.textContent =
+            "L'envoi n'a pas abouti. Vérifiez votre connexion et réessayez, ou commandez sur WhatsApp ci-dessous.";
+          lienAlt.href = lienWa();
+        })
+        .finally(() => {
+          boutonEnvoi.disabled = false;
+          boutonEnvoi.textContent = "Commander";
+        });
     });
 
     return {
@@ -231,7 +256,8 @@
         el.setAttribute("aria-labelledby", "order-title");
         form.querySelectorAll(".field-error").forEach((x) => (x.textContent = ""));
         form.querySelectorAll("[aria-invalid]").forEach((x) => x.removeAttribute("aria-invalid"));
-        lienAlt.href = lienGoogle();
+        erreurEnvoi.textContent = "";
+        lienAlt.href = lienWa();
         el.showModal();
         form.elements.prenom.focus();
       },
@@ -532,7 +558,7 @@
               <div><dt>Paiement</dt><dd>À la livraison</dd></div>
               <div><dt>Échange ou retour</dt><dd>Sans motif, sous 7 jours</dd></div>
             </dl>
-            <p class="service-note">Le prix et la disponibilité sont confirmés avant la commande. <a href="livraison.html">Voir toutes les conditions</a></p>
+            <p class="service-note">Le prix et la disponibilité sont confirmés avec vous avant l'envoi. <a href="livraison.html">Voir toutes les conditions</a></p>
           </div>
         </div>
       </div>

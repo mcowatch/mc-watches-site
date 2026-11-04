@@ -1512,3 +1512,8 @@ main { flex: 1 0 auto; }
 @media (prefers-reduced-motion: reduce) {
   .promo-track { animation: none; }
 }
+
+/* ---------- Fenêtre de commande : envoi ---------- */
+
+.order-submit[disabled] { opacity: 0.7; cursor: progress; }
+.order-send-error { margin: 0 0 12px; }
