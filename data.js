@@ -20,7 +20,13 @@ window.MC = {
     base: "https://docs.google.com/forms/d/e/1FAIpQLSerO_SjWbLOsfbOhFkFcDC0gSQHaS_0Ss3w8ePUO94eo3wCzQ/viewform",
     reference: "entry.1548138927",
     couleur: "entry.549343203",
-    prix: "entry.1447288487"
+    prix: "entry.1447288487",
+    nom: "entry.663554986",
+    prenom: "entry.443864583",
+    ville: "entry.2138251804",
+    telephone: "entry.1484696432",
+    adresse: "entry.573979871",
+    quantite: "entry.792405374"
   },
 
   /* type "montre" : plusieurs couleurs (couleurs) + photos communes
@@ -80,6 +86,7 @@ window.MC = {
       categorie: "Accessoire",
       reference: "Boîte de rangement - 6 montres",
       nom: "Boîte de rangement - 6 montres",
+      nomCourt: "Boîte 6 montres",
       prix: 219,
       couleur: "Noir",
       photos: ["images/boite-6/BOITEPETIT1.jpg", "images/boite-6/BOITEPETIT2.jpg", "images/boite-6/BOITEPETIT3.jpg", "images/boite-6/BOITEPETIT4.jpg"]
@@ -89,6 +96,7 @@ window.MC = {
       categorie: "Accessoire",
       reference: "Boîte de rangement - 12 montres",
       nom: "Boîte de rangement - 12 montres",
+      nomCourt: "Boîte 12 montres",
       prix: 299,
       couleur: "Noir",
       photos: ["images/boite-12/BG1.jpg", "images/boite-12/BG2.jpg", "images/boite-12/BG3.jpg"]

@@ -26,13 +26,28 @@
   const lienWhatsApp = (message) =>
     `https://wa.me/${MC.whatsapp}?text=${encodeURIComponent(message)}`;
 
-  const lienFormulaire = (reference, couleur, montant) => {
+  /* Lien du formulaire Google déjà rempli. `client` est facultatif :
+     { prenom, nom, tel, ville, adresse, qte }. Les champs vides ou sans
+     identifiant dans data.js sont simplement ignorés.                 */
+  const lienFormulaire = (reference, couleur, montant, client = {}) => {
     const f = MC.formulaire;
+    const valeurs = [
+      [f.reference, reference],
+      [f.couleur, couleur],
+      [f.prix, montant],
+      [f.prenom, client.prenom],
+      [f.nom, client.nom],
+      [f.telephone, client.tel],
+      [f.ville, client.ville],
+      [f.adresse, client.adresse],
+      [f.quantite, client.qte]
+    ];
     return (
       `${f.base}?usp=pp_url` +
-      `&${f.reference}=${encodeURIComponent(reference)}` +
-      `&${f.couleur}=${encodeURIComponent(couleur)}` +
-      `&${f.prix}=${encodeURIComponent(montant)}`
+      valeurs
+        .filter(([id, v]) => id && v !== undefined && v !== null && String(v).trim() !== "")
+        .map(([id, v]) => `&${id}=${encodeURIComponent(String(v).trim())}`)
+        .join("")
     );
   };
 
@@ -66,7 +81,7 @@
       `Prix : ${p.prix} DH (livraison gratuite)`,
       `Total : ${p.prix * qte} DH`,
       "",
-      `Nom : ${f.nom}`,
+      `Nom : ${f.prenom} ${f.nom}`,
       `Téléphone : ${f.tel}`,
       `Ville : ${f.ville}`,
       `Adresse : ${f.adresse}`,
@@ -77,7 +92,8 @@
   const telValide = (v) => /^(?:\+?212|0)[5-7]\d{8}$/.test(v.replace(/[\s.\-()]/g, ""));
 
   const CHAMPS = [
-    { id: "nom", label: "Nom complet", auto: "name", erreur: "Indiquez votre nom." },
+    { id: "prenom", label: "Prénom", auto: "given-name", erreur: "Indiquez votre prénom." },
+    { id: "nom", label: "Nom", auto: "family-name", erreur: "Indiquez votre nom." },
     { id: "tel", label: "Téléphone", auto: "tel", type: "tel", aide: "Exemple : 06 12 34 56 78",
       erreur: "Entrez un numéro marocain valide, par exemple 06 12 34 56 78." },
     { id: "ville", label: "Ville", auto: "address-level2", erreur: "Indiquez votre ville." },
@@ -124,6 +140,8 @@
           </div>
           <p>Envoyez-le dans WhatsApp pour valider votre demande. Nous vous confirmons ensuite le prix, la disponibilité et la livraison.</p>
           <a class="btn btn-solid" data-open-wa target="_blank" rel="noopener">Ouvrir WhatsApp</a>
+          <p class="order-fine order-fine-tight">Le formulaire Google est aussi déjà rempli avec vos informations : il ne reste qu'à l'envoyer.</p>
+          <a class="btn btn-ghost" data-open-form target="_blank" rel="noopener">Ouvrir le formulaire Google</a>
           <button type="button" class="btn btn-ghost order-close-2">Fermer</button>
         </div>
       </dialog>`);
@@ -149,6 +167,30 @@
       });
     };
 
+    /* Lit ce que le client a déjà saisi dans le formulaire du site. */
+    const saisie = () => {
+      const v = (id) => (form.elements[id] ? form.elements[id].value.trim() : "");
+      return {
+        prenom: v("prenom"), nom: v("nom"), tel: v("tel"),
+        ville: v("ville"), adresse: v("adresse"),
+        qte: Number(v("qte")) || 1
+      };
+    };
+
+    /* Lien du formulaire Google, rempli avec la saisie actuelle. */
+    const lienGoogle = () => {
+      const c = saisie();
+      const { p, couleur } = etat;
+      return lienFormulaire(p.reference, couleur || p.couleur || "", p.prix * c.qte, c);
+    };
+
+    // Le lien est recalculé juste avant l'ouverture : il contient toujours
+    // les dernières informations saisies, même si le client a tout modifié.
+    const lienAlt = el.querySelector("[data-alt-form]");
+    ["pointerdown", "focus", "click"].forEach((ev) =>
+      lienAlt.addEventListener(ev, () => { lienAlt.href = lienGoogle(); })
+    );
+
     const fermer = () => el.close();
     el.querySelectorAll(".order-close, .order-close-2").forEach((b) => b.addEventListener("click", fermer));
     el.addEventListener("click", (e) => { if (e.target === el) fermer(); });
@@ -171,6 +213,7 @@
       const qte = Number(form.elements.qte.value) || 1;
       const lien = lienWhatsApp(messageDetaille(etat.p, etat.couleur, qte, valeurs));
       done.querySelector("[data-open-wa]").href = lien;
+      done.querySelector("[data-open-form]").href = lienGoogle();
       window.open(lien, "_blank", "noopener");
       form.hidden = true;
       done.hidden = false;
@@ -188,9 +231,9 @@
         el.setAttribute("aria-labelledby", "order-title");
         form.querySelectorAll(".field-error").forEach((x) => (x.textContent = ""));
         form.querySelectorAll("[aria-invalid]").forEach((x) => x.removeAttribute("aria-invalid"));
-        el.querySelector("[data-alt-form]").href = lienFormulaire(p.reference, couleur || p.couleur || "", p.prix);
+        lienAlt.href = lienGoogle();
         el.showModal();
-        form.elements.nom.focus();
+        form.elements.prenom.focus();
       },
       supporte: typeof el.showModal === "function"
     };
@@ -481,11 +524,16 @@
             <a class="btn btn-ghost" data-wa target="_blank" rel="noopener">Poser une question sur WhatsApp</a>
           </div>
 
-          <ul class="facts">
-            <li>Paiement à la livraison</li>
-            <li>Prix, disponibilité et livraison confirmés avant la commande</li>
-            <li><a href="livraison.html">Livraison, paiement et questions fréquentes</a></li>
-          </ul>
+          <div class="service">
+            <p class="service-title">Livraison et retours</p>
+            <dl class="service-list">
+              <div><dt>Casablanca, Rabat et environs</dt><dd>24 à 48 h</dd></div>
+              <div><dt>Autres villes du Maroc</dt><dd>3 jours</dd></div>
+              <div><dt>Paiement</dt><dd>À la livraison</dd></div>
+              <div><dt>Échange ou retour</dt><dd>Sans motif, sous 7 jours</dd></div>
+            </dl>
+            <p class="service-note">Le prix et la disponibilité sont confirmés avant la commande. <a href="livraison.html">Voir toutes les conditions</a></p>
+          </div>
         </div>
       </div>
 
@@ -549,6 +597,29 @@
     majCouleur();
   }
 
+  /* ---------- Textes qui suivent data.js ----------
+     Nombre de collections et prix des boîtes :
+     ils se mettent à jour tout seuls quand vous modifiez data.js. */
+
+  function initAuto() {
+    const montres = MC.produits.filter((p) => p.type === "montre");
+    const boites = MC.produits.filter((p) => p.type === "boite");
+    const mots = ["zéro", "une", "deux", "trois", "quatre", "cinq", "six", "sept", "huit", "neuf", "dix"];
+
+    document.querySelectorAll('[data-auto="nb-collections"]').forEach((e) => {
+      let t = mots[montres.length] || String(montres.length);
+      if (e.hasAttribute("data-cap")) t = t.charAt(0).toUpperCase() + t.slice(1);
+      e.textContent = t;
+    });
+
+    document.querySelectorAll('[data-auto="boites-prix"]').forEach((ul) => {
+      if (!boites.length) return;
+      ul.innerHTML = boites
+        .map((p) => `<li><span>${esc(p.nomCourt || p.nom)}</span><strong>${prix(p.prix)}</strong></li>`)
+        .join("");
+    });
+  }
+
   /* ---------- Bouton WhatsApp flottant ----------
      Il se masque quand l'en-tête d'accueil, le contact ou le pied de page est visible. */
 
@@ -564,9 +635,61 @@
     cibles.forEach((c) => obs.observe(c));
   }
 
+  /* ---------- Bandeau d'infos défilant ----------
+     Les infos du bandeau défilent lentement, en boucle. Le défilement
+     s'arrête au survol, et n'existe pas du tout si le visiteur a demandé
+     « réduire les animations » (le bandeau reste alors fixe).
+     Pour changer la vitesse : modifiez VITESSE (pixels par seconde).   */
+
+  function initBandeau() {
+    const VITESSE = 28;
+    const bandeau = document.querySelector(".promo");
+    const liste = bandeau && bandeau.querySelector(".promo-list");
+    if (!liste) return;
+    const calme = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (calme && calme.matches) return;
+
+    const original = liste.cloneNode(true);
+    let piste = null;
+
+    const construire = () => {
+      if (piste) piste.remove();
+      bandeau.classList.remove("is-marquee");
+      liste.style.display = "";
+
+      // Largeur d'un groupe d'infos, puis nombre de copies pour remplir l'écran.
+      bandeau.classList.add("is-marquee");
+      const probe = original.cloneNode(true);
+      probe.classList.add("promo-measure");
+      bandeau.appendChild(probe);
+      const largeur = probe.getBoundingClientRect().width;
+      probe.remove();
+      if (!largeur) { bandeau.classList.remove("is-marquee"); return; }
+
+      const copies = Math.ceil(bandeau.clientWidth / largeur) + 1;
+      piste = document.createElement("div");
+      piste.className = "promo-track";
+      piste.style.setProperty("--shift", `${largeur}px`);
+      piste.style.setProperty("--duree", `${(largeur / VITESSE).toFixed(1)}s`);
+      for (let i = 0; i < copies; i++) {
+        const c = original.cloneNode(true);
+        if (i > 0) c.setAttribute("aria-hidden", "true");
+        piste.appendChild(c);
+      }
+      liste.style.display = "none";
+      bandeau.appendChild(piste);
+    };
+
+    construire();
+    let t;
+    window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(construire, 200); });
+  }
+
   /* ---------- Démarrage ---------- */
 
+  initAuto();
   initFloat();
+  initBandeau();
   initMenu();
   initCatalogue();
   initFiche();

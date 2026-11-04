@@ -1183,3 +1183,332 @@ body:has(dialog[open]) { overflow: hidden; }
 .faq details p { max-width: 42em; padding: 0 40px 22px 0; color: var(--muted); }
 
 .more-link { margin-top: clamp(28px, 4vw, 40px); }
+
+/* ---------- Page livraison : délais, frais, retours ---------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ship { padding-bottom: clamp(40px, 6vw, 72px); }
+
+.ship-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ship-card {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(22px, 3vw, 32px);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--ink);
+}
+
+.ship-card-dark {
+  color: var(--bone);
+  background: var(--case);
+  border-color: var(--case);
+  border-top-color: var(--gold);
+}
+
+.ship-kicker {
+  color: var(--gold-ink);
+  font-family: var(--f-display);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ship-card-dark .ship-kicker { color: var(--gold); }
+
+.ship-figure {
+  margin-top: 14px;
+  font-family: var(--f-display);
+  font-size: clamp(2.25rem, 4.6vw, 3.25rem);
+  font-weight: 700;
+  font-stretch: 110%;
+  line-height: 1;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+}
+.ship-card-dark .ship-figure { color: var(--gold); }
+
+.ship-note {
+  margin-top: 14px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.ship-card-dark .ship-note { color: var(--bone-muted); }
+
+.ship-foot {
+  margin-top: 16px;
+  color: var(--muted);
+  font-family: var(--f-display);
+  font-size: 0.875rem;
+}
+
+.returns {
+  padding-block: clamp(40px, 6vw, 72px);
+  border-top: 1px solid var(--line);
+}
+.returns .section-head { margin-bottom: clamp(24px, 4vw, 36px); }
+.returns .section-head p { margin-top: 14px; color: var(--muted); }
+
+.returns-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.6fr;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.fee-card {
+  padding: clamp(20px, 3vw, 28px);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--gold-ink);
+}
+.fee-card h3 {
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+}
+.fee {
+  margin-top: 12px;
+  font-family: var(--f-display);
+  font-size: clamp(2rem, 3.6vw, 2.75rem);
+  font-weight: 700;
+  font-stretch: 110%;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.fee-card p:last-child { margin-top: 10px; color: var(--muted); font-size: 1rem; line-height: 1.5; }
+
+.terms {
+  padding: clamp(20px, 3vw, 28px);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--ink);
+}
+.terms h3 { font-size: 1.125rem; }
+
+.check-list {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.check-list li {
+  position: relative;
+  padding-left: 30px;
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.check-list li::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0.32em;
+  width: 7px;
+  height: 12px;
+  border-right: 2px solid var(--gold-ink);
+  border-bottom: 2px solid var(--gold-ink);
+  transform: rotate(40deg);
+}
+
+.callout {
+  margin-top: 16px;
+  padding: 18px 22px;
+  color: var(--ink);
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--gold-ink);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+.callout strong { font-family: var(--f-display); font-weight: 700; }
+
+.how { padding-block: clamp(40px, 6vw, 72px) clamp(32px, 5vw, 56px); border-top: 1px solid var(--line); }
+.how .faq-title { margin-bottom: 24px; }
+
+.how-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 40px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: how;
+}
+.how-steps li {
+  display: flex;
+  flex-direction: column;
+  padding-top: 18px;
+  border-top: 1px solid var(--ink);
+  counter-increment: how;
+}
+.how-steps li::before {
+  content: "0" counter(how);
+  margin-bottom: 10px;
+  color: var(--gold-ink);
+  font-family: var(--f-display);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.how-steps strong { font-family: var(--f-display); font-size: 1.25rem; font-weight: 700; }
+.how-steps span { margin-top: 6px; color: var(--muted); font-size: 1rem; line-height: 1.5; }
+
+@media (max-width: 900px) {
+  .returns-grid { grid-template-columns: 1fr 1fr; }
+  .terms { grid-column: 1 / -1; }
+}
+@media (max-width: 760px) {
+  .ship-grid,
+  .how-steps { grid-template-columns: 1fr; }
+}
+@media (max-width: 480px) {
+  .returns-grid { grid-template-columns: 1fr; }
+}
+
+.order-done .order-fine-tight { margin: 18px 0 0; font-size: 0.9375rem; }
+
+/* ---------- Mise en page : pied de page toujours en bas ---------- */
+
+body { display: flex; flex-direction: column; min-height: 100vh; }
+main { flex: 1 0 auto; }
+
+/* ---------- Accueil : bandeau d'engagements ---------- */
+
+.trust { background: var(--card); border-bottom: 1px solid var(--line); }
+
+.trust-list {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trust-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 22px 24px;
+  border-left: 1px solid var(--line);
+}
+.trust-list li:first-child { padding-left: 0; border-left: 0; }
+
+.trust-list strong {
+  font-family: var(--f-display);
+  font-size: 1.1875rem;
+  font-weight: 700;
+  font-stretch: 105%;
+  line-height: 1.2;
+}
+.trust-list span { color: var(--muted); font-size: 0.9375rem; line-height: 1.4; }
+
+@media (max-width: 900px) {
+  .trust-list { grid-template-columns: 1fr 1fr; }
+  .trust-list li { padding: 18px 16px; border-left: 0; border-top: 1px solid var(--line); }
+  .trust-list li:nth-child(-n+2) { border-top: 0; }
+  .trust-list li:nth-child(odd) { padding-left: 0; }
+  .trust-list li:nth-child(even) { border-left: 1px solid var(--line); }
+}
+@media (max-width: 480px) {
+  .trust-list strong { font-size: 1.0625rem; }
+  .trust-list span { font-size: 0.875rem; }
+}
+
+/* ---------- Fiche produit : livraison et retours ---------- */
+
+.service {
+  margin-top: 28px;
+  padding: 20px 22px 18px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--ink);
+}
+
+.service-title {
+  font-family: var(--f-display);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold-ink);
+}
+
+.service-list { margin: 10px 0 0; }
+.service-list div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 1rem;
+  line-height: 1.4;
+}
+.service-list div:last-child { border-bottom: 0; }
+.service-list dt { color: var(--muted); }
+.service-list dd {
+  margin: 0;
+  font-family: var(--f-display);
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.service-note { margin-top: 6px; color: var(--muted); font-size: 0.9375rem; line-height: 1.5; }
+.service-note a { text-underline-offset: 3px; }
+
+@media (max-width: 480px) {
+  .service-list div { flex-direction: column; gap: 2px; }
+  .service-list dd { text-align: left; white-space: normal; }
+}
+
+/* ---------- Bandeau d'infos défilant ---------- */
+
+.promo.is-marquee { overflow: hidden; }
+
+.promo-track {
+  display: flex;
+  width: max-content;
+  animation: promo-scroll var(--duree, 30s) linear infinite;
+  will-change: transform;
+}
+.promo.is-marquee:hover .promo-track { animation-play-state: paused; }
+
+.promo.is-marquee .promo-list,
+.promo-measure {
+  flex: none;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  gap: 0 56px;
+  /* Le retrait à droite égale l'écart entre infos : la boucle est continue. */
+  padding: 9px 56px 9px 0;
+  white-space: nowrap;
+}
+.promo-measure { position: absolute; visibility: hidden; display: flex; margin: 0; list-style: none; }
+.promo-measure li::before { content: ""; display: inline-block; width: 5px; height: 5px; margin-right: 9px; }
+
+@keyframes promo-scroll {
+  to { transform: translateX(calc(-1 * var(--shift))); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .promo-track { animation: none; }
+}
