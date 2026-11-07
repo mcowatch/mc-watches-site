@@ -18,7 +18,7 @@ window.MC = {
   // Pixel Meta. Collez ici l'identifiant trouvé dans
   // Gestionnaire d'évènements > Sources de données (une suite de chiffres).
   // Tant que c'est vide, aucun script Meta n'est chargé sur le site.
-  pixel: "",
+  pixel: "1923341795704210",
 
   // Formulaire Google : identifiants des champs préremplis.
   formulaire: {
