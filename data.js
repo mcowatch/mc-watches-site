@@ -15,6 +15,11 @@ window.MC = {
   instagram: "https://www.instagram.com/mcowatches/",
   instagramNom: "@mcowatches",
 
+  // Pixel Meta. Collez ici l'identifiant trouvé dans
+  // Gestionnaire d'évènements > Sources de données (une suite de chiffres).
+  // Tant que c'est vide, aucun script Meta n'est chargé sur le site.
+  pixel: "",
+
   // Formulaire Google : identifiants des champs préremplis.
   formulaire: {
     base: "https://docs.google.com/forms/d/e/1FAIpQLSerO_SjWbLOsfbOhFkFcDC0gSQHaS_0Ss3w8ePUO94eo3wCzQ/viewform",

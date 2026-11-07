@@ -10,6 +10,36 @@
   const MC = window.MC;
   if (!MC) return;
 
+  /* ---------- Pixel Meta ----------
+     L'identifiant se colle dans data.js (MC.pixel).
+     Tant qu'il est vide, aucun script Meta n'est chargé et le site
+     fonctionne exactement comme avant.                              */
+
+  const initPixel = () => {
+    const id = String(MC.pixel || "").trim();
+    if (!id) return;
+    /* extrait officiel Meta */
+    !(function (f, b, e, v, n, t, s) {
+      if (f.fbq) return;
+      n = f.fbq = function () {
+        n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+      };
+      if (!f._fbq) f._fbq = n;
+      n.push = n; n.loaded = !0; n.version = "2.0"; n.queue = [];
+      t = b.createElement(e); t.async = !0; t.src = v;
+      s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
+    })(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+    window.fbq("init", id);
+    window.fbq("track", "PageView");
+  };
+
+  /* N'envoie un évènement que si le pixel est réellement chargé. */
+  const pixel = (evenement, donnees) => {
+    if (typeof window.fbq === "function") window.fbq("track", evenement, donnees || {});
+  };
+
+  const refProduit = (p) => p.reference || p.nom || "";
+
   /* ---------- Outils ---------- */
 
   const esc = (s) =>
@@ -28,8 +58,8 @@
 
   const messageCommande = (p, couleur) =>
     couleur
-      ? `Bonjour MC Watches, je souhaite commander ${p.reference}, couleur ${couleur}, au prix de ${p.prix} DH. Pouvez-vous confirmer la disponibilité et la livraison ?`
-      : `Bonjour MC Watches, je souhaite commander ${p.nom} au prix de ${p.prix} DH. Pouvez-vous confirmer la disponibilité et la livraison ?`;
+      ? `Bonjour MC Watches, je commande ${p.reference}, couleur ${couleur}, à ${p.prix} DH. Je vous envoie mon nom, mon téléphone, ma ville et mon adresse.`
+      : `Bonjour MC Watches, je commande ${p.nom} à ${p.prix} DH. Je vous envoie mon nom, mon téléphone, ma ville et mon adresse.`;
 
   const style = (c) =>
     c.code2
@@ -63,7 +93,7 @@
       `Ville : ${f.ville}`,
       `Adresse : ${f.adresse}`,
       "",
-      "Pouvez-vous confirmer la disponibilité et la livraison ?"
+      "Merci de confirmer ma commande."
     ].filter((l) => l !== null).join("\n");
 
   const telValide = (v) => /^(?:\+?212|0)[5-7]\d{8}$/.test(v.replace(/[\s.\-()]/g, ""));
@@ -107,8 +137,8 @@
 
           <p class="field-error order-send-error" role="alert"></p>
           <button type="submit" class="btn btn-solid order-submit">Commander</button>
-          <p class="order-fine">Votre commande nous est envoyée directement. Nous vous contactons pour confirmer la disponibilité et la livraison, puis vous payez à la réception.</p>
-          <p class="order-alt"><a data-alt-wa target="_blank" rel="noopener">Je préfère commander sur WhatsApp</a></p>
+          <p class="order-fine">Prix final. Votre commande nous est envoyée directement. Nous vous appelons seulement pour confirmer l'adresse, puis vous payez au livreur.</p>
+          <p class="order-alt" hidden><a data-alt-wa target="_blank" rel="noopener">Commander sur WhatsApp à la place</a></p>
         </form>
 
         <div class="order-done" hidden>
@@ -116,7 +146,7 @@
             <h2 id="order-done-title">Commande envoyée</h2>
             <button type="button" class="order-close" aria-label="Fermer">${ICON_CLOSE}</button>
           </div>
-          <p>Merci ! Nous vous contactons très vite pour confirmer la disponibilité et la livraison. Vous payez à la réception de votre montre.</p>
+          <p>Merci, votre commande est enregistrée. Nous vous appelons très vite pour confirmer l'adresse, puis vous payez au livreur à la réception.</p>
           <button type="button" class="btn btn-solid order-close-2">Fermer</button>
           <p class="order-fine order-fine-tight">Pas de nouvelles de notre part ?</p>
           <a class="btn btn-ghost" data-open-wa target="_blank" rel="noopener">Nous écrire sur WhatsApp</a>
@@ -230,6 +260,13 @@
 
       envoyerCommande(c)
         .then(() => {
+          pixel("Purchase", {
+            value: etat.p.prix * c.qte,
+            currency: "MAD",
+            content_type: "product",
+            content_ids: [refProduit(etat.p)],
+            contents: [{ id: refProduit(etat.p), quantity: c.qte }]
+          });
           form.hidden = true;
           done.hidden = false;
           el.setAttribute("aria-labelledby", "order-done-title");
@@ -239,6 +276,9 @@
           erreurEnvoi.textContent =
             "L'envoi n'a pas abouti. Vérifiez votre connexion et réessayez, ou commandez sur WhatsApp ci-dessous.";
           lienAlt.href = lienWa();
+          /* WhatsApp n'apparaît qu'ici : quand l'envoi a échoué. */
+          const alt = lienAlt.closest(".order-alt");
+          if (alt) alt.hidden = false;
         })
         .finally(() => {
           boutonEnvoi.disabled = false;
@@ -258,6 +298,14 @@
         form.querySelectorAll("[aria-invalid]").forEach((x) => x.removeAttribute("aria-invalid"));
         erreurEnvoi.textContent = "";
         lienAlt.href = lienWa();
+        const altReset = lienAlt.closest(".order-alt");
+        if (altReset) altReset.hidden = true;
+        pixel("InitiateCheckout", {
+          value: p.prix,
+          currency: "MAD",
+          content_type: "product",
+          content_ids: [refProduit(p)]
+        });
         el.showModal();
         form.elements.prenom.focus();
       },
@@ -558,7 +606,7 @@
               <div><dt>Paiement</dt><dd>À la livraison</dd></div>
               <div><dt>Échange ou retour</dt><dd>Sans motif, sous 7 jours</dd></div>
             </dl>
-            <p class="service-note">Le prix et la disponibilité sont confirmés avec vous avant l'envoi. <a href="livraison.html">Voir toutes les conditions</a></p>
+            <p class="service-note">Prix final. Vous payez à la livraison, rien à l'avance. <a href="livraison.html">Voir toutes les conditions</a></p>
           </div>
         </div>
       </div>
@@ -619,6 +667,14 @@
     });
 
     racine.querySelector("[data-order]").addEventListener("click", () => ouvrirCommande(p, p.couleurs[ci].nom));
+
+    pixel("ViewContent", {
+      value: p.prix,
+      currency: "MAD",
+      content_type: "product",
+      content_ids: [refProduit(p)],
+      content_name: p.nom || refProduit(p)
+    });
 
     majCouleur();
   }
@@ -713,6 +769,7 @@
 
   /* ---------- Démarrage ---------- */
 
+  initPixel();
   initAuto();
   initFloat();
   initBandeau();
