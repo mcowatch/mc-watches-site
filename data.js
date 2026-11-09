@@ -94,11 +94,11 @@ window.MC = {
       prix: 299,
       couleurs: [
         { nom: "Noir", code: "#171717",
-          photos: ["images/mc04/NOIR1.jpg", "images/mc04/NOIR2.jpg", "images/mc04/NOIR3.jpg", "images/mc04/NOIR4.jpg", "images/mc04/NOIR5.jpg", "images/mc04/NOIR6.jpg"] },
+          photos: ["images/mc04/NOIR1.jpg", "images/mc04/NOIR2.jpg", "images/mc04/NOIR3.jpg", "images/mc04/NOIR4.jpg", "images/mc04/NOIR5.jpg"] },
         { nom: "Blanc", code: "#F4F1E8",
-          photos: ["images/mc04/BLANC1.jpg", "images/mc04/BLANC2.jpg", "images/mc04/BLANC3.jpg", "images/mc04/BLANC4.jpg", "images/mc04/BLANC5.jpg", "images/mc04/BLANC6.jpg", "images/mc04/BLANC7.jpg", "images/mc04/BLANC8.jpg"] }
+          photos: ["images/mc04/BLANC1.jpg", "images/mc04/BLANC2.jpg", "images/mc04/BLANC3.jpg", "images/mc04/BLANC4.jpg", "images/mc04/BLANC5.jpg", "images/mc04/BLANC6.jpg", "images/mc04/BLANC7.jpg"] }
       ],
-      photosCommunes: ["images/mc04/DUO1.jpg", "images/mc04/DUO2.jpg", "images/mc04/DUO3.jpg", "images/mc04/DUO4.jpg", "images/mc04/DUO5.jpg", "images/mc04/DUO6.jpg"]
+      photosCommunes: ["images/mc04/DUO1.jpg", "images/mc04/DUO2.jpg", "images/mc04/DUO3.jpg", "images/mc04/DUO4.jpg", "images/mc04/DUO5.jpg"]
     },
     {
       type: "montre",
