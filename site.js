@@ -96,13 +96,16 @@
       "Merci de confirmer ma commande."
     ].filter((l) => l !== null).join("\n");
 
-  const telValide = (v) => /^(?:\+?212|0)[5-7]\d{8}$/.test(v.replace(/[\s.\-()]/g, ""));
+  /* Numero de n'importe quel pays : 8 a 15 chiffres, un + ou un 00 devant si besoin.
+     Les espaces, points, tirets et parentheses sont ignores. */
+  const telValide = (v) => /^(?:\+|00)?\d{8,15}$/.test(v.replace(/[\s.\-()]/g, ""));
 
   const CHAMPS = [
     { id: "prenom", label: "Prénom", auto: "given-name", erreur: "Indiquez votre prénom." },
     { id: "nom", label: "Nom", auto: "family-name", erreur: "Indiquez votre nom." },
-    { id: "tel", label: "Téléphone", auto: "tel", type: "tel", aide: "Exemple : 06 12 34 56 78",
-      erreur: "Entrez un numéro marocain valide, par exemple 06 12 34 56 78." },
+    { id: "tel", label: "Téléphone", auto: "tel", type: "tel",
+      aide: "Exemple : 06 12 34 56 78. Depuis l'étranger, ajoutez l'indicatif : +33 6 12 34 56 78.",
+      erreur: "Entrez un numéro de téléphone valide. Depuis l'étranger, ajoutez l'indicatif du pays." },
     { id: "ville", label: "Ville", auto: "address-level2", erreur: "Indiquez votre ville." },
     { id: "adresse", label: "Adresse de livraison", auto: "street-address", zone: true,
       aide: "Quartier, rue, numéro, repère.", erreur: "Indiquez votre adresse de livraison." }
