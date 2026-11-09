@@ -96,16 +96,54 @@
       "Merci de confirmer ma commande."
     ].filter((l) => l !== null).join("\n");
 
-  /* Numero de n'importe quel pays : 8 a 15 chiffres, un + ou un 00 devant si besoin.
-     Les espaces, points, tirets et parentheses sont ignores. */
-  const telValide = (v) => /^(?:\+|00)?\d{8,15}$/.test(v.replace(/[\s.\-()]/g, ""));
+  /* ---------- Telephone : pays + numero ----------
+     Chaque pays donne son indicatif et la longueur du numero national
+     (sans le 0 de debut). "debuts" limite les premiers chiffres quand
+     le pays a des regles nettes. "garde0" pour l'Italie, qui conserve
+     son 0. Le pays par defaut est le premier de la liste : le Maroc.   */
+
+  const PAYS = [
+    { code: "MA", nom: "Maroc",            ind: "212", min: 9,  max: 9,  debuts: ["5", "6", "7"] },
+    { code: "FR", nom: "France",           ind: "33",  min: 9,  max: 9 },
+    { code: "ES", nom: "Espagne",          ind: "34",  min: 9,  max: 9 },
+    { code: "BE", nom: "Belgique",         ind: "32",  min: 8,  max: 9 },
+    { code: "NL", nom: "Pays-Bas",         ind: "31",  min: 9,  max: 9 },
+    { code: "DE", nom: "Allemagne",        ind: "49",  min: 10, max: 11 },
+    { code: "IT", nom: "Italie",           ind: "39",  min: 9,  max: 10, garde0: true },
+    { code: "GB", nom: "Royaume-Uni",      ind: "44",  min: 10, max: 10 },
+    { code: "CH", nom: "Suisse",           ind: "41",  min: 9,  max: 9 },
+    { code: "PT", nom: "Portugal",         ind: "351", min: 9,  max: 9 },
+    { code: "CA", nom: "Canada / USA",     ind: "1",   min: 10, max: 10 },
+    { code: "AE", nom: "Emirats arabes unis", ind: "971", min: 9, max: 9 },
+    { code: "SA", nom: "Arabie saoudite",  ind: "966", min: 9,  max: 9 },
+    { code: "QA", nom: "Qatar",            ind: "974", min: 8,  max: 8 },
+    { code: "XX", nom: "Autre pays",       ind: "",    min: 6,  max: 15 }
+  ];
+
+  const paysDe = (code) => PAYS.find((p) => p.code === code) || PAYS[0];
+
+  /* Transforme ce que le client a tape en numero international.
+     Renvoie null si le numero ne colle pas au pays choisi.            */
+  const numeroInternational = (codePays, saisi) => {
+    const p = paysDe(codePays);
+    let n = String(saisi || "").replace(/[^\d+]/g, "");
+    n = n.replace(/^\+/, "").replace(/^00/, "");
+    if (p.ind && n.startsWith(p.ind) && n.length > p.ind.length) n = n.slice(p.ind.length);
+    if (!p.garde0) n = n.replace(/^0+/, "");
+    if (n.length < p.min || n.length > p.max) return null;
+    if (p.debuts && !p.debuts.some((d) => n.startsWith(d))) return null;
+    return p.ind ? "+" + p.ind + n : "+" + n;
+  };
+
+  const telValide = (codePays, saisi) => numeroInternational(codePays, saisi) !== null;
+
 
   const CHAMPS = [
     { id: "prenom", label: "Prénom", auto: "given-name", erreur: "Indiquez votre prénom." },
     { id: "nom", label: "Nom", auto: "family-name", erreur: "Indiquez votre nom." },
-    { id: "tel", label: "Téléphone", auto: "tel", type: "tel",
-      aide: "Exemple : 06 12 34 56 78. Depuis l'étranger, ajoutez l'indicatif : +33 6 12 34 56 78.",
-      erreur: "Entrez un numéro de téléphone valide. Depuis l'étranger, ajoutez l'indicatif du pays." },
+    { id: "tel", label: "Téléphone", auto: "tel", type: "tel", pays: true,
+      aide: "Choisissez votre pays, puis tapez votre numéro sans l'indicatif.",
+      erreur: "Ce numéro ne correspond pas au pays choisi. Vérifiez le nombre de chiffres." },
     { id: "ville", label: "Ville", auto: "address-level2", erreur: "Indiquez votre ville." },
     { id: "adresse", label: "Adresse de livraison", auto: "street-address", zone: true,
       aide: "Quartier, rue, numéro, repère.", erreur: "Indiquez votre adresse de livraison." }
@@ -119,7 +157,14 @@
     const champs = CHAMPS.map((c) => `
       <div class="field">
         <label for="of-${c.id}">${c.label}</label>
-        ${c.zone
+        ${c.pays
+          ? `<div style="display:flex;gap:8px;align-items:stretch">
+               <select id="of-pays" name="pays" aria-label="Pays" style="flex:0 1 42%;min-width:0">
+                 ${PAYS.map((p) => `<option value="${p.code}">${p.ind ? `+${p.ind} ` : ""}${esc(p.nom)}</option>`).join("")}
+               </select>
+               <input id="of-${c.id}" name="${c.id}" type="tel" autocomplete="${c.auto}" inputmode="tel" required style="flex:1 1 auto;min-width:0" aria-describedby="of-${c.id}-aide of-${c.id}-err">
+             </div>`
+          : c.zone
           ? `<textarea id="of-${c.id}" name="${c.id}" rows="2" autocomplete="${c.auto}" required aria-describedby="of-${c.id}-aide of-${c.id}-err"></textarea>`
           : `<input id="of-${c.id}" name="${c.id}" type="${c.type || "text"}" autocomplete="${c.auto}" ${c.type === "tel" ? 'inputmode="tel"' : ""} required aria-describedby="of-${c.id}-aide of-${c.id}-err">`}
         <p class="field-help" id="of-${c.id}-aide">${c.aide || ""}</p>
@@ -180,8 +225,10 @@
     /* Lit ce que le client a déjà saisi dans le formulaire du site. */
     const saisie = () => {
       const v = (id) => (form.elements[id] ? form.elements[id].value.trim() : "");
+      const pays = form.elements.pays ? form.elements.pays.value : "MA";
       return {
-        prenom: v("prenom"), nom: v("nom"), tel: v("tel"),
+        prenom: v("prenom"), nom: v("nom"),
+        tel: numeroInternational(pays, v("tel")) || v("tel"),
         ville: v("ville"), adresse: v("adresse"),
         qte: Number(v("qte")) || 1
       };
@@ -248,7 +295,9 @@
         const champ = form.elements[c.id];
         const v = champ.value.trim();
         valeurs[c.id] = v;
-        const ok = c.id === "tel" ? telValide(v) : v.length > 1;
+        const ok = c.id === "tel"
+          ? telValide(form.elements.pays ? form.elements.pays.value : "MA", v)
+          : v.length > 1;
         champ.setAttribute("aria-invalid", String(!ok));
         form.querySelector(`#of-${c.id}-err`).textContent = ok ? "" : c.erreur;
         if (!ok && !premier) premier = champ;
