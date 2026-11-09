@@ -405,9 +405,13 @@
   function creerCarte(p) {
     const avecCouleurs = p.type === "montre";
     let ci = 0;
+    // Tant que le client n'a pas clique une couleur, on montre les deux coloris d'abord.
+    let couleurChoisie = false;
 
     const photos = () =>
-      avecCouleurs ? [...p.couleurs[ci].photos, ...(p.photosCommunes || [])] : p.photos;
+      avecCouleurs ? (couleurChoisie
+            ? [...p.couleurs[ci].photos, ...(p.photosCommunes || [])]
+            : [...(p.photosCommunes || []), ...p.couleurs[ci].photos]) : p.photos;
     const alt = () => (avecCouleurs ? `${p.nom}, ${p.couleurs[ci].nom}` : p.nom);
 
     const pastilles = avecCouleurs
@@ -473,6 +477,7 @@
         );
         b.addEventListener("click", () => {
           ci = i;
+          couleurChoisie = true;
           zone.querySelectorAll(".swatch").forEach((s) => s.setAttribute("aria-pressed", "false"));
           b.setAttribute("aria-pressed", "true");
           mettreAJourLiens();
@@ -516,8 +521,13 @@
       return;
     }
 
-    let ci = Math.max(0, p.couleurs.findIndex((c) => c.nom === params.get("couleur")));
-    const photos = () => [...p.couleurs[ci].photos, ...(p.photosCommunes || [])];
+    const couleurDemandee = p.couleurs.findIndex((c) => c.nom === params.get("couleur"));
+    let ci = Math.max(0, couleurDemandee);
+    // Une couleur dans l'adresse = le client a deja choisi. Sinon, les deux d'abord.
+    let couleurChoisie = couleurDemandee >= 0;
+    const photos = () => (couleurChoisie
+            ? [...p.couleurs[ci].photos, ...(p.photosCommunes || [])]
+            : [...(p.photosCommunes || []), ...p.couleurs[ci].photos]);
 
     /* Titre, description, JSON-LD */
     document.title = `${p.reference} - montre pour homme, ${prix(p.prix)} | MC Watches`;
@@ -662,7 +672,7 @@
       const b = html(
         `<button type="button" class="chip" aria-pressed="false"><span class="chip-dot" style="${style(c)}"></span><span>${esc(c.nom)}</span></button>`
       );
-      b.addEventListener("click", () => { ci = i; majCouleur(); });
+      b.addEventListener("click", () => { ci = i; couleurChoisie = true; majCouleur(); });
       zone.appendChild(b);
     });
 
