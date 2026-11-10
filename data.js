@@ -108,9 +108,9 @@ window.MC = {
       prix: 299,
       couleurs: [
         { nom: "Noir", code: "#171717",
-          photos: ["images/mc05/NOIR1.jpg", "images/mc05/NOIR2.jpg", "images/mc05/NOIR3.jpg", "images/mc05/NOIR4.jpg"] },
+          photos: ["images/mc05/NOIR1.jpg", "images/mc05/NOIR2.jpg", "images/mc05/NOIR3.jpg"] },
         { nom: "Blanc", code: "#F4F1E8",
-          photos: ["images/mc05/BLANC1.jpg", "images/mc05/BLANC2.jpg", "images/mc05/BLANC3.jpg", "images/mc05/BLANC4.jpg", "images/mc05/BLANC5.jpg"] }
+          photos: ["images/mc05/BLANC1.jpg", "images/mc05/BLANC2.jpg", "images/mc05/BLANC3.jpg", "images/mc05/BLANC4.jpg"] }
       ],
       photosCommunes: ["images/mc05/DUO1.jpg", "images/mc05/DUO2.jpg", "images/mc05/DUO3.jpg", "images/mc05/DUO4.jpg", "images/mc05/DUO5.jpg"]
     },
