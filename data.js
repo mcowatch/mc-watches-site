@@ -20,6 +20,11 @@ window.MC = {
   // Tant que c'est vide, aucun script Meta n'est chargé sur le site.
   pixel: "1923341795704210",
 
+  // Offre lot : chaque montre SUPPLÉMENTAIRE de la même commande est
+  // remisée de ce montant, en DH. 49 => 2 x MC-01 = 449 au lieu de 498.
+  // Mettre 0 pour désactiver l'offre. Ne touche pas les boîtes.
+  remiseMontreSupp: 49,
+
   // Formulaire Google : identifiants des champs préremplis.
   formulaire: {
     base: "https://docs.google.com/forms/d/e/1FAIpQLSerO_SjWbLOsfbOhFkFcDC0gSQHaS_0Ss3w8ePUO94eo3wCzQ/viewform",

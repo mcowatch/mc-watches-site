@@ -78,6 +78,23 @@
 
   const refProduit = (p) => p.reference || p.nom || "";
 
+  /* ---------- Prix d'une commande ----------
+     UNE seule fonction calcule le total. Le récapitulatif, le formulaire
+     Google, le pixel et WhatsApp s'en servent tous, pour qu'aucun des
+     quatre ne puisse afficher un prix différent des autres.           */
+
+  const REMISE_SUPP = Number(MC.remiseMontreSupp) || 0;
+
+  const offreLot = (p) => !!p && p.type === "montre" && REMISE_SUPP > 0;
+
+  const prixTotal = (p, qte) => {
+    const q = Math.max(1, Number(qte) || 1);
+    const plein = p.prix * q;
+    return offreLot(p) ? Math.max(0, plein - REMISE_SUPP * (q - 1)) : plein;
+  };
+
+  const economie = (p, qte) => p.prix * Math.max(1, Number(qte) || 1) - prixTotal(p, qte);
+
   /* ---------- Outils ---------- */
 
   const esc = (s) =>
@@ -124,7 +141,7 @@
       couleur ? `Couleur : ${couleur}` : null,
       `Quantité : ${qte}`,
       `Prix : ${p.prix} DH (livraison gratuite)`,
-      `Total : ${p.prix * qte} DH`,
+      `Total : ${prixTotal(p, qte)} DH`,
       "",
       `Nom : ${f.prenom} ${f.nom}`,
       `Téléphone : ${f.tel}`,
@@ -254,10 +271,22 @@
           <select id="of-qte" name="qte">${[1, 2, 3, 4, 5].map((n) => `<option value="${n}">${n}</option>`).join("")}</select>
           <span class="order-total"><span class="order-unit">${prix(p.prix)} l'unité</span><strong data-total>${prix(p.prix)}</strong></span>
         </div>
+        ${offreLot(p) ? `<p data-offre hidden style="margin:6px 0 0;font-weight:600"></p>` : ""}
         <p class="order-note">Livraison gratuite. Paiement à la livraison.</p>`;
-      resume.querySelector("#of-qte").addEventListener("change", (e) => {
-        resume.querySelector("[data-total]").textContent = prix(p.prix * Number(e.target.value));
-      });
+
+      const majTotal = (qte) => {
+        resume.querySelector("[data-total]").textContent = prix(prixTotal(p, qte));
+        const ligne = resume.querySelector("[data-offre]");
+        if (!ligne) return;
+        const eco = economie(p, qte);
+        ligne.hidden = eco <= 0;
+        if (eco > 0) {
+          ligne.innerHTML = `Offre lot : <s>${prix(p.prix * qte)}</s> ${prix(prixTotal(p, qte))}, vous économisez ${prix(eco)}.`;
+        }
+      };
+
+      resume.querySelector("#of-qte").addEventListener("change", (e) => majTotal(Number(e.target.value)));
+      majTotal(1);
     };
 
     /* Lit ce que le client a déjà saisi dans le formulaire du site. */
@@ -305,7 +334,7 @@
       [
         [f.reference, p.reference],
         [f.couleur, couleur || p.couleur || ""],
-        [f.prix, p.prix * c.qte],
+        [f.prix, prixTotal(p, c.qte)],
         [f.prenom, c.prenom],
         [f.nom, c.nom],
         [f.telephone, c.tel],
@@ -356,7 +385,7 @@
       envoyerCommande(c)
         .then(() => {
           pixel("Purchase", {
-            value: etat.p.prix * c.qte,
+            value: prixTotal(etat.p, c.qte),
             currency: "MAD",
             content_type: "product",
             content_ids: [refProduit(etat.p)],
@@ -699,6 +728,7 @@
           <h1>${esc(p.nom)}</h1>
           <p class="detail-price">${prix(p.prix)}</p>
           <p class="card-delivery">Livraison gratuite partout au Maroc</p>
+          ${offreLot(p) ? `<p class="card-delivery" style="font-weight:600">2 montres : ${prix(prixTotal(p, 2))} au lieu de ${prix(p.prix * 2)}. Chaque montre en plus coûte ${REMISE_SUPP} DH de moins.</p>` : ""}
 
           <div class="swatch-group">
             <p class="swatch-label">Couleur : <strong data-couleur></strong></p>
