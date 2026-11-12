@@ -10,12 +10,50 @@
   const MC = window.MC;
   if (!MC) return;
 
+  /* ---------- Mode test ----------
+     Vos propres commandes de test faussent le pixel et apprennent à Meta
+     à chercher des gens qui vous ressemblent, pas des acheteurs.
+
+     Ouvrez le site UNE fois avec ?notrack=1 sur chaque appareil que vous
+     utilisez pour tester (téléphone + ordinateur). Le pixel ne partira
+     plus jamais depuis cet appareil, et un petit badge vous le confirme.
+     Pour réactiver le suivi : ?notrack=0                              */
+
+  const CLE_TEST = "mc-notrack";
+
+  const estModeTest = () => {
+    try {
+      var p = new URLSearchParams(window.location.search);
+      if (p.has("notrack")) {
+        if (p.get("notrack") === "0") localStorage.removeItem(CLE_TEST);
+        else localStorage.setItem(CLE_TEST, "1");
+      }
+      return localStorage.getItem(CLE_TEST) === "1";
+    } catch (e) {
+      return false; /* navigation privée, stockage bloqué : on suit normalement */
+    }
+  };
+
+  const modeTest = estModeTest();
+
+  const badgeModeTest = () => {
+    if (!modeTest || !document.body) return;
+    var b = document.createElement("div");
+    b.textContent = "mode test · pixel désactivé";
+    b.style.cssText =
+      "position:fixed;left:8px;bottom:8px;z-index:9999;background:#1d1d1d;color:#fff;" +
+      "font:600 11px/1 system-ui,-apple-system,sans-serif;letter-spacing:.04em;" +
+      "padding:7px 10px;border-radius:4px;opacity:.85;pointer-events:none";
+    document.body.appendChild(b);
+  };
+
   /* ---------- Pixel Meta ----------
      L'identifiant se colle dans data.js (MC.pixel).
      Tant qu'il est vide, aucun script Meta n'est chargé et le site
      fonctionne exactement comme avant.                              */
 
   const initPixel = () => {
+    if (modeTest) return; /* vos tests ne partent pas chez Meta */
     const id = String(MC.pixel || "").trim();
     if (!id) return;
     /* extrait officiel Meta */
@@ -832,6 +870,7 @@
   /* ---------- Démarrage ---------- */
 
   initPixel();
+  badgeModeTest();
   initAuto();
   initFloat();
   initBandeau();
