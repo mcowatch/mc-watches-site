@@ -39,7 +39,7 @@
   const badgeModeTest = () => {
     if (!modeTest || !document.body) return;
     var b = document.createElement("div");
-    b.textContent = "mode test · pixel désactivé";
+    b.textContent = "mode test · rien n'est envoyé";
     b.style.cssText =
       "position:fixed;left:8px;bottom:8px;z-index:9999;background:#1d1d1d;color:#fff;" +
       "font:600 11px/1 system-ui,-apple-system,sans-serif;letter-spacing:.04em;" +
@@ -294,6 +294,11 @@
        (mode no-cors : Google ne renvoie pas de réponse lisible, on sait
        seulement si l'envoi a pu partir.)                              */
     const envoyerCommande = (c) => {
+      /* En mode test (?notrack=1) la commande n'est envoyée nulle part :
+         ni au formulaire Google, ni au pixel. Vous pouvez essayer tout le
+         parcours sans salir votre feuille de commandes.                 */
+      if (modeTest) return Promise.resolve();
+
       const f = MC.formulaire;
       const { p, couleur } = etat;
       const corps = new URLSearchParams();
@@ -359,6 +364,13 @@
           });
           form.hidden = true;
           done.hidden = false;
+          if (modeTest && !done.querySelector("[data-test-note]")) {
+            var note = document.createElement("p");
+            note.setAttribute("data-test-note", "");
+            note.textContent = "Mode test : rien n'a été envoyé. Aucune ligne dans vos commandes, aucun évènement chez Meta.";
+            note.style.cssText = "background:#1d1d1d;color:#fff;padding:9px 12px;border-radius:4px;font-size:13px";
+            done.insertBefore(note, done.children[1] || null);
+          }
           el.setAttribute("aria-labelledby", "order-done-title");
           done.querySelector(".btn").focus();
         })
