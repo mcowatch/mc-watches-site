@@ -633,10 +633,14 @@
          </div>`
       : "";
 
+    /* Le panier passe en premier et en bouton plein : c'est l'action
+       qu'on veut voir choisie. Commander reste possible d'un seul clic. */
     const actions = avecCouleurs
-      ? `<button type="button" class="btn btn-solid" data-order>Commander</button>
+      ? `<button type="button" class="btn btn-solid" data-panier>Ajouter au panier</button>
+         <button type="button" class="btn btn-ghost" data-order>Commander</button>
          <a class="btn btn-ghost" data-details>Voir les détails</a>`
-      : `<button type="button" class="btn btn-solid" data-order>Commander</button>
+      : `<button type="button" class="btn btn-solid" data-panier>Ajouter au panier</button>
+         <button type="button" class="btn btn-ghost" data-order>Commander</button>
          <a class="btn btn-ghost" data-wa target="_blank" rel="noopener">Poser une question sur WhatsApp</a>`;
 
     const carte = html(`
@@ -672,6 +676,16 @@
     carte.querySelector("[data-order]").addEventListener("click", () =>
       ouvrirCommande(p, avecCouleurs ? p.couleurs[ci].nom : p.couleur || "")
     );
+
+    carte.querySelector("[data-panier]").addEventListener("click", function () {
+      const c = avecCouleurs ? p.couleurs[ci].nom : p.couleur || "";
+      Panier.ajouter(p, c, 1);
+      pixel("AddToCart", {
+        value: p.prix, currency: "MAD",
+        content_type: "product", content_ids: [refProduit(p)]
+      });
+      document.dispatchEvent(new CustomEvent("panier:ouvrir"));
+    });
 
     const car = carrousel({
       media,
@@ -817,8 +831,8 @@
           </div>
 
           <div class="detail-actions">
-            <button type="button" class="btn btn-solid" data-order>Commander</button>
-            <button type="button" class="btn btn-ghost" data-panier>Ajouter au panier</button>
+            <button type="button" class="btn btn-solid" data-panier>Ajouter au panier</button>
+            <button type="button" class="btn btn-ghost" data-order>Commander</button>
             <a class="btn btn-ghost btn-wa" data-wa target="_blank" rel="noopener">Poser une question sur WhatsApp</a>
           </div>
 
@@ -1170,16 +1184,46 @@
      la trotteuse balaie, et la couronne de graduations tourne
      lentement (animation CSS). */
   function initMontre() {
-    var svg = document.querySelector(".dial-hands");
-    if (!svg) return;
-    var hr = svg.querySelector(".hand-hr"),
-        mn = svg.querySelector(".hand-min"),
-        sc = svg.querySelector(".hand-sec");
+    var hote = document.querySelector(".site-header .wrap");
+    if (!hote) return;
+
+    var ticks = "";
+    for (var k = 0; k < 12; k++) {
+      var ang = (k / 12) * Math.PI * 2;
+      var maj = k % 3 === 0;
+      var r1 = 42, r2 = maj ? 32 : 36;
+      ticks += '<line class="hm-t' + (maj ? " hm-t-maj" : "") + '"' +
+        ' x1="' + (50 + Math.sin(ang) * r1).toFixed(2) + '" y1="' + (50 - Math.cos(ang) * r1).toFixed(2) + '"' +
+        ' x2="' + (50 + Math.sin(ang) * r2).toFixed(2) + '" y2="' + (50 - Math.cos(ang) * r2).toFixed(2) + '"/>';
+    }
+
+    var el = html(
+      '<div class="hdr-montre" title="Heure actuelle">' +
+        '<svg viewBox="0 0 100 100" aria-hidden="true" focusable="false">' +
+          '<circle class="hm-ring" cx="50" cy="50" r="46"/>' + ticks +
+          '<line class="hm-h" x1="50" y1="57" x2="50" y2="29"/>' +
+          '<line class="hm-m" x1="50" y1="59" x2="50" y2="19"/>' +
+          '<line class="hm-s" x1="50" y1="62" x2="50" y2="15"/>' +
+          '<circle class="hm-pin" cx="50" cy="50" r="2.8"/>' +
+        '</svg>' +
+        '<span class="hm-sr" data-heure>heure actuelle</span>' +
+      '</div>');
+
+    var marque = hote.querySelector(".brand");
+    if (marque) hote.insertBefore(el, marque.nextSibling);
+    else hote.insertBefore(el, hote.firstChild);
+
+    var svg = el.querySelector("svg");
+    var hr = svg.querySelector(".hm-h"),
+        mn = svg.querySelector(".hm-m"),
+        sc = svg.querySelector(".hm-s"),
+        txt = el.querySelector("[data-heure]");
     if (!hr || !mn || !sc) return;
 
     var doux = true;
     try { doux = !window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
 
+    var derniereMin = -1;
     function poser() {
       var d = new Date();
       var s = d.getSeconds() + (doux ? d.getMilliseconds() / 1000 : 0);
@@ -1188,6 +1232,11 @@
       hr.style.transform = "rotate(" + (h / 12) * 360 + "deg)";
       mn.style.transform = "rotate(" + (m / 60) * 360 + "deg)";
       sc.style.transform = "rotate(" + (s / 60) * 360 + "deg)";
+      if (txt && d.getMinutes() !== derniereMin) {
+        derniereMin = d.getMinutes();
+        txt.textContent = "Il est " + d.getHours() + " h " +
+          String(derniereMin).padStart(2, "0");
+      }
     }
 
     poser();
