@@ -360,26 +360,18 @@ button, a { -webkit-tap-highlight-color: transparent; }
   animation: dial-in 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-.dial-ring circle {
-  fill: none;
-  transform: rotate(-90deg);
-  transform-origin: 100px 100px;
+/* 60 graduations, et trois d'entre elles disent l'heure.
+   L'ordre des regles compte : seconde par-dessus heure,
+   heure par-dessus minute, minute par-dessus les grandes. */
+.dial-ring line {
+  stroke-linecap: round;
+  transition: stroke-width 0.2s ease, stroke-opacity 0.2s ease, stroke 0.3s ease;
 }
-
-.ticks-min {
-  stroke: var(--bone);
-  stroke-opacity: 0.4;
-  stroke-width: 8;
-  stroke-dasharray: 0.8 9.148;
-  stroke-dashoffset: 0.4;
-}
-
-.ticks-hr {
-  stroke: var(--gold);
-  stroke-width: 12;
-  stroke-dasharray: 2.4 46.29;
-  stroke-dashoffset: 1.2;
-}
+.tk { stroke: var(--bone); stroke-opacity: 0.3; stroke-width: 2.4; }
+.tk-maj { stroke-opacity: 0.48; stroke-width: 3.6; }
+.tk-min { stroke: var(--bone); stroke-opacity: 0.95; stroke-width: 4.6; }
+.tk-hr { stroke: var(--gold); stroke-opacity: 1; stroke-width: 6.5; }
+.tk-sec { stroke: #FFFFFF; stroke-opacity: 1; stroke-width: 5.6; }
 
 @keyframes dial-in {
   from { opacity: 0; transform: rotate(-30deg) scale(0.96); }

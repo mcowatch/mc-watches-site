@@ -1183,6 +1183,67 @@
   /* Le cadran du hero donne l'heure réelle : les aiguilles bougent,
      la trotteuse balaie, et la couronne de graduations tourne
      lentement (animation CSS). */
+  /* La lunette du hero EST l'horloge. Soixante graduations :
+     celle de l'heure passe en doré, celle des minutes s'épaissit,
+     et celle des secondes grandit et devient blanche en tournant.
+     On peut vraiment lire l'heure dessus. */
+  function initCadran() {
+    var svg = document.querySelector(".dial-ring");
+    var g = svg && svg.querySelector(".ticks");
+    if (!g) return;
+
+    var NS = "http://www.w3.org/2000/svg";
+    var N = 60, R = 95;
+    var LONG = { base: 7, maj: 11, min: 14, hr: 17, sec: 20 };
+    var ticks = [];
+
+    for (var i = 0; i < N; i++) {
+      var a = (i / N) * Math.PI * 2 - Math.PI / 2;
+      var ln = document.createElementNS(NS, "line");
+      ln.setAttribute("x1", (100 + Math.cos(a) * R).toFixed(2));
+      ln.setAttribute("y1", (100 + Math.sin(a) * R).toFixed(2));
+      g.appendChild(ln);
+      ticks.push({ el: ln, a: a, maj: i % 5 === 0 });
+      poser(ticks[i], null);
+    }
+
+    function poser(t, role) {
+      var len = role === "sec" ? LONG.sec
+              : role === "hr"  ? LONG.hr
+              : role === "min" ? LONG.min
+              : t.maj ? LONG.maj : LONG.base;
+      t.el.setAttribute("x2", (100 + Math.cos(t.a) * (R - len)).toFixed(2));
+      t.el.setAttribute("y2", (100 + Math.sin(t.a) * (R - len)).toFixed(2));
+      t.el.setAttribute("class", "tk" + (t.maj ? " tk-maj" : "") + (role ? " tk-" + role : ""));
+    }
+
+    var dernier = { hr: -1, min: -1, sec: -1 };
+
+    function lire() {
+      var d = new Date();
+      var s = d.getSeconds();
+      var m = d.getMinutes();
+      var h = (d.getHours() % 12) * 5 + Math.floor(m / 12);
+
+      if (h === dernier.hr && m === dernier.min && s === dernier.sec) return;
+
+      /* on remet à zéro seulement ce qui change */
+      [dernier.hr, dernier.min, dernier.sec].forEach(function (i) {
+        if (i > -1 && ticks[i]) poser(ticks[i], null);
+      });
+
+      /* ordre volontaire : la seconde passe par-dessus tout */
+      poser(ticks[h], "hr");
+      if (m !== h) poser(ticks[m], "min");
+      poser(ticks[s], "sec");
+
+      dernier.hr = h; dernier.min = m; dernier.sec = s;
+    }
+
+    lire();
+    setInterval(lire, 250);
+  }
+
   function initAuto() {
     const montres = MC.produits.filter((p) => p.type === "montre");
     const boites = MC.produits.filter((p) => p.type === "boite");
@@ -1272,6 +1333,7 @@
   initPixel();
   badgeModeTest();
   initPanier();
+  initCadran();
   initAuto();
   initFloat();
   initBandeau();
