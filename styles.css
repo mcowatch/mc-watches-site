@@ -1764,3 +1764,74 @@ main { flex: 1 0 auto; }
   .pg-form { grid-template-columns: 1fr; }
   .pg-form .field-demi { grid-column: 1 / -1; }
 }
+
+/* ------------------------------------------------------
+   Panier toujours a portee : en-tete et pastille flottante
+   ------------------------------------------------------ */
+
+/* Le bouton vit dans l'en-tete lui-meme, pas dans la navigation :
+   sur telephone la navigation est repliee et le panier y etait
+   invisible. L'ordre le place a droite dans les deux cas :
+   ordinateur -> marque, liens, panier
+   telephone  -> marque, panier, menu                             */
+.site-header .wrap > .nav-panier { order: 3; }
+.site-header .wrap > .menu-toggle { order: 4; }
+.site-header .wrap > .nav { order: 2; }
+
+@media (min-width: 880px) {
+  .site-header .wrap > .nav { margin-left: auto; }
+  .site-header .wrap > .nav-panier { margin-left: 18px; }
+}
+@media (max-width: 879px) {
+  .site-header .wrap > .nav-panier { margin-left: auto; padding: 7px 12px; }
+}
+@media (max-width: 400px) {
+  .site-header .wrap > .nav-panier span { display: none; }
+  .site-header .wrap > .nav-panier { padding: 8px 10px; }
+}
+
+/* Pastille flottante, au-dessus du bouton WhatsApp */
+.pan-flot {
+  position: fixed; right: 16px; bottom: 76px; z-index: 61;
+  display: inline-flex; align-items: center; gap: 9px;
+  min-height: 50px; padding: 12px 18px 12px 15px;
+  color: var(--case); background: var(--bone);
+  border-radius: 999px; text-decoration: none;
+  font-family: var(--f-display); font-weight: 600; font-size: 0.95rem;
+  box-shadow: 0 6px 20px rgba(18, 18, 18, 0.35);
+  transition: transform 0.18s ease, background 0.18s ease;
+}
+.pan-flot:hover { background: #fff; transform: translateY(-2px); }
+.pan-flot b {
+  background: var(--case); color: var(--bone); font-weight: 700;
+  font-size: 0.74rem; line-height: 1; min-width: 20px; height: 20px;
+  border-radius: 999px; display: inline-grid; place-items: center; padding: 0 6px;
+}
+.pan-flot.saute { animation: pan-saut 0.6s cubic-bezier(0.25, 0.9, 0.3, 1); }
+@keyframes pan-saut {
+  0%   { transform: scale(1) translateY(0); }
+  28%  { transform: scale(1.12) translateY(-7px); }
+  55%  { transform: scale(0.97) translateY(0); }
+  78%  { transform: scale(1.04) translateY(-2px); }
+  100% { transform: scale(1) translateY(0); }
+}
+@media (max-width: 560px) {
+  .pan-flot { padding: 13px; bottom: 72px; }
+  .pan-flot-txt { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pan-flot.saute { animation: none; }
+  .pan-flot:hover { transform: none; }
+}
+
+/* Lien discret sous le bouton des cartes produit */
+.card-lien {
+  display: inline-block; margin-top: 2px;
+  font-family: var(--f-display); font-size: 0.92rem; font-weight: 600;
+  color: var(--gold-ink); text-decoration: none;
+  border-bottom: 1px solid currentColor; padding-bottom: 1px;
+  justify-self: start; cursor: pointer;
+}
+.card-lien:hover { color: var(--ink); }
+.card-actions { justify-items: start; }
+.card-actions .btn { width: 100%; }

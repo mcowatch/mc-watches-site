@@ -643,13 +643,13 @@
 
     /* Le panier passe en premier et en bouton plein : c'est l'action
        qu'on veut voir choisie. Commander reste possible d'un seul clic. */
+    /* Deux actions par carte, pas trois : un bouton qui agit et un lien
+       pour en voir plus. « Commander » reste sur la fiche produit. */
     const actions = avecCouleurs
       ? `<button type="button" class="btn btn-solid" data-panier>Ajouter au panier</button>
-         <button type="button" class="btn btn-ghost" data-order>Commander</button>
-         <a class="btn btn-ghost" data-details>Voir les détails</a>`
+         <a class="card-lien" data-details>Voir les détails</a>`
       : `<button type="button" class="btn btn-solid" data-panier>Ajouter au panier</button>
-         <button type="button" class="btn btn-ghost" data-order>Commander</button>
-         <a class="btn btn-ghost" data-wa target="_blank" rel="noopener">Poser une question sur WhatsApp</a>`;
+         <a class="card-lien" data-wa target="_blank" rel="noopener">Poser une question</a>`;
 
     const carte = html(`
       <article class="card">
@@ -681,7 +681,8 @@
       }
     };
 
-    carte.querySelector("[data-order]").addEventListener("click", () =>
+    const cmdCarte = carte.querySelector("[data-order]");
+    if (cmdCarte) cmdCarte.addEventListener("click", () =>
       ouvrirCommande(p, avecCouleurs ? p.couleurs[ci].nom : p.couleur || "")
     );
 
@@ -692,7 +693,6 @@
         value: p.prix, currency: "MAD",
         content_type: "product", content_ids: [refProduit(p)]
       });
-      document.dispatchEvent(new CustomEvent("panier:ouvrir"));
     });
 
     const car = carrousel({
@@ -921,7 +921,6 @@
         value: p.prix, currency: "MAD",
         content_type: "product", content_ids: [refProduit(p)]
       });
-      document.dispatchEvent(new CustomEvent("panier:ouvrir"));
     });
 
     pixel("ViewContent", {
@@ -1052,148 +1051,59 @@
     return (p.photos && p.photos[0]) || "";
   }
 
+  /* ---------- Acces au panier ----------
+     Deux portes vers la page panier : le bouton de l'en-tete, toujours
+     visible meme sur telephone, et une pastille flottante qui saute
+     quand on vient d'ajouter quelque chose. Pas de tiroir qui
+     s'ouvre par-dessus : l'ajout se confirme, il ne detourne pas. */
+
   function initPanier() {
     Panier.charger();
 
-    var el = html(
-      '<div class="pan" hidden>' +
-        '<div class="pan-voile" data-fermer></div>' +
-        '<aside class="pan-boite" role="dialog" aria-modal="true" aria-labelledby="pan-titre">' +
-          '<div class="pan-tete">' +
-            '<h2 id="pan-titre">Votre panier</h2>' +
-            '<button type="button" class="order-close" data-fermer aria-label="Fermer">' + ICON_CLOSE + '</button>' +
-          '</div>' +
-          '<div class="pan-corps"></div>' +
-          '<div class="pan-pied">' +
-            '<div class="pan-l"><span>Sous-total</span><strong data-sous>0 DH</strong></div>' +
-            '<div class="pan-l pan-eco" data-eco-l hidden><span>Offre lot</span><strong data-eco>0 DH</strong></div>' +
-            '<div class="pan-l pan-tot"><span>Total</span><strong data-tot>0 DH</strong></div>' +
-            '<p class="pan-note">Livraison gratuite partout au Maroc. Vous payez à la réception.</p>' +
-            '<button type="button" class="btn btn-solid pan-go">Commander</button>' +
-          '</div>' +
-        '</aside>' +
-      '</div>');
-    document.body.appendChild(el);
-
-    var corps = el.querySelector(".pan-corps");
-    var pied  = el.querySelector(".pan-pied");
-
-    function ouvrir() {
-      el.hidden = false;
-      document.body.style.overflow = "hidden";
-      requestAnimationFrame(function () { el.classList.add("is-open"); });
-      var b = el.querySelector(".order-close"); if (b) b.focus();
-    }
-    function fermer() {
-      el.classList.remove("is-open");
-      document.body.style.overflow = "";
-      setTimeout(function () { el.hidden = true; }, 240);
-    }
-    el.querySelectorAll("[data-fermer]").forEach(function (b) { b.addEventListener("click", fermer); });
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && !el.hidden) fermer();
-    });
-
-    function dessiner() {
-      var lignes = Panier.lignes;
-
-      if (!lignes.length) {
-        corps.innerHTML = '<p class="pan-vide">Votre panier est vide.<br>Ajoutez une montre pour commencer.</p>';
-        pied.hidden = true;
-        return;
-      }
-      pied.hidden = false;
-
-      corps.innerHTML = lignes.map(function (l, i) {
-        var cols = couleursDe(l.ref);
-        var ph = photoDe(l.ref, l.couleur);
-        return '<div class="pan-art">' +
-          (ph ? '<img class="pan-img" src="' + esc(ph) + '" alt="" loading="lazy">' : '<span class="pan-img"></span>') +
-          '<div class="pan-info">' +
-            '<p class="pan-nom">' + esc(l.nom) + '</p>' +
-            '<p class="pan-prix">' + prix(l.prix) + " l'unité" + '</p>' +
-            (cols.length
-              ? '<label class="pan-coul"><span>Couleur</span>' +
-                '<select data-coul="' + i + '">' +
-                  cols.map(function (c) {
-                    return '<option value="' + esc(c) + '"' + (c === l.couleur ? " selected" : "") + ">" + esc(c) + "</option>";
-                  }).join("") +
-                '</select></label>'
-              : "") +
-            '<div class="pan-qte">' +
-              '<button type="button" data-moins="' + i + '" aria-label="Retirer un">&minus;</button>' +
-              '<span>' + l.qte + '</span>' +
-              '<button type="button" data-plus="' + i + '" aria-label="Ajouter un">+</button>' +
-              '<button type="button" class="pan-sup" data-sup="' + i + '">Retirer</button>' +
-            '</div>' +
-          '</div>' +
-          '<strong class="pan-sous">' + prix(l.prix * l.qte) + '</strong>' +
-        '</div>';
-      }).join("");
-
-      var c = Panier.calcul();
-      el.querySelector("[data-sous]").textContent = prix(c.sousTotal);
-      el.querySelector("[data-tot]").textContent  = prix(c.total);
-      var ecoL = el.querySelector("[data-eco-l]");
-      ecoL.hidden = c.remise <= 0;
-      if (c.remise > 0) {
-        el.querySelector("[data-eco]").textContent = "− " + prix(c.remise);
-        ecoL.querySelector("span").textContent =
-          "Offre lot · " + c.nbMontres + " montres";
-      }
-    }
-
-    corps.addEventListener("click", function (e) {
-      var t = e.target.closest("[data-moins],[data-plus],[data-sup]");
-      if (!t) return;
-      if (t.hasAttribute("data-moins")) Panier.definirQte(+t.getAttribute("data-moins"), Panier.lignes[+t.getAttribute("data-moins")].qte - 1);
-      else if (t.hasAttribute("data-plus")) Panier.definirQte(+t.getAttribute("data-plus"), Panier.lignes[+t.getAttribute("data-plus")].qte + 1);
-      else Panier.retirer(+t.getAttribute("data-sup"));
-    });
-    corps.addEventListener("change", function (e) {
-      var s = e.target.closest("[data-coul]");
-      if (s) Panier.definirCouleur(+s.getAttribute("data-coul"), s.value);
-    });
-
-    /* Le tiroir sert à confirmer l'ajout. La commande se passe sur la
-       page panier, avec le formulaire de livraison. */
-    el.querySelector(".pan-go").addEventListener("click", function () {
-      if (!Panier.lignes.length) return;
-      window.location.href = "panier.html";
-    });
-
-    /* bouton dans l'en-tête */
-    var nav = document.querySelector(".site-header .nav");
-    var btn = html('<a class="nav-panier" href="panier.html" aria-label="Voir le panier">' +
+    var ICONE_PANIER =
       '<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">' +
       '<path d="M6 7h12l-1.2 11.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 7Z" fill="none" stroke="currentColor" stroke-width="1.8"/>' +
       '<path d="M9 7a3 3 0 0 1 6 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
-      '</svg><span>Panier</span><b data-compte hidden>0</b></a>');
-    if (nav) nav.insertBefore(btn, nav.querySelector(".nav-cta") || null);
-    else document.querySelector(".site-header .wrap").appendChild(btn);
+      "</svg>";
 
-    function majBadge() {
-      var n = Panier.nbArticles();
-      var b = btn.querySelector("[data-compte]");
-      b.textContent = String(n);
-      b.hidden = n === 0;
-      btn.classList.toggle("a-des-articles", n > 0);
+    /* dans l'en-tete lui-meme, pas dans la navigation : sur telephone
+       la navigation est repliee et le panier y devenait invisible */
+    var wrap = document.querySelector(".site-header .wrap");
+    var btn = html('<a class="nav-panier" href="panier.html" aria-label="Voir le panier">' +
+      ICONE_PANIER + "<span>Panier</span><b data-compte hidden>0</b></a>");
+    if (wrap) {
+      var bascule = wrap.querySelector(".menu-toggle");
+      if (bascule) wrap.insertBefore(btn, bascule);
+      else wrap.appendChild(btn);
     }
 
-    document.addEventListener("panier:maj", function () { majBadge(); dessiner(); });
-    majBadge(); dessiner();
+    var flot = html('<a class="pan-flot" href="panier.html" hidden aria-label="Aller au panier">' +
+      ICONE_PANIER + '<span class="pan-flot-txt">Aller au panier</span>' +
+      "<b data-compte2>0</b></a>");
+    document.body.appendChild(flot);
 
-    /* ouvert depuis ailleurs (bouton « Ajouter au panier ») */
-    document.addEventListener("panier:ouvrir", function () { dessiner(); ouvrir(); });
+    var premierRendu = true;
+    function majBadge() {
+      var n = Panier.nbArticles();
+      [btn.querySelector("[data-compte]"), flot.querySelector("[data-compte2]")].forEach(function (b) {
+        if (!b) return;
+        b.textContent = String(n);
+        b.hidden = n === 0;
+      });
+      btn.classList.toggle("a-des-articles", n > 0);
+      flot.hidden = n === 0;
+      if (!premierRendu && n > 0) {
+        flot.classList.remove("saute");
+        void flot.offsetWidth; /* relance l'animation */
+        flot.classList.add("saute");
+      }
+      premierRendu = false;
+    }
+
+    document.addEventListener("panier:maj", majBadge);
+    majBadge();
   }
 
-  /* Le cadran du hero donne l'heure réelle : les aiguilles bougent,
-     la trotteuse balaie, et la couronne de graduations tourne
-     lentement (animation CSS). */
-  /* La lunette du hero EST l'horloge. Soixante graduations :
-     celle de l'heure passe en doré, celle des minutes s'épaissit,
-     et celle des secondes grandit et devient blanche en tournant.
-     On peut vraiment lire l'heure dessus. */
   function initCadran() {
     var svg = document.querySelector(".dial-ring");
     var g = svg && svg.querySelector(".ticks");
