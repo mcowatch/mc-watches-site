@@ -25,6 +25,11 @@ window.MC = {
   // Mettre 0 pour désactiver l'offre. Ne touche pas les boîtes.
   remiseMontreSupp: 49,
 
+  // Heure limite d'expédition du jour, en heures (0 à 23).
+  // Une commande passée avant cette heure part le jour même.
+  // Mettre null pour masquer tout le bandeau de l'heure.
+  heureLimite: 17,
+
   // Formulaire Google : identifiants des champs préremplis.
   formulaire: {
     base: "https://docs.google.com/forms/d/e/1FAIpQLSerO_SjWbLOsfbOhFkFcDC0gSQHaS_0Ss3w8ePUO94eo3wCzQ/viewform",
