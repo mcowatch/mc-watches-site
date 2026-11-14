@@ -1702,3 +1702,65 @@ main { flex: 1 0 auto; }
   .pg-img { width: 70px; height: 70px; }
   .pg-total { grid-column: 2; justify-self: end; }
 }
+
+/* ------------------------------------------------------
+   Formulaire de la page panier
+   Les champs de la fenetre sont stylises par .order-dialog,
+   donc la page avait des champs bruts. Ici le sien, en carte,
+   avec prenom et nom cote a cote.
+   ------------------------------------------------------ */
+
+.pg-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 18px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: clamp(20px, 3.5vw, 30px);
+}
+.pg-form .field { grid-column: 1 / -1; margin-bottom: 18px; }
+.pg-form .field-demi { grid-column: span 1; }
+
+.pg-form label {
+  display: block; margin-bottom: 7px;
+  font-family: var(--f-display); font-size: 0.82rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted);
+}
+
+.pg-form input,
+.pg-form select,
+.pg-form textarea {
+  display: block; width: 100%; min-height: 52px;
+  padding: 13px 15px;
+  color: var(--ink); background: #fff;
+  border: 1px solid var(--line); border-radius: 10px;
+  font-family: var(--f-display); font-size: 1rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.pg-form input::placeholder, .pg-form textarea::placeholder { color: #A8A396; }
+.pg-form input:hover, .pg-form select:hover, .pg-form textarea:hover { border-color: #B6AD98; }
+.pg-form input:focus, .pg-form select:focus, .pg-form textarea:focus {
+  outline: none; border-color: var(--gold-ink);
+  box-shadow: 0 0 0 3px rgba(201, 162, 75, 0.24);
+}
+.pg-form textarea { resize: vertical; min-height: 92px; line-height: 1.5; }
+.pg-form [aria-invalid="true"] {
+  border-color: #A3261A; box-shadow: 0 0 0 3px rgba(163, 38, 26, 0.13);
+}
+
+.pg-form .field-help { margin-top: 6px; font-size: 0.8rem; color: var(--muted); }
+.pg-form .field-error { margin-top: 6px; font-size: 0.85rem; }
+
+.pg-form .order-send-error,
+.pg-form .order-fine { grid-column: 1 / -1; }
+.pg-form .order-fine { margin: 14px 0 0; font-size: 0.86rem; }
+.pg-form .btn {
+  grid-column: 1 / -1; width: 100%; min-height: 56px;
+  font-size: 1.02rem; margin-top: 4px;
+}
+
+@media (max-width: 560px) {
+  .pg-form { grid-template-columns: 1fr; }
+  .pg-form .field-demi { grid-column: 1 / -1; }
+}

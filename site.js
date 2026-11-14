@@ -194,8 +194,8 @@
 
 
   const CHAMPS = [
-    { id: "prenom", label: "Prénom", auto: "given-name", erreur: "Indiquez votre prénom." },
-    { id: "nom", label: "Nom", auto: "family-name", erreur: "Indiquez votre nom." },
+    { id: "prenom", label: "Prénom", auto: "given-name", demi: true, erreur: "Indiquez votre prénom." },
+    { id: "nom", label: "Nom", auto: "family-name", demi: true, erreur: "Indiquez votre nom." },
     { id: "tel", label: "Téléphone", auto: "tel", type: "tel", pays: true,
       aide: "Choisissez votre pays, puis tapez votre numéro sans l'indicatif.",
       erreur: "Ce numéro ne correspond pas au pays choisi. Vérifiez le nombre de chiffres." },
@@ -214,7 +214,7 @@
   function champsHTML(pfx) {
     pfx = pfx || "of";
     return CHAMPS.map((c) => `
-      <div class="field">
+      <div class="field${c.demi ? " field-demi" : ""}">
         <label for="${pfx}-${c.id}">${c.label}</label>
         ${c.pays
           ? `<div style="display:flex;gap:8px;align-items:stretch">
