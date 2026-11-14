@@ -1194,7 +1194,7 @@
 
     var NS = "http://www.w3.org/2000/svg";
     var N = 60, R = 95;
-    var LONG = { base: 7, maj: 11, min: 14, hr: 17, sec: 20 };
+    var LONG = { base: 7, maj: 11, min: 15, hr: 19, sec: 15 };
     var ticks = [];
 
     for (var i = 0; i < N; i++) {
@@ -1207,42 +1207,44 @@
       poser(ticks[i], null);
     }
 
-    /* La lunette reste une lunette : graduations fixes, les grandes
-       un peu plus longues. Ce sont les aiguilles qui donnent l'heure. */
-    function poser(t) {
-      var len = t.maj ? LONG.maj : LONG.base;
+    /* Ce sont les graduations elles-mêmes qui donnent l'heure.
+       Même couleur que les autres, simplement plus longues et plus
+       épaisses : la plus grosse est l'heure, la moyenne la minute,
+       et celle qui avance chaque seconde est la seconde. */
+    function poser(t, role) {
+      var len = role === "hr"  ? LONG.hr
+              : role === "min" ? LONG.min
+              : role === "sec" ? LONG.sec
+              : t.maj ? LONG.maj : LONG.base;
       t.el.setAttribute("x2", (100 + Math.cos(t.a) * (R - len)).toFixed(2));
       t.el.setAttribute("y2", (100 + Math.sin(t.a) * (R - len)).toFixed(2));
-      t.el.setAttribute("class", "tk" + (t.maj ? " tk-maj" : ""));
+      t.el.setAttribute("class", "tk" + (t.maj ? " tk-maj" : "") + (role ? " tk-" + role : ""));
     }
 
-    /* Trois flèches posées SUR la lunette, pointant vers la montre.
-       Rien ne vient recouvrir la photo du produit. */
-    var flH = svg.querySelector(".fl-hr"),
-        flM = svg.querySelector(".fl-min"),
-        flS = svg.querySelector(".fl-sec");
-    if (!flH || !flM || !flS) return;
-
-    var doux = true;
-    try { doux = !window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+    var dernier = { hr: -1, min: -1, sec: -1 };
 
     function lire() {
       var d = new Date();
-      var s = d.getSeconds() + (doux ? d.getMilliseconds() / 1000 : 0);
-      var m = d.getMinutes() + s / 60;
-      var h = (d.getHours() % 12) + m / 60;
-      flH.setAttribute("transform", "rotate(" + (h / 12) * 360 + " 100 100)");
-      flM.setAttribute("transform", "rotate(" + (m / 60) * 360 + " 100 100)");
-      flS.setAttribute("transform", "rotate(" + (s / 60) * 360 + " 100 100)");
+      var s = d.getSeconds();
+      var m = d.getMinutes();
+      var h = (d.getHours() % 12) * 5 + Math.floor(m / 12);
+
+      if (h === dernier.hr && m === dernier.min && s === dernier.sec) return;
+
+      /* on ne redessine que ce qui change, pas les soixante */
+      [dernier.hr, dernier.min, dernier.sec].forEach(function (i) {
+        if (i > -1 && ticks[i]) poser(ticks[i], null);
+      });
+
+      poser(ticks[h], "hr");
+      if (m !== h) poser(ticks[m], "min");
+      if (s !== h && s !== m) poser(ticks[s], "sec");
+
+      dernier.hr = h; dernier.min = m; dernier.sec = s;
     }
 
     lire();
-    if (doux) {
-      var boucle = function () { lire(); requestAnimationFrame(boucle); };
-      requestAnimationFrame(boucle);
-    } else {
-      setInterval(lire, 1000);
-    }
+    setInterval(lire, 250);
   }
 
   function initAuto() {

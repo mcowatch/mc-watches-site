@@ -360,19 +360,19 @@ button, a { -webkit-tap-highlight-color: transparent; }
   animation: dial-in 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-/* La lunette redevient une lunette : 60 graduations fixes,
-   les 12 grandes en dore. Ce sont les AIGUILLES qui donnent l'heure. */
-.dial-ring line { stroke-linecap: round; }
-.tk { stroke: var(--bone); stroke-opacity: 0.3; stroke-width: 2.4; }
-.tk-maj { stroke: var(--gold); stroke-opacity: 0.78; stroke-width: 3.8; }
-
-/* Trois fleches sur la lunette, pointe vers l'EXTERIEUR.
-   Hampe + tete : une vraie fleche, pas un triangle. La hampe part de
-   sous la photo, donc le produit reste entierement degage. */
-.fl { transition: fill 0.3s ease; }
-.fl-hr { fill: var(--gold); }
-.fl-min { fill: var(--bone); }
-.fl-sec { fill: #FFFFFF; }
+/* La lunette donne l'heure avec ses propres graduations.
+   Tout reste creme, sauf la seconde qui passe en dore : c'est la
+   seule qui change de couleur, et la seule qui bouge chaque seconde.
+   L'heure est la plus longue et la plus epaisse, la minute suit. */
+.dial-ring line {
+  stroke-linecap: round;
+  transition: stroke-width 0.18s ease, stroke-opacity 0.18s ease, stroke 0.25s ease;
+}
+.tk { stroke: var(--bone); stroke-opacity: 0.28; stroke-width: 2.4; }
+.tk-maj { stroke-opacity: 0.46; stroke-width: 3.6; }
+.tk-min { stroke-opacity: 0.92; stroke-width: 5; }
+.tk-hr { stroke-opacity: 1; stroke-width: 7; }
+.tk-sec { stroke: var(--gold); stroke-opacity: 1; stroke-width: 5; }
 
 @keyframes dial-in {
   from { opacity: 0; transform: rotate(-30deg) scale(0.96); }
