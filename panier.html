@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Votre panier | MC Watches</title>
+  <meta name="description" content="Votre panier MC Watches. Livraison gratuite partout au Maroc, paiement à la réception, échange ou retour sous 7 jours.">
+  <link rel="canonical" href="https://www.mc-watches.com/panier.html">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#121212">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MC Watches">
+  <meta property="og:locale" content="fr_MA">
+  <meta property="og:title" content="Votre panier | MC Watches">
+  <meta property="og:description" content="Votre panier MC Watches.">
+  <meta property="og:url" content="https://www.mc-watches.com/panier.html">
+  <meta property="og:image" content="https://www.mc-watches.com/og-image.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=Newsreader:wght@400;500&display=swap">
+  <link rel="stylesheet" href="styles.css?v=29">
+  <script src="data.js?v=29" defer></script>
+  <script src="site.js?v=29" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenu">Aller au contenu</a>
+
+  <div class="promo">
+    <ul class="promo-list">
+      <li>Livraison gratuite partout au Maroc</li>
+      <li>Livraison en 24 à 48 h à Casablanca et Rabat, 3 jours ailleurs</li>
+      <li>Paiement à la livraison</li>
+      <li>Échange et retour sous 7 jours</li>
+    </ul>
+  </div>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="./" aria-label="MC Watches, accueil">
+        <img src="logo-light.png" width="240" height="184" alt="">
+        <span class="brand-text">
+          <span class="brand-name">MC Watches</span>
+          <span class="brand-tag">Men's Corner</span>
+        </span>
+      </a>
+
+      <button type="button" class="menu-toggle" aria-expanded="false" aria-controls="main-navigation">
+        <span class="menu-bars" aria-hidden="true"></span>
+        <span>Menu</span>
+      </button>
+
+      <nav class="nav" id="main-navigation" aria-label="Navigation principale">
+        <a href="produits.html">Produits</a>
+        <a href="livraison.html" aria-current="page">Livraison</a>
+        <a href="./#about">À propos</a>
+        <a href="./#contact">Contact</a>
+        <a class="nav-cta" href="https://wa.me/212708275864?text=Bonjour%20MC%20Watches%2C%20je%20souhaite%20d%C3%A9couvrir%20les%20mod%C3%A8les%20disponibles." target="_blank" rel="noopener">WhatsApp</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenu">
+    <section class="section">
+      <div class="wrap">
+        <p class="fil"><a href="./">Accueil</a> <span aria-hidden="true">/</span> Panier</p>
+        <h1>Votre panier</h1>
+
+        <div class="pg-vide" data-vide hidden>
+          <p>Votre panier est vide pour le moment.</p>
+          <a class="btn btn-solid" href="produits.html">Voir les montres</a>
+        </div>
+
+        <div class="pg" data-pg hidden>
+          <div class="pg-lignes" data-lignes></div>
+
+          <aside class="pg-resume">
+            <h2>Récapitulatif</h2>
+            <div class="pan-l"><span>Sous-total</span><strong data-sous>0 DH</strong></div>
+            <div class="pan-l pan-eco" data-eco-l hidden><span data-eco-txt>Offre lot</span><strong data-eco>0 DH</strong></div>
+            <div class="pan-l"><span>Livraison</span><strong>Gratuite</strong></div>
+            <div class="pan-l pan-tot"><span>Total</span><strong data-tot>0 DH</strong></div>
+            <p class="pan-note">Chaque montre après la première coûte 49 DH de moins. Prix final : vous payez au livreur à la réception, rien à l'avance. Échange ou retour sans motif sous 7 jours.</p>
+            <a class="btn btn-ghost pg-continuer" href="produits.html">Continuer mes achats</a>
+          </aside>
+        </div>
+
+        <div class="pg-commande" data-commande hidden>
+          <h2>Vos coordonnées de livraison</h2>
+          <p class="pg-sous">Nous vous appelons seulement pour confirmer l'adresse. Vous payez au livreur.</p>
+          <form class="order-form pg-form" novalidate data-form></form>
+        </div>
+
+        <div class="pg-merci" data-merci hidden>
+          <h2>Commande envoyée</h2>
+          <p>Merci, votre commande est enregistrée. Nous vous appelons très vite pour confirmer l'adresse, puis vous payez au livreur à la réception.</p>
+          <a class="btn btn-solid" href="produits.html">Continuer mes achats</a>
+          <p class="pan-note">Pas de nouvelles de notre part&nbsp;?</p>
+          <a class="btn btn-ghost" data-merci-wa target="_blank" rel="noopener">Nous écrire sur WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <img src="logo-light.png" width="240" height="184" loading="lazy" alt="Logo MC Watches">
+          <p>Montres et boîtes de rangement, livrées partout au Maroc. Boutique basée à Casablanca.</p>
+        </div>
+
+        <div>
+          <h2>Boutique</h2>
+          <ul class="footer-links">
+            <li><a href="produits.html#montres">Montres</a></li>
+            <li><a href="produits.html#boites">Boîtes de rangement</a></li>
+            <li><a href="livraison.html">Livraison et retours</a></li>
+            <li><a href="./#about">À propos</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h2>Contact</h2>
+          <ul class="footer-links">
+            <li><a href="https://wa.me/212708275864?text=Bonjour%20MC%20Watches%2C%20j%27ai%20une%20question%20sur%20vos%20mod%C3%A8les." target="_blank" rel="noopener">WhatsApp : +212 708 275 864</a></li>
+            <li><a href="mailto:mcowatches@gmail.com">mcowatches@gmail.com</a></li>
+            <li><a href="https://www.instagram.com/mcowatches/" target="_blank" rel="noopener">Instagram : @mcowatches</a></li>
+            <li>Casablanca, Maroc</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 MC Watches. Tous droits réservés.</span>
+        <span>mc-watches.com</span>
+      </div>
+    </div>
+  </footer>
+
+  <a class="wa-float" href="https://wa.me/212708275864?text=Bonjour%20MC%20Watches%2C%20je%20souhaite%20commander%20une%20montre." target="_blank" rel="noopener" aria-label="Écrire sur WhatsApp">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 4.5h16v11H9.5L5 19.5v-4H4z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+    <span>WhatsApp</span>
+  </a>
+</body>
+</html>

@@ -208,23 +208,31 @@
 
   let dlg = null;
 
-  function creerDialogue() {
-    const champs = CHAMPS.map((c) => `
+  /* Les champs de livraison sont écrits UNE fois et servent aux deux
+     endroits : la fenêtre de commande rapide et la page panier.
+     Le préfixe évite deux éléments avec le même identifiant. */
+  function champsHTML(pfx) {
+    pfx = pfx || "of";
+    return CHAMPS.map((c) => `
       <div class="field">
-        <label for="of-${c.id}">${c.label}</label>
+        <label for="${pfx}-${c.id}">${c.label}</label>
         ${c.pays
           ? `<div style="display:flex;gap:8px;align-items:stretch">
-               <select id="of-pays" name="pays" aria-label="Pays" style="flex:0 1 42%;min-width:0">
+               <select id="${pfx}-pays" name="pays" aria-label="Pays" style="flex:0 1 42%;min-width:0">
                  ${PAYS.map((p) => `<option value="${p.code}">${p.ind ? `+${p.ind} ` : ""}${esc(p.nom)}</option>`).join("")}
                </select>
-               <input id="of-${c.id}" name="${c.id}" type="tel" autocomplete="${c.auto}" inputmode="tel" required style="flex:1 1 auto;min-width:0" aria-describedby="of-${c.id}-aide of-${c.id}-err">
+               <input id="${pfx}-${c.id}" name="${c.id}" type="tel" autocomplete="${c.auto}" inputmode="tel" required style="flex:1 1 auto;min-width:0" aria-describedby="${pfx}-${c.id}-aide ${pfx}-${c.id}-err">
              </div>`
           : c.zone
-          ? `<textarea id="of-${c.id}" name="${c.id}" rows="2" autocomplete="${c.auto}" required aria-describedby="of-${c.id}-aide of-${c.id}-err"></textarea>`
-          : `<input id="of-${c.id}" name="${c.id}" type="${c.type || "text"}" autocomplete="${c.auto}" ${c.type === "tel" ? 'inputmode="tel"' : ""} required aria-describedby="of-${c.id}-aide of-${c.id}-err">`}
-        <p class="field-help" id="of-${c.id}-aide">${c.aide || ""}</p>
-        <p class="field-error" id="of-${c.id}-err" role="alert"></p>
+          ? `<textarea id="${pfx}-${c.id}" name="${c.id}" rows="2" autocomplete="${c.auto}" required aria-describedby="${pfx}-${c.id}-aide ${pfx}-${c.id}-err"></textarea>`
+          : `<input id="${pfx}-${c.id}" name="${c.id}" type="${c.type || "text"}" autocomplete="${c.auto}" ${c.type === "tel" ? 'inputmode="tel"' : ""} required aria-describedby="${pfx}-${c.id}-aide ${pfx}-${c.id}-err">`}
+        <p class="field-help" id="${pfx}-${c.id}-aide">${c.aide || ""}</p>
+        <p class="field-error" id="${pfx}-${c.id}-err" role="alert"></p>
       </div>`).join("");
+  }
+
+  function creerDialogue() {
+    const champs = champsHTML("of");
 
     const el = html(`
       <dialog class="order-dialog" aria-labelledby="order-title">
@@ -1131,7 +1139,7 @@
       if (c.remise > 0) {
         el.querySelector("[data-eco]").textContent = "− " + prix(c.remise);
         ecoL.querySelector("span").textContent =
-          "Offre lot (" + c.nbMontres + " montres, " + REMISE_SUPP + " DH par montre en plus)";
+          "Offre lot · " + c.nbMontres + " montres";
       }
     }
 
@@ -1147,21 +1155,20 @@
       if (s) Panier.definirCouleur(+s.getAttribute("data-coul"), s.value);
     });
 
+    /* Le tiroir sert à confirmer l'ajout. La commande se passe sur la
+       page panier, avec le formulaire de livraison. */
     el.querySelector(".pan-go").addEventListener("click", function () {
       if (!Panier.lignes.length) return;
-      fermer();
-      if (!dlg) dlg = creerDialogue();
-      if (dlg.supporte) dlg.ouvrirPanier();
+      window.location.href = "panier.html";
     });
 
     /* bouton dans l'en-tête */
     var nav = document.querySelector(".site-header .nav");
-    var btn = html('<button type="button" class="nav-panier" aria-label="Ouvrir le panier">' +
+    var btn = html('<a class="nav-panier" href="panier.html" aria-label="Voir le panier">' +
       '<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">' +
       '<path d="M6 7h12l-1.2 11.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 7Z" fill="none" stroke="currentColor" stroke-width="1.8"/>' +
       '<path d="M9 7a3 3 0 0 1 6 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
-      '</svg><span>Panier</span><b data-compte hidden>0</b></button>');
-    btn.addEventListener("click", function () { dessiner(); ouvrir(); });
+      '</svg><span>Panier</span><b data-compte hidden>0</b></a>');
     if (nav) nav.insertBefore(btn, nav.querySelector(".nav-cta") || null);
     else document.querySelector(".site-header .wrap").appendChild(btn);
 
@@ -1245,6 +1252,190 @@
 
     lire();
     setInterval(lire, 250);
+  }
+
+  /* ---------- Page panier ----------
+     Le parcours complet sur une vraie page : les articles, le
+     récapitulatif, puis les coordonnées de livraison. Pas de fenêtre. */
+
+  function envoiPanier(c) {
+    if (modeTest) return Promise.resolve();
+    var f = MC.formulaire, k = Panier.calcul();
+    var corps = new URLSearchParams();
+    [
+      [f.reference, Panier.resume()],
+      [f.couleur, Panier.couleurs()],
+      [f.prix, k.total],
+      [f.prenom, c.prenom],
+      [f.nom, c.nom],
+      [f.telephone, c.tel],
+      [f.ville, c.ville],
+      [f.adresse, c.adresse],
+      [f.quantite, Panier.nbArticles()]
+    ].forEach(function (p) {
+      if (p[0] && String(p[1]).trim() !== "") corps.append(p[0], String(p[1]).trim());
+    });
+    corps.append("fvv", "1");
+    corps.append("pageHistory", "0");
+    var ctrl = typeof AbortController === "function" ? new AbortController() : null;
+    var t = setTimeout(function () { ctrl && ctrl.abort(); }, 15000);
+    return fetch(f.base.replace(/\/viewform.*$/, "/formResponse"), {
+      method: "POST", mode: "no-cors", body: corps,
+      signal: ctrl ? ctrl.signal : undefined
+    }).finally(function () { clearTimeout(t); });
+  }
+
+  function initPagePanier() {
+    var page = document.querySelector("[data-pg]");
+    if (!page) return;
+    Panier.charger();
+
+    var vide = document.querySelector("[data-vide]"),
+        lignesEl = document.querySelector("[data-lignes]"),
+        cmd = document.querySelector("[data-commande]"),
+        merci = document.querySelector("[data-merci]"),
+        formEl = document.querySelector("[data-form]");
+
+    formEl.innerHTML = champsHTML("pg") +
+      '<p class="field-error order-send-error" role="alert"></p>' +
+      '<button type="submit" class="btn btn-solid pg-envoyer">Commander</button>' +
+      '<p class="order-fine">Prix final. Nous vous appelons seulement pour confirmer l\'adresse, puis vous payez au livreur.</p>';
+
+    var err = formEl.querySelector(".order-send-error"),
+        bouton = formEl.querySelector(".pg-envoyer"),
+        envoye = false;
+
+    function dessiner() {
+      if (envoye) return;
+      var n = Panier.lignes.length;
+      vide.hidden = n > 0;
+      page.hidden = n === 0;
+      cmd.hidden = n === 0;
+      if (!n) return;
+
+      lignesEl.innerHTML = Panier.lignes.map(function (l, i) {
+        var cols = couleursDe(l.ref), ph = photoDe(l.ref, l.couleur);
+        return '<div class="pg-art">' +
+          (ph ? '<img class="pg-img" src="' + esc(ph) + '" alt="" loading="lazy">' : '<span class="pg-img"></span>') +
+          '<div class="pg-info">' +
+            "<h3>" + esc(l.nom) + "</h3>" +
+            '<p class="pg-prix">' + prix(l.prix) + " l'unité</p>" +
+            (cols.length
+              ? '<label class="pan-coul"><span>Couleur</span><select data-coul="' + i + '">' +
+                cols.map(function (c) {
+                  return '<option value="' + esc(c) + '"' + (c === l.couleur ? " selected" : "") + ">" + esc(c) + "</option>";
+                }).join("") + "</select></label>"
+              : "") +
+            '<div class="pan-qte">' +
+              '<button type="button" data-moins="' + i + '" aria-label="Retirer un">&minus;</button>' +
+              "<span>" + l.qte + "</span>" +
+              '<button type="button" data-plus="' + i + '" aria-label="Ajouter un">+</button>' +
+              '<button type="button" class="pan-sup" data-sup="' + i + '">Retirer</button>' +
+            "</div>" +
+          "</div>" +
+          '<strong class="pg-total">' + prix(l.prix * l.qte) + "</strong>" +
+        "</div>";
+      }).join("");
+
+      /* scope sur la page : le tiroir porte les memes marqueurs */
+      var k = Panier.calcul();
+      page.querySelector("[data-sous]").textContent = prix(k.sousTotal);
+      page.querySelector("[data-tot]").textContent = prix(k.total);
+      var eco = page.querySelector("[data-eco-l]");
+      eco.hidden = k.remise <= 0;
+      if (k.remise > 0) {
+        page.querySelector("[data-eco]").textContent = "− " + prix(k.remise);
+        page.querySelector("[data-eco-txt]").textContent =
+          "Offre lot · " + k.nbMontres + " montres";
+      }
+    }
+
+    lignesEl.addEventListener("click", function (e) {
+      var t = e.target.closest("[data-moins],[data-plus],[data-sup]");
+      if (!t) return;
+      var i;
+      if (t.hasAttribute("data-moins")) { i = +t.getAttribute("data-moins"); Panier.definirQte(i, Panier.lignes[i].qte - 1); }
+      else if (t.hasAttribute("data-plus")) { i = +t.getAttribute("data-plus"); Panier.definirQte(i, Panier.lignes[i].qte + 1); }
+      else Panier.retirer(+t.getAttribute("data-sup"));
+    });
+    lignesEl.addEventListener("change", function (e) {
+      var s = e.target.closest("[data-coul]");
+      if (s) Panier.definirCouleur(+s.getAttribute("data-coul"), s.value);
+    });
+
+    document.addEventListener("panier:maj", dessiner);
+    dessiner();
+
+    if (Panier.lignes.length) {
+      var kk = Panier.calcul();
+      pixel("InitiateCheckout", {
+        value: kk.total, currency: "MAD", content_type: "product",
+        content_ids: Panier.lignes.map(function (l) { return l.ref; }),
+        num_items: Panier.nbArticles()
+      });
+    }
+
+    formEl.addEventListener("submit", function (e) {
+      e.preventDefault();
+      var pays = formEl.elements.pays ? formEl.elements.pays.value : "MA";
+      var vals = {}, premier = null;
+      CHAMPS.forEach(function (c) {
+        var champ = formEl.elements[c.id], val = champ.value.trim();
+        vals[c.id] = val;
+        var ok = c.id === "tel" ? telValide(pays, val) : val.length > 1;
+        champ.setAttribute("aria-invalid", String(!ok));
+        formEl.querySelector("#pg-" + c.id + "-err").textContent = ok ? "" : c.erreur;
+        if (!ok && !premier) premier = champ;
+      });
+      if (premier) { premier.focus(); return; }
+
+      var c = {
+        prenom: vals.prenom, nom: vals.nom,
+        tel: numeroInternational(pays, vals.tel) || vals.tel,
+        ville: vals.ville, adresse: vals.adresse
+      };
+      var k = Panier.calcul();
+      var refs = Panier.lignes.map(function (l) { return l.ref; });
+      var contenus = Panier.lignes.map(function (l) { return { id: l.ref, quantity: l.qte }; });
+      var nb = Panier.nbArticles();
+      var lienMerci = lienWhatsApp(
+        "Bonjour MC Watches, je commande :\n" +
+        Panier.lignes.map(function (l) {
+          return "• " + l.ref + (l.couleur ? " " + l.couleur : "") + " x" + l.qte;
+        }).join("\n") +
+        "\nTotal : " + k.total + " DH\n\nNom : " + c.prenom + " " + c.nom +
+        "\nTéléphone : " + c.tel + "\nVille : " + c.ville + "\nAdresse : " + c.adresse);
+
+      err.textContent = "";
+      bouton.disabled = true;
+      bouton.textContent = "Envoi en cours…";
+
+      envoiPanier(c).then(function () {
+        pixel("Purchase", {
+          value: k.total, currency: "MAD", content_type: "product",
+          content_ids: refs, contents: contenus, num_items: nb
+        });
+        var wa = merci.querySelector("[data-merci-wa]");
+        if (wa) wa.href = lienMerci;
+        if (modeTest && !merci.querySelector("[data-test-note]")) {
+          var note = document.createElement("p");
+          note.setAttribute("data-test-note", "");
+          note.textContent = "Mode test : rien n'a été envoyé. Aucune ligne dans vos commandes, aucun évènement chez Meta.";
+          note.style.cssText = "background:#1d1d1d;color:#fff;padding:9px 12px;border-radius:4px;font-size:13px";
+          merci.insertBefore(note, merci.children[1] || null);
+        }
+        envoye = true;
+        Panier.vider();
+        page.hidden = true; cmd.hidden = true; vide.hidden = true;
+        merci.hidden = false;
+        merci.scrollIntoView({ behavior: "smooth", block: "start" });
+      }).catch(function () {
+        err.textContent = "L'envoi n'a pas abouti. Vérifiez votre connexion et réessayez.";
+      }).finally(function () {
+        bouton.disabled = false;
+        bouton.textContent = "Commander";
+      });
+    });
   }
 
   function initAuto() {
@@ -1336,6 +1527,7 @@
   initPixel();
   badgeModeTest();
   initPanier();
+  initPagePanier();
   initCadran();
   initAuto();
   initFloat();
