@@ -1183,93 +1183,6 @@
   /* Le cadran du hero donne l'heure réelle : les aiguilles bougent,
      la trotteuse balaie, et la couronne de graduations tourne
      lentement (animation CSS). */
-  /* L'heure réelle sert à quelque chose : elle dit au visiteur si sa
-     montre part aujourd'hui ou demain. Le cadran est grand, le compte
-     à rebours est vrai, et l'heure limite se règle dans data.js. */
-  function initMontre() {
-    var sec = document.getElementById("heure");
-    if (!sec) return;
-    var limite = MC.heureLimite;
-    if (limite === null || limite === undefined || isNaN(Number(limite))) return;
-    limite = Number(limite);
-
-    var ticks = "";
-    for (var k = 0; k < 60; k++) {
-      var ang = (k / 60) * Math.PI * 2;
-      var maj = k % 5 === 0;
-      var r1 = 46, r2 = maj ? 38 : 42.5;
-      ticks += '<line class="hu-t' + (maj ? " hu-t-maj" : "") + '"' +
-        ' x1="' + (50 + Math.sin(ang) * r1).toFixed(2) + '" y1="' + (50 - Math.cos(ang) * r1).toFixed(2) + '"' +
-        ' x2="' + (50 + Math.sin(ang) * r2).toFixed(2) + '" y2="' + (50 - Math.cos(ang) * r2).toFixed(2) + '"/>';
-    }
-
-    sec.querySelector(".heure-cadran").innerHTML =
-      '<svg viewBox="0 0 100 100" focusable="false">' +
-        '<circle class="hu-ring" cx="50" cy="50" r="48"/>' +
-        '<circle class="hu-fond" cx="50" cy="50" r="46"/>' + ticks +
-        '<line class="hu-h" x1="50" y1="57" x2="50" y2="28"/>' +
-        '<line class="hu-m" x1="50" y1="59" x2="50" y2="16"/>' +
-        '<line class="hu-s" x1="50" y1="63" x2="50" y2="13"/>' +
-        '<circle class="hu-pin" cx="50" cy="50" r="2.4"/>' +
-      '</svg>';
-
-    sec.hidden = false;
-
-    var svg = sec.querySelector(".heure-cadran svg");
-    var hr = svg.querySelector(".hu-h"),
-        mn = svg.querySelector(".hu-m"),
-        sc = svg.querySelector(".hu-s"),
-        txt = sec.querySelector("[data-now]"),
-        titre = sec.querySelector("[data-titre]"),
-        reste = sec.querySelector("[data-reste]");
-    if (!hr || !mn || !sc) return;
-
-    var derniereMinAff = -1;
-    function majTexte(d) {
-      if (d.getMinutes() === derniereMinAff) return;
-      derniereMinAff = d.getMinutes();
-
-      txt.textContent = String(d.getHours()).padStart(2, "0") + ":" +
-                        String(derniereMinAff).padStart(2, "0");
-
-      var avant = d.getHours() < limite;
-      if (avant) {
-        titre.textContent = "Commandez avant " + limite + " h, votre montre part aujourd'hui.";
-        var minsRestantes = (limite - d.getHours()) * 60 - derniereMinAff;
-        var h = Math.floor(minsRestantes / 60), m = minsRestantes % 60;
-        reste.innerHTML = "Il vous reste <strong>" +
-          (h > 0 ? h + " h " + String(m).padStart(2, "0") + " min" : m + " min") + "</strong>";
-        reste.hidden = false;
-      } else {
-        titre.textContent = "Commandez maintenant, votre montre part demain matin.";
-        reste.innerHTML = "Casablanca et Rabat en 24 à 48 h, le reste du Maroc en 3 jours.";
-        reste.hidden = false;
-      }
-    }
-
-    var doux = true;
-    try { doux = !window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
-
-    function poser() {
-      var d = new Date();
-      var s = d.getSeconds() + (doux ? d.getMilliseconds() / 1000 : 0);
-      var m = d.getMinutes() + s / 60;
-      var h = (d.getHours() % 12) + m / 60;
-      hr.style.transform = "rotate(" + (h / 12) * 360 + "deg)";
-      mn.style.transform = "rotate(" + (m / 60) * 360 + "deg)";
-      sc.style.transform = "rotate(" + (s / 60) * 360 + "deg)";
-      majTexte(d);
-    }
-
-    poser();
-    if (doux) {
-      var boucle = function () { poser(); requestAnimationFrame(boucle); };
-      requestAnimationFrame(boucle);
-    } else {
-      setInterval(poser, 1000);
-    }
-  }
-
   function initAuto() {
     const montres = MC.produits.filter((p) => p.type === "montre");
     const boites = MC.produits.filter((p) => p.type === "boite");
@@ -1359,7 +1272,6 @@
   initPixel();
   badgeModeTest();
   initPanier();
-  initMontre();
   initAuto();
   initFloat();
   initBandeau();

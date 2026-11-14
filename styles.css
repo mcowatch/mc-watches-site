@@ -1626,50 +1626,15 @@ main { flex: 1 0 auto; }
 }
 
 /* ======================================================
-   Le cadran du hero vit : graduations qui tournent,
-   aiguilles à l'heure réelle
+   La montre tourne dans sa lunette graduee
    ====================================================== */
 
-@keyframes ring-spin { to { transform: rotate(270deg); } }
-.ticks-min { animation: ring-spin 200s linear infinite; }
-
-/* Le bandeau de l'heure : un vrai cadran, et surtout une vraie
-   information commerciale. Le visiteur voit tout de suite si sa
-   montre part aujourd'hui. L'heure limite se regle dans data.js. */
-.heure { padding-block: clamp(44px, 7vw, 76px); }
-.heure .wrap {
-  display: grid; grid-template-columns: minmax(150px, 215px) 1fr;
-  gap: clamp(26px, 5vw, 58px); align-items: center;
-}
-.heure-cadran { width: 100%; aspect-ratio: 1; }
-.heure-cadran svg { width: 100%; height: 100%; display: block; }
-.heure-cadran line { transform-origin: 50px 50px; stroke-linecap: round; }
-.hu-ring { fill: none; stroke: var(--gold); stroke-width: 1.1; stroke-opacity: 0.55; }
-.hu-fond { fill: rgba(234, 228, 214, 0.035); }
-.hu-t { stroke: var(--bone); stroke-opacity: 0.28; stroke-width: 0.7; }
-.hu-t-maj { stroke: var(--gold); stroke-opacity: 0.85; stroke-width: 1.9; }
-.hu-h { stroke: var(--bone); stroke-width: 3.2; }
-.hu-m { stroke: var(--bone); stroke-width: 2.1; }
-.hu-s { stroke: var(--gold); stroke-width: 0.9; }
-.hu-pin { fill: var(--gold); }
-
-.heure-now { margin: 0 0 10px; color: var(--bone-muted); font-size: 0.94rem; }
-.heure-now strong {
-  color: var(--gold); font-size: 1.18rem; font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-}
-.heure-mots h2 {
-  margin: 0 0 12px; font-family: var(--f-display);
-  font-size: clamp(1.38rem, 3.3vw, 2.05rem); line-height: 1.16;
-}
-.heure-reste { margin: 0 0 22px; color: var(--bone-muted); }
-.heure-reste strong { color: var(--bone); font-variant-numeric: tabular-nums; }
-
-@media (max-width: 700px) {
-  .heure .wrap { grid-template-columns: 1fr; justify-items: center; text-align: center; }
-  .heure-cadran { max-width: 182px; }
-}
+/* Une seule valeur a changer pour la vitesse : --tour.
+   La lunette, elle, reste fixe : c'est la montre qui tourne. */
+:root { --tour: 72s; }
+@keyframes montre-tourne { to { transform: rotate(360deg); } }
+.dial-photo { animation: montre-tourne var(--tour) linear infinite; }
 
 @media (prefers-reduced-motion: reduce) {
-  .ticks-min { animation: none; }
+  .dial-photo { animation: none; }
 }
