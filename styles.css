@@ -366,8 +366,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .tk { stroke: var(--bone); stroke-opacity: 0.3; stroke-width: 2.4; }
 .tk-maj { stroke: var(--gold); stroke-opacity: 0.78; stroke-width: 3.8; }
 
-/* Trois fleches sur la lunette, pointant vers la montre.
-   La photo du produit reste entierement degagee. */
+/* Trois fleches sur la lunette, pointe vers l'EXTERIEUR.
+   Hampe + tete : une vraie fleche, pas un triangle. La hampe part de
+   sous la photo, donc le produit reste entierement degage. */
 .fl { transition: fill 0.3s ease; }
 .fl-hr { fill: var(--gold); }
 .fl-min { fill: var(--bone); }
