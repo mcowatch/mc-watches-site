@@ -1517,3 +1517,130 @@ main { flex: 1 0 auto; }
 
 .order-submit[disabled] { opacity: 0.7; cursor: progress; }
 .order-send-error { margin: 0 0 12px; }
+
+/* ======================================================
+   Panier
+   ====================================================== */
+
+.nav-panier {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: none; border: 1px solid rgba(234, 228, 214, 0.28);
+  color: inherit; font: inherit; font-size: 0.95rem;
+  padding: 8px 14px; border-radius: 999px; cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+.nav-panier:hover { background: rgba(234, 228, 214, 0.1); }
+.nav-panier.a-des-articles { border-color: var(--gold); }
+.nav-panier b {
+  background: var(--gold); color: #1B1A18; font-weight: 700;
+  font-size: 0.72rem; line-height: 1; min-width: 19px; height: 19px;
+  border-radius: 999px; display: inline-grid; place-items: center; padding: 0 5px;
+}
+
+.pan { position: fixed; inset: 0; z-index: 90; }
+.pan-voile {
+  position: absolute; inset: 0; background: rgba(18, 18, 18, 0.62);
+  opacity: 0; transition: opacity 0.24s ease;
+}
+.pan.is-open .pan-voile { opacity: 1; }
+.pan-boite {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: min(430px, 100%);
+  background: var(--paper); color: var(--ink);
+  display: flex; flex-direction: column;
+  transform: translateX(100%); transition: transform 0.26s cubic-bezier(0.2, 0.7, 0.2, 1);
+  box-shadow: -18px 0 46px rgba(0, 0, 0, 0.26);
+}
+.pan.is-open .pan-boite { transform: none; }
+
+.pan-tete {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 18px 20px; border-bottom: 1px solid var(--line);
+}
+.pan-tete h2 { margin: 0; font-family: var(--f-display); font-size: 1.12rem; }
+
+.pan-corps { flex: 1 1 auto; overflow-y: auto; padding: 6px 20px 12px; }
+.pan-vide { color: var(--muted); padding: 34px 0; text-align: center; line-height: 1.7; }
+
+.pan-art {
+  display: grid; grid-template-columns: 62px 1fr auto; gap: 13px;
+  align-items: start; padding: 16px 0; border-bottom: 1px solid var(--line);
+}
+.pan-img {
+  width: 62px; height: 62px; border-radius: 10px; object-fit: cover;
+  background: var(--card); display: block;
+}
+.pan-info { min-width: 0; }
+.pan-nom { margin: 0; font-weight: 600; font-size: 0.96rem; line-height: 1.3; overflow-wrap: anywhere; }
+.pan-prix { margin: 2px 0 7px; font-size: 0.82rem; color: var(--muted); }
+.pan-sous { font-family: var(--f-display); font-size: 0.98rem; white-space: nowrap; }
+
+.pan-coul { display: grid; gap: 3px; margin-bottom: 8px; }
+.pan-coul span {
+  font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
+}
+.pan-coul select {
+  font: inherit; font-size: 0.85rem; padding: 5px 8px;
+  border: 1px solid var(--line); border-radius: 7px; background: #fff; color: var(--ink);
+  width: 100%; max-width: 100%;
+}
+
+.pan-qte { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.pan-qte button {
+  width: 27px; height: 27px; border-radius: 7px; border: 1px solid var(--line);
+  background: #fff; color: var(--ink); font: inherit; font-size: 1rem;
+  line-height: 1; cursor: pointer; display: grid; place-items: center;
+}
+.pan-qte button:hover { border-color: var(--gold-ink); }
+.pan-qte > span { min-width: 20px; text-align: center; font-variant-numeric: tabular-nums; }
+.pan-sup {
+  width: auto !important; padding: 0 9px; font-size: 0.76rem !important;
+  color: var(--muted) !important; margin-left: 4px;
+}
+
+.pan-pied { border-top: 1px solid var(--line); padding: 16px 20px 20px; background: var(--card); }
+.pan-l { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 7px; font-size: 0.92rem; }
+.pan-l strong { font-variant-numeric: tabular-nums; }
+.pan-eco { color: var(--gold-ink); font-weight: 600; }
+.pan-eco span { font-size: 0.82rem; }
+.pan-tot { font-size: 1.1rem; font-family: var(--f-display); margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+.pan-note { font-size: 0.8rem; color: var(--muted); margin: 10px 0 13px; line-height: 1.5; }
+.pan-go { width: 100%; }
+
+/* récapitulatif du panier dans le dialogue de commande */
+.order-panier { list-style: none; margin: 0 0 10px; padding: 0; }
+.order-panier li {
+  display: flex; justify-content: space-between; gap: 12px;
+  padding: 7px 0; border-bottom: 1px solid var(--line); font-size: 0.92rem;
+}
+.order-eco { margin: 8px 0 0; font-weight: 600; color: var(--gold-ink); }
+.order-line-tot {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line);
+  font-family: var(--f-display); font-size: 1.08rem;
+}
+
+@media (max-width: 560px) {
+  .pan-boite { width: 100%; }
+  .nav-panier span { display: none; }
+}
+
+/* ======================================================
+   Le cadran du hero vit : graduations qui tournent,
+   aiguilles à l'heure réelle
+   ====================================================== */
+
+@keyframes ring-spin { to { transform: rotate(270deg); } }
+.ticks-min { animation: ring-spin 200s linear infinite; }
+
+.dial-hands { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.dial-hands line { stroke-linecap: round; transform-origin: 100px 100px; }
+.hand-hr  { stroke: var(--bone); stroke-width: 3.4; stroke-opacity: 0.92; }
+.hand-min { stroke: var(--bone); stroke-width: 2.4; stroke-opacity: 0.92; }
+.hand-sec { stroke: var(--gold); stroke-width: 1.1; }
+.hand-pin { fill: var(--gold); }
+.dial-hands .shadow { stroke: rgba(0, 0, 0, 0.42); }
+
+@media (prefers-reduced-motion: reduce) {
+  .ticks-min { animation: none; }
+}

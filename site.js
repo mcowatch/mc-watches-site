@@ -260,9 +260,29 @@
     const form = el.querySelector("form");
     const done = el.querySelector(".order-done");
     const resume = el.querySelector(".order-summary");
-    const etat = { p: null, couleur: "" };
+    const etat = { p: null, couleur: "", panier: false };
 
     const dessiner = () => {
+      /* mode panier : on récapitule les lignes, la quantité se règle
+         dans le panier lui-même, pas ici. */
+      if (etat.panier) {
+        const k = Panier.calcul();
+        resume.innerHTML =
+          '<ul class="order-panier">' +
+          Panier.lignes.map(function (l) {
+            return '<li><span>' + esc(l.nom) + (l.couleur ? " · " + esc(l.couleur) : "") +
+              ' <b>&times;' + l.qte + '</b></span><span>' + prix(l.prix * l.qte) + "</span></li>";
+          }).join("") +
+          "</ul>" +
+          (k.remise > 0
+            ? '<p class="order-eco">Offre lot : <s>' + prix(k.sousTotal) + "</s> " + prix(k.total) +
+              ", vous économisez " + prix(k.remise) + ".</p>"
+            : "") +
+          '<div class="order-line order-line-tot"><span>Total</span><strong>' + prix(k.total) + "</strong></div>" +
+          '<p class="order-note">Livraison gratuite. Paiement à la livraison.</p>';
+        return;
+      }
+
       const { p, couleur } = etat;
       resume.innerHTML = `
         <p class="order-product"><strong>${esc(p.nom)}</strong>${couleur ? `<span>${esc(couleur)}</span>` : ""}</p>
@@ -305,6 +325,17 @@
     const lienWa = () => {
       const c = saisie();
       const { p, couleur } = etat;
+      if (etat.panier) {
+        const k = Panier.calcul();
+        const lignes = Panier.lignes.map(function (l) {
+          return "• " + l.ref + (l.couleur ? " " + l.couleur : "") + " x" + l.qte;
+        }).join("\n");
+        return lienWhatsApp(
+          "Bonjour MC Watches, je commande :\n" + lignes +
+          "\nTotal : " + k.total + " DH" +
+          (c.prenom ? "\n\nNom : " + c.prenom + " " + c.nom + "\nTéléphone : " + c.tel +
+                      "\nVille : " + c.ville + "\nAdresse : " + c.adresse : ""));
+      }
       const complet = c.prenom && c.nom && c.tel && c.ville && c.adresse;
       return lienWhatsApp(complet ? messageDetaille(p, couleur, c.qte, c) : messageCommande(p, couleur));
     };
@@ -330,17 +361,31 @@
 
       const f = MC.formulaire;
       const { p, couleur } = etat;
+
+      /* Un panier tient dans les mêmes champs : la référence porte le
+         détail lisible, le prix porte le total, la quantité le nombre
+         d'articles. Rien à changer dans le formulaire Google.        */
+      let ref, coul, montant, nb;
+      if (etat.panier) {
+        const k = Panier.calcul();
+        ref = Panier.resume(); coul = Panier.couleurs();
+        montant = k.total; nb = Panier.nbArticles();
+      } else {
+        ref = p.reference; coul = couleur || p.couleur || "";
+        montant = prixTotal(p, c.qte); nb = c.qte;
+      }
+
       const corps = new URLSearchParams();
       [
-        [f.reference, p.reference],
-        [f.couleur, couleur || p.couleur || ""],
-        [f.prix, prixTotal(p, c.qte)],
+        [f.reference, ref],
+        [f.couleur, coul],
+        [f.prix, montant],
         [f.prenom, c.prenom],
         [f.nom, c.nom],
         [f.telephone, c.tel],
         [f.ville, c.ville],
         [f.adresse, c.adresse],
-        [f.quantite, c.qte]
+        [f.quantite, nb]
       ].forEach(([id, v]) => { if (id && String(v).trim() !== "") corps.append(id, String(v).trim()); });
       corps.append("fvv", "1");
       corps.append("pageHistory", "0");
@@ -377,20 +422,35 @@
       if (premier) { premier.focus(); return; }
 
       const c = saisie();
-      done.querySelector("[data-open-wa]").href = lienWhatsApp(messageDetaille(etat.p, etat.couleur, c.qte, valeurs));
+      done.querySelector("[data-open-wa]").href = etat.panier
+        ? lienWa()
+        : lienWhatsApp(messageDetaille(etat.p, etat.couleur, c.qte, valeurs));
       erreurEnvoi.textContent = "";
       boutonEnvoi.disabled = true;
       boutonEnvoi.textContent = "Envoi en cours…";
 
       envoyerCommande(c)
         .then(() => {
-          pixel("Purchase", {
-            value: prixTotal(etat.p, c.qte),
-            currency: "MAD",
-            content_type: "product",
-            content_ids: [refProduit(etat.p)],
-            contents: [{ id: refProduit(etat.p), quantity: c.qte }]
-          });
+          if (etat.panier) {
+            const k = Panier.calcul();
+            pixel("Purchase", {
+              value: k.total,
+              currency: "MAD",
+              content_type: "product",
+              content_ids: Panier.lignes.map(function (l) { return l.ref; }),
+              contents: Panier.lignes.map(function (l) { return { id: l.ref, quantity: l.qte }; }),
+              num_items: Panier.nbArticles()
+            });
+            Panier.vider();
+          } else {
+            pixel("Purchase", {
+              value: prixTotal(etat.p, c.qte),
+              currency: "MAD",
+              content_type: "product",
+              content_ids: [refProduit(etat.p)],
+              contents: [{ id: refProduit(etat.p), quantity: c.qte }]
+            });
+          }
           form.hidden = true;
           done.hidden = false;
           if (modeTest && !done.querySelector("[data-test-note]")) {
@@ -417,28 +477,49 @@
         });
     });
 
+    const preparer = () => {
+      dessiner();
+      form.hidden = false;
+      done.hidden = true;
+      const note = done.querySelector("[data-test-note]");
+      if (note) note.remove();
+      el.setAttribute("aria-labelledby", "order-title");
+      form.querySelectorAll(".field-error").forEach((x) => (x.textContent = ""));
+      form.querySelectorAll("[aria-invalid]").forEach((x) => x.removeAttribute("aria-invalid"));
+      erreurEnvoi.textContent = "";
+      lienAlt.href = lienWa();
+      const altReset = lienAlt.closest(".order-alt");
+      if (altReset) altReset.hidden = true;
+      el.showModal();
+      form.elements.prenom.focus();
+    };
+
     return {
       ouvrir(p, couleur) {
+        etat.panier = false;
         etat.p = p;
         etat.couleur = couleur || "";
-        dessiner();
-        form.hidden = false;
-        done.hidden = true;
-        el.setAttribute("aria-labelledby", "order-title");
-        form.querySelectorAll(".field-error").forEach((x) => (x.textContent = ""));
-        form.querySelectorAll("[aria-invalid]").forEach((x) => x.removeAttribute("aria-invalid"));
-        erreurEnvoi.textContent = "";
-        lienAlt.href = lienWa();
-        const altReset = lienAlt.closest(".order-alt");
-        if (altReset) altReset.hidden = true;
+        preparer();
         pixel("InitiateCheckout", {
           value: p.prix,
           currency: "MAD",
           content_type: "product",
           content_ids: [refProduit(p)]
         });
-        el.showModal();
-        form.elements.prenom.focus();
+      },
+      ouvrirPanier() {
+        etat.panier = true;
+        etat.p = null;
+        etat.couleur = "";
+        preparer();
+        const k = Panier.calcul();
+        pixel("InitiateCheckout", {
+          value: k.total,
+          currency: "MAD",
+          content_type: "product",
+          content_ids: Panier.lignes.map(function (l) { return l.ref; }),
+          num_items: Panier.nbArticles()
+        });
       },
       supporte: typeof el.showModal === "function"
     };
@@ -737,7 +818,8 @@
 
           <div class="detail-actions">
             <button type="button" class="btn btn-solid" data-order>Commander</button>
-            <a class="btn btn-ghost" data-wa target="_blank" rel="noopener">Poser une question sur WhatsApp</a>
+            <button type="button" class="btn btn-ghost" data-panier>Ajouter au panier</button>
+            <a class="btn btn-ghost btn-wa" data-wa target="_blank" rel="noopener">Poser une question sur WhatsApp</a>
           </div>
 
           <div class="service">
@@ -810,6 +892,16 @@
 
     racine.querySelector("[data-order]").addEventListener("click", () => ouvrirCommande(p, p.couleurs[ci].nom));
 
+    const btnPan = racine.querySelector("[data-panier]");
+    if (btnPan) btnPan.addEventListener("click", function () {
+      Panier.ajouter(p, p.couleurs[ci].nom, 1);
+      pixel("AddToCart", {
+        value: p.prix, currency: "MAD",
+        content_type: "product", content_ids: [refProduit(p)]
+      });
+      document.dispatchEvent(new CustomEvent("panier:ouvrir"));
+    });
+
     pixel("ViewContent", {
       value: p.prix,
       currency: "MAD",
@@ -824,6 +916,288 @@
   /* ---------- Textes qui suivent data.js ----------
      Nombre de collections et prix des boîtes :
      ils se mettent à jour tout seuls quand vous modifiez data.js. */
+
+  /* ---------- Panier ----------
+     Plusieurs montres, plusieurs couleurs, une seule commande.
+     L'offre porte sur TOUT le panier : chaque montre après la première
+     coûte REMISE_SUPP de moins, même si ce sont des modèles différents.
+     Les boîtes de rangement n'entrent pas dans le calcul.             */
+
+  var PANIER_CLE = "mc-panier-v1";
+
+  var Panier = {
+    lignes: [],
+
+    charger: function () {
+      try {
+        var brut = JSON.parse(localStorage.getItem(PANIER_CLE) || "[]");
+        this.lignes = Array.isArray(brut) ? brut.filter(function (l) {
+          return l && l.ref && Number(l.qte) > 0;
+        }) : [];
+      } catch (e) { this.lignes = []; }
+      return this.lignes;
+    },
+
+    enregistrer: function () {
+      try { localStorage.setItem(PANIER_CLE, JSON.stringify(this.lignes)); } catch (e) {}
+      document.dispatchEvent(new CustomEvent("panier:maj"));
+    },
+
+    ajouter: function (p, couleur, qte) {
+      var n = Math.max(1, Number(qte) || 1);
+      var ref = refProduit(p), coul = couleur || "";
+      var trouve = null;
+      for (var i=0;i<this.lignes.length;i++){
+        if (this.lignes[i].ref === ref && this.lignes[i].couleur === coul) { trouve = this.lignes[i]; break; }
+      }
+      if (trouve) trouve.qte = Math.min(20, trouve.qte + n);
+      else this.lignes.push({
+        ref: ref, nom: p.nom || ref, couleur: coul,
+        prix: p.prix, type: p.type || "montre", qte: n
+      });
+      this.enregistrer();
+    },
+
+    definirQte: function (i, qte) {
+      var n = Number(qte);
+      if (!this.lignes[i]) return;
+      if (n <= 0) this.lignes.splice(i, 1);
+      else this.lignes[i].qte = Math.min(20, n);
+      this.enregistrer();
+    },
+
+    definirCouleur: function (i, couleur) {
+      if (!this.lignes[i]) return;
+      /* si la même montre existe déjà dans cette couleur, on fusionne */
+      var l = this.lignes[i], autre = -1;
+      for (var k=0;k<this.lignes.length;k++){
+        if (k !== i && this.lignes[k].ref === l.ref && this.lignes[k].couleur === couleur) { autre = k; break; }
+      }
+      if (autre > -1){
+        this.lignes[autre].qte = Math.min(20, this.lignes[autre].qte + l.qte);
+        this.lignes.splice(i,1);
+      } else l.couleur = couleur;
+      this.enregistrer();
+    },
+
+    retirer: function (i) { this.lignes.splice(i, 1); this.enregistrer(); },
+    vider: function () { this.lignes = []; this.enregistrer(); },
+
+    nbArticles: function () {
+      return this.lignes.reduce(function (s, l) { return s + l.qte; }, 0);
+    },
+
+    calcul: function () {
+      var sousTotal = this.lignes.reduce(function (s, l) { return s + l.prix * l.qte; }, 0);
+      var nbMontres = this.lignes.reduce(function (s, l) { return s + (l.type === "montre" ? l.qte : 0); }, 0);
+      var remise = REMISE_SUPP > 0 ? REMISE_SUPP * Math.max(0, nbMontres - 1) : 0;
+      return { sousTotal: sousTotal, nbMontres: nbMontres, remise: remise,
+               total: Math.max(0, sousTotal - remise) };
+    },
+
+    /* une ligne lisible pour la feuille de commandes */
+    resume: function () {
+      return this.lignes.map(function (l) {
+        return l.ref + (l.couleur ? " " + l.couleur : "") + " x" + l.qte;
+      }).join(" | ");
+    },
+
+    couleurs: function () {
+      return this.lignes.map(function (l) { return l.couleur; })
+        .filter(Boolean).join(", ");
+    }
+  };
+
+  function produitDe(ref) {
+    var liste = MC.produits || [];
+    for (var i=0;i<liste.length;i++) if (refProduit(liste[i]) === ref) return liste[i];
+    return null;
+  }
+  function couleursDe(ref) {
+    var p = produitDe(ref);
+    return (p && p.couleurs) ? p.couleurs.map(function (c) { return c.nom; }) : [];
+  }
+  function photoDe(ref, couleur) {
+    var p = produitDe(ref);
+    if (!p) return "";
+    if (p.couleurs) {
+      for (var i=0;i<p.couleurs.length;i++){
+        if (p.couleurs[i].nom === couleur && p.couleurs[i].photos && p.couleurs[i].photos.length)
+          return p.couleurs[i].photos[0];
+      }
+      if (p.couleurs[0] && p.couleurs[0].photos) return p.couleurs[0].photos[0];
+    }
+    return (p.photos && p.photos[0]) || "";
+  }
+
+  function initPanier() {
+    Panier.charger();
+
+    var el = html(
+      '<div class="pan" hidden>' +
+        '<div class="pan-voile" data-fermer></div>' +
+        '<aside class="pan-boite" role="dialog" aria-modal="true" aria-labelledby="pan-titre">' +
+          '<div class="pan-tete">' +
+            '<h2 id="pan-titre">Votre panier</h2>' +
+            '<button type="button" class="order-close" data-fermer aria-label="Fermer">' + ICON_CLOSE + '</button>' +
+          '</div>' +
+          '<div class="pan-corps"></div>' +
+          '<div class="pan-pied">' +
+            '<div class="pan-l"><span>Sous-total</span><strong data-sous>0 DH</strong></div>' +
+            '<div class="pan-l pan-eco" data-eco-l hidden><span>Offre lot</span><strong data-eco>0 DH</strong></div>' +
+            '<div class="pan-l pan-tot"><span>Total</span><strong data-tot>0 DH</strong></div>' +
+            '<p class="pan-note">Livraison gratuite partout au Maroc. Vous payez à la réception.</p>' +
+            '<button type="button" class="btn btn-solid pan-go">Commander</button>' +
+          '</div>' +
+        '</aside>' +
+      '</div>');
+    document.body.appendChild(el);
+
+    var corps = el.querySelector(".pan-corps");
+    var pied  = el.querySelector(".pan-pied");
+
+    function ouvrir() {
+      el.hidden = false;
+      document.body.style.overflow = "hidden";
+      requestAnimationFrame(function () { el.classList.add("is-open"); });
+      var b = el.querySelector(".order-close"); if (b) b.focus();
+    }
+    function fermer() {
+      el.classList.remove("is-open");
+      document.body.style.overflow = "";
+      setTimeout(function () { el.hidden = true; }, 240);
+    }
+    el.querySelectorAll("[data-fermer]").forEach(function (b) { b.addEventListener("click", fermer); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !el.hidden) fermer();
+    });
+
+    function dessiner() {
+      var lignes = Panier.lignes;
+
+      if (!lignes.length) {
+        corps.innerHTML = '<p class="pan-vide">Votre panier est vide.<br>Ajoutez une montre pour commencer.</p>';
+        pied.hidden = true;
+        return;
+      }
+      pied.hidden = false;
+
+      corps.innerHTML = lignes.map(function (l, i) {
+        var cols = couleursDe(l.ref);
+        var ph = photoDe(l.ref, l.couleur);
+        return '<div class="pan-art">' +
+          (ph ? '<img class="pan-img" src="' + esc(ph) + '" alt="" loading="lazy">' : '<span class="pan-img"></span>') +
+          '<div class="pan-info">' +
+            '<p class="pan-nom">' + esc(l.nom) + '</p>' +
+            '<p class="pan-prix">' + prix(l.prix) + " l'unité" + '</p>' +
+            (cols.length
+              ? '<label class="pan-coul"><span>Couleur</span>' +
+                '<select data-coul="' + i + '">' +
+                  cols.map(function (c) {
+                    return '<option value="' + esc(c) + '"' + (c === l.couleur ? " selected" : "") + ">" + esc(c) + "</option>";
+                  }).join("") +
+                '</select></label>'
+              : "") +
+            '<div class="pan-qte">' +
+              '<button type="button" data-moins="' + i + '" aria-label="Retirer un">&minus;</button>' +
+              '<span>' + l.qte + '</span>' +
+              '<button type="button" data-plus="' + i + '" aria-label="Ajouter un">+</button>' +
+              '<button type="button" class="pan-sup" data-sup="' + i + '">Retirer</button>' +
+            '</div>' +
+          '</div>' +
+          '<strong class="pan-sous">' + prix(l.prix * l.qte) + '</strong>' +
+        '</div>';
+      }).join("");
+
+      var c = Panier.calcul();
+      el.querySelector("[data-sous]").textContent = prix(c.sousTotal);
+      el.querySelector("[data-tot]").textContent  = prix(c.total);
+      var ecoL = el.querySelector("[data-eco-l]");
+      ecoL.hidden = c.remise <= 0;
+      if (c.remise > 0) {
+        el.querySelector("[data-eco]").textContent = "− " + prix(c.remise);
+        ecoL.querySelector("span").textContent =
+          "Offre lot (" + c.nbMontres + " montres, " + REMISE_SUPP + " DH par montre en plus)";
+      }
+    }
+
+    corps.addEventListener("click", function (e) {
+      var t = e.target.closest("[data-moins],[data-plus],[data-sup]");
+      if (!t) return;
+      if (t.hasAttribute("data-moins")) Panier.definirQte(+t.getAttribute("data-moins"), Panier.lignes[+t.getAttribute("data-moins")].qte - 1);
+      else if (t.hasAttribute("data-plus")) Panier.definirQte(+t.getAttribute("data-plus"), Panier.lignes[+t.getAttribute("data-plus")].qte + 1);
+      else Panier.retirer(+t.getAttribute("data-sup"));
+    });
+    corps.addEventListener("change", function (e) {
+      var s = e.target.closest("[data-coul]");
+      if (s) Panier.definirCouleur(+s.getAttribute("data-coul"), s.value);
+    });
+
+    el.querySelector(".pan-go").addEventListener("click", function () {
+      if (!Panier.lignes.length) return;
+      fermer();
+      if (!dlg) dlg = creerDialogue();
+      if (dlg.supporte) dlg.ouvrirPanier();
+    });
+
+    /* bouton dans l'en-tête */
+    var nav = document.querySelector(".site-header .nav");
+    var btn = html('<button type="button" class="nav-panier" aria-label="Ouvrir le panier">' +
+      '<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true">' +
+      '<path d="M6 7h12l-1.2 11.2a2 2 0 0 1-2 1.8H9.2a2 2 0 0 1-2-1.8L6 7Z" fill="none" stroke="currentColor" stroke-width="1.8"/>' +
+      '<path d="M9 7a3 3 0 0 1 6 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>' +
+      '</svg><span>Panier</span><b data-compte hidden>0</b></button>');
+    btn.addEventListener("click", function () { dessiner(); ouvrir(); });
+    if (nav) nav.insertBefore(btn, nav.querySelector(".nav-cta") || null);
+    else document.querySelector(".site-header .wrap").appendChild(btn);
+
+    function majBadge() {
+      var n = Panier.nbArticles();
+      var b = btn.querySelector("[data-compte]");
+      b.textContent = String(n);
+      b.hidden = n === 0;
+      btn.classList.toggle("a-des-articles", n > 0);
+    }
+
+    document.addEventListener("panier:maj", function () { majBadge(); dessiner(); });
+    majBadge(); dessiner();
+
+    /* ouvert depuis ailleurs (bouton « Ajouter au panier ») */
+    document.addEventListener("panier:ouvrir", function () { dessiner(); ouvrir(); });
+  }
+
+  /* Le cadran du hero donne l'heure réelle : les aiguilles bougent,
+     la trotteuse balaie, et la couronne de graduations tourne
+     lentement (animation CSS). */
+  function initMontre() {
+    var svg = document.querySelector(".dial-hands");
+    if (!svg) return;
+    var hr = svg.querySelector(".hand-hr"),
+        mn = svg.querySelector(".hand-min"),
+        sc = svg.querySelector(".hand-sec");
+    if (!hr || !mn || !sc) return;
+
+    var doux = true;
+    try { doux = !window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+
+    function poser() {
+      var d = new Date();
+      var s = d.getSeconds() + (doux ? d.getMilliseconds() / 1000 : 0);
+      var m = d.getMinutes() + s / 60;
+      var h = (d.getHours() % 12) + m / 60;
+      hr.style.transform = "rotate(" + (h / 12) * 360 + "deg)";
+      mn.style.transform = "rotate(" + (m / 60) * 360 + "deg)";
+      sc.style.transform = "rotate(" + (s / 60) * 360 + "deg)";
+    }
+
+    poser();
+    if (doux) {
+      var boucle = function () { poser(); requestAnimationFrame(boucle); };
+      requestAnimationFrame(boucle);
+    } else {
+      setInterval(poser, 1000);
+    }
+  }
 
   function initAuto() {
     const montres = MC.produits.filter((p) => p.type === "montre");
@@ -913,6 +1287,8 @@
 
   initPixel();
   badgeModeTest();
+  initPanier();
+  initMontre();
   initAuto();
   initFloat();
   initBandeau();
