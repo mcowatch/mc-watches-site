@@ -1207,41 +1207,41 @@
       poser(ticks[i], null);
     }
 
-    function poser(t, role) {
-      var len = role === "sec" ? LONG.sec
-              : role === "hr"  ? LONG.hr
-              : role === "min" ? LONG.min
-              : t.maj ? LONG.maj : LONG.base;
+    /* La lunette reste une lunette : graduations fixes, les grandes
+       un peu plus longues. Ce sont les aiguilles qui donnent l'heure. */
+    function poser(t) {
+      var len = t.maj ? LONG.maj : LONG.base;
       t.el.setAttribute("x2", (100 + Math.cos(t.a) * (R - len)).toFixed(2));
       t.el.setAttribute("y2", (100 + Math.sin(t.a) * (R - len)).toFixed(2));
-      t.el.setAttribute("class", "tk" + (t.maj ? " tk-maj" : "") + (role ? " tk-" + role : ""));
+      t.el.setAttribute("class", "tk" + (t.maj ? " tk-maj" : ""));
     }
 
-    var dernier = { hr: -1, min: -1, sec: -1 };
+    var hands = document.querySelector(".dial-hands");
+    if (!hands) return;
+    var aigH = hands.querySelector(".hd-hr"),
+        aigM = hands.querySelector(".hd-min"),
+        aigS = hands.querySelector(".hd-sec");
+
+    var doux = true;
+    try { doux = !window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
 
     function lire() {
       var d = new Date();
-      var s = d.getSeconds();
-      var m = d.getMinutes();
-      var h = (d.getHours() % 12) * 5 + Math.floor(m / 12);
-
-      if (h === dernier.hr && m === dernier.min && s === dernier.sec) return;
-
-      /* on remet à zéro seulement ce qui change */
-      [dernier.hr, dernier.min, dernier.sec].forEach(function (i) {
-        if (i > -1 && ticks[i]) poser(ticks[i], null);
-      });
-
-      /* ordre volontaire : la seconde passe par-dessus tout */
-      poser(ticks[h], "hr");
-      if (m !== h) poser(ticks[m], "min");
-      poser(ticks[s], "sec");
-
-      dernier.hr = h; dernier.min = m; dernier.sec = s;
+      var s = d.getSeconds() + (doux ? d.getMilliseconds() / 1000 : 0);
+      var m = d.getMinutes() + s / 60;
+      var h = (d.getHours() % 12) + m / 60;
+      aigH.setAttribute("transform", "rotate(" + (h / 12) * 360 + " 100 100)");
+      aigM.setAttribute("transform", "rotate(" + (m / 60) * 360 + " 100 100)");
+      aigS.setAttribute("transform", "rotate(" + (s / 60) * 360 + " 100 100)");
     }
 
     lire();
-    setInterval(lire, 250);
+    if (doux) {
+      var boucle = function () { lire(); requestAnimationFrame(boucle); };
+      requestAnimationFrame(boucle);
+    } else {
+      setInterval(lire, 1000);
+    }
   }
 
   function initAuto() {

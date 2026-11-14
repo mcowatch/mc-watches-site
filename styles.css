@@ -360,18 +360,23 @@ button, a { -webkit-tap-highlight-color: transparent; }
   animation: dial-in 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
-/* 60 graduations, et trois d'entre elles disent l'heure.
-   L'ordre des regles compte : seconde par-dessus heure,
-   heure par-dessus minute, minute par-dessus les grandes. */
-.dial-ring line {
-  stroke-linecap: round;
-  transition: stroke-width 0.2s ease, stroke-opacity 0.2s ease, stroke 0.3s ease;
-}
+/* La lunette redevient une lunette : 60 graduations fixes,
+   les 12 grandes en dore. Ce sont les AIGUILLES qui donnent l'heure. */
+.dial-ring line { stroke-linecap: round; }
 .tk { stroke: var(--bone); stroke-opacity: 0.3; stroke-width: 2.4; }
-.tk-maj { stroke-opacity: 0.48; stroke-width: 3.6; }
-.tk-min { stroke: var(--bone); stroke-opacity: 0.95; stroke-width: 4.6; }
-.tk-hr { stroke: var(--gold); stroke-opacity: 1; stroke-width: 6.5; }
-.tk-sec { stroke: #FFFFFF; stroke-opacity: 1; stroke-width: 5.6; }
+.tk-maj { stroke: var(--gold); stroke-opacity: 0.78; stroke-width: 3.8; }
+
+/* Aiguilles effilees, posees sur la photo qui tourne.
+   L'ombre portee les detache quelle que soit la montre dessous. */
+.dial-hands {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6));
+}
+.hd-hr polygon, .hd-min polygon { fill: var(--bone); }
+.hd-sec line { stroke: var(--gold); stroke-width: 1.7; stroke-linecap: round; }
+.hd-sec polygon, .hd-sec circle { fill: var(--gold); }
+.hd-pin { fill: var(--case); stroke: var(--gold); stroke-width: 1.5; }
 
 @keyframes dial-in {
   from { opacity: 0; transform: rotate(-30deg) scale(0.96); }
