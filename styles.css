@@ -1835,3 +1835,13 @@ main { flex: 1 0 auto; }
 .card-lien:hover { color: var(--ink); }
 .card-actions { justify-items: start; }
 .card-actions .btn { width: 100%; }
+
+/* ------------------------------------------------------
+   Pas de defilement lateral sur telephone
+   L'animation d'entree du cadran le fait pivoter de 30 degres :
+   le DESSIN reste dans son cercle, mais la boite du SVG, elle,
+   s'elargit et poussait la page de 32 px vers la droite.
+   On coupe au niveau du hero : rien de visible n'est perdu.
+   (overflow sur .dial couperait la couronne, qui depasse a -5%.)
+   ------------------------------------------------------ */
+.hero { overflow: hidden; }
