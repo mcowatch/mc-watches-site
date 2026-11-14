@@ -1216,11 +1216,12 @@
       t.el.setAttribute("class", "tk" + (t.maj ? " tk-maj" : ""));
     }
 
-    var hands = document.querySelector(".dial-hands");
-    if (!hands) return;
-    var aigH = hands.querySelector(".hd-hr"),
-        aigM = hands.querySelector(".hd-min"),
-        aigS = hands.querySelector(".hd-sec");
+    /* Trois flèches posées SUR la lunette, pointant vers la montre.
+       Rien ne vient recouvrir la photo du produit. */
+    var flH = svg.querySelector(".fl-hr"),
+        flM = svg.querySelector(".fl-min"),
+        flS = svg.querySelector(".fl-sec");
+    if (!flH || !flM || !flS) return;
 
     var doux = true;
     try { doux = !window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
@@ -1230,9 +1231,9 @@
       var s = d.getSeconds() + (doux ? d.getMilliseconds() / 1000 : 0);
       var m = d.getMinutes() + s / 60;
       var h = (d.getHours() % 12) + m / 60;
-      aigH.setAttribute("transform", "rotate(" + (h / 12) * 360 + " 100 100)");
-      aigM.setAttribute("transform", "rotate(" + (m / 60) * 360 + " 100 100)");
-      aigS.setAttribute("transform", "rotate(" + (s / 60) * 360 + " 100 100)");
+      flH.setAttribute("transform", "rotate(" + (h / 12) * 360 + " 100 100)");
+      flM.setAttribute("transform", "rotate(" + (m / 60) * 360 + " 100 100)");
+      flS.setAttribute("transform", "rotate(" + (s / 60) * 360 + " 100 100)");
     }
 
     lire();

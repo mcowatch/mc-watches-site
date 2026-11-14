@@ -366,17 +366,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
 .tk { stroke: var(--bone); stroke-opacity: 0.3; stroke-width: 2.4; }
 .tk-maj { stroke: var(--gold); stroke-opacity: 0.78; stroke-width: 3.8; }
 
-/* Aiguilles effilees, posees sur la photo qui tourne.
-   L'ombre portee les detache quelle que soit la montre dessous. */
-.dial-hands {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  pointer-events: none;
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.6));
-}
-.hd-hr polygon, .hd-min polygon { fill: var(--bone); }
-.hd-sec line { stroke: var(--gold); stroke-width: 1.7; stroke-linecap: round; }
-.hd-sec polygon, .hd-sec circle { fill: var(--gold); }
-.hd-pin { fill: var(--case); stroke: var(--gold); stroke-width: 1.5; }
+/* Trois fleches sur la lunette, pointant vers la montre.
+   La photo du produit reste entierement degagee. */
+.fl { transition: fill 0.3s ease; }
+.fl-hr { fill: var(--gold); }
+.fl-min { fill: var(--bone); }
+.fl-sec { fill: #FFFFFF; }
 
 @keyframes dial-in {
   from { opacity: 0; transform: rotate(-30deg) scale(0.96); }
