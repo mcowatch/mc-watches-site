@@ -127,7 +127,7 @@ window.MC = {
       prix: 249,
       couleurs: [
         { nom: "Noir et or", code: "#171717", code2: "#C9A227",
-          photos: ["images/mc06/OR1.jpg", "images/mc06/OR2.jpg", "images/mc06/OR3.jpg", "images/mc06/OR4.jpg", "images/mc06/OR5.jpg"] },
+          photos: ["images/mc06/OR1.jpg", "images/mc06/OR2.jpg", "images/mc06/OR3.jpg", "images/mc06/OR4.jpg"] },
         { nom: "Noir", code: "#171717",
           photos: ["images/mc06/NOIR1.jpg", "images/mc06/NOIR2.jpg", "images/mc06/NOIR3.jpg", "images/mc06/NOIR4.jpg"] }
       ],
