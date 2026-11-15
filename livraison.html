@@ -6,6 +6,9 @@
   <title>Livraison, paiement et retours | MC Watches</title>
   <meta name="description" content="Livraison gratuite au Maroc : 24 à 48 h à Casablanca et Rabat, 3 jours ailleurs. Paiement à la livraison. Échange et retour sans motif sous 7 jours.">
   <link rel="canonical" href="https://www.mc-watches.com/livraison.html">
+  <link rel="alternate" hreflang="fr" href="https://www.mc-watches.com/livraison.html?lang=fr">
+  <link rel="alternate" hreflang="ar" href="https://www.mc-watches.com/livraison.html?lang=ar">
+  <link rel="alternate" hreflang="x-default" href="https://www.mc-watches.com/livraison.html">
   <meta name="theme-color" content="#121212">
 
   <meta property="og:type" content="website">
@@ -24,9 +27,35 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=Newsreader:wght@400;500&display=swap">
-  <link rel="stylesheet" href="styles.css?v=34">
-  <script src="data.js?v=34" defer></script>
-  <script src="site.js?v=34" defer></script>
+  <script>
+  /* La langue choisie, posee AVANT l'affichage : la version arabe ne
+     montre jamais le francais une fraction de seconde. Les polices
+     arabes ne sont chargees que pour la version arabe : le site
+     francais reste exactement aussi rapide qu'avant.
+     Tout le reste se passe dans i18n.js.                            */
+  (function () {
+    try {
+      var p = new URLSearchParams(location.search), l = p.get("lang");
+      if (l === "ar" || l === "fr") localStorage.setItem("mc-langue", l);
+      else l = localStorage.getItem("mc-langue");
+      if (l !== "ar") return;
+      var d = document.documentElement;
+      d.lang = "ar";
+      d.dir = "rtl";
+      d.classList.add("mc-ar");
+      d.classList.add("mc-attente");
+      setTimeout(function () { d.classList.remove("mc-attente"); }, 1500);
+      var k = document.createElement("link");
+      k.rel = "stylesheet";
+      k.href = "https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Noto+Kufi+Arabic:wght@400;600;700&display=swap";
+      document.head.appendChild(k);
+    } catch (e) {}
+  })();
+  </script>
+  <link rel="stylesheet" href="styles.css?v=35">
+  <script src="data.js?v=35" defer></script>
+  <script src="i18n.js?v=35" defer></script>
+  <script src="site.js?v=35" defer></script>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",

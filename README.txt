@@ -17,6 +17,27 @@ FICHIERS À MODIFIER
                   ajouter une photo, modifiez uniquement ce fichier.
   styles.css      tout le design (couleurs en haut du fichier, section :root)
   site.js         comportement (menu, carrousels, fiche produit)
+  i18n.js         la version ARABE : chaque phrase française avec sa
+                  traduction en face.
+
+DEUX LANGUES : FRANÇAIS ET ARABE
+  Le site est écrit en français. Le bouton « عربي » dans l'en-tête bascule
+  tout en arabe, de droite à gauche : pages, boutons, formulaire de commande
+  et même le message WhatsApp que le client vous envoie. Le choix du visiteur
+  est retenu pour ses prochaines visites, et le bouton « FR » le ramène.
+  Liens directs : www.mc-watches.com/?lang=ar et www.mc-watches.com/?lang=fr
+  (pratique à mettre dans la bio Instagram ou dans une story).
+
+  POUR CORRIGER UN MOT ARABE
+    Ouvrez i18n.js, cherchez la phrase française, changez le texte arabe
+    qui est juste en face. Rien d'autre à toucher.
+
+  POUR TRADUIRE UNE PHRASE AJOUTÉE AU SITE
+    Dans i18n.js, ajoutez une ligne dans la liste AR :
+      "la phrase française exacte": "la phrase en arabe",
+    La phrase française doit être copiée EXACTEMENT comme sur le site
+    (accents et ponctuation compris). Une phrase sans traduction reste
+    simplement en français : rien ne casse.
 
 AJOUTER UNE COLLECTION
   1. Déposez ses photos dans un nouveau dossier : images/mc04

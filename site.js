@@ -108,13 +108,28 @@
 
   const prix = (n) => `${n} DH`;
 
+  /* ---------- Les phrases envoyées sur WhatsApp ----------
+     T() et TPL() viennent de i18n.js. En arabe, c'est la version
+     arabe du message qui part sur WhatsApp ; en français, la phrase
+     ne change pas du tout. Les {accolades} sont remplacées par le
+     produit, la couleur, le prix.                                  */
+
+  const T = (s) => (window.MC_T ? window.MC_T(s) : s);
+
+  const TPL = (s, v) =>
+    window.MC_TPL
+      ? window.MC_TPL(s, v)
+      : s.replace(/\{(\w+)\}/g, (m, k) => (k in v ? String(v[k]) : m));
+
   const lienWhatsApp = (message) =>
     `https://wa.me/${MC.whatsapp}?text=${encodeURIComponent(message)}`;
 
   const messageCommande = (p, couleur) =>
     couleur
-      ? `Bonjour MC Watches, je commande ${p.reference}, couleur ${couleur}, à ${p.prix} DH. Je vous envoie mon nom, mon téléphone, ma ville et mon adresse.`
-      : `Bonjour MC Watches, je commande ${p.nom} à ${p.prix} DH. Je vous envoie mon nom, mon téléphone, ma ville et mon adresse.`;
+      ? TPL("Bonjour MC Watches, je commande {reference}, couleur {couleur}, à {prix} DH. Je vous envoie mon nom, mon téléphone, ma ville et mon adresse.",
+          { reference: p.reference, couleur: T(couleur), prix: p.prix })
+      : TPL("Bonjour MC Watches, je commande {produit} à {prix} DH. Je vous envoie mon nom, mon téléphone, ma ville et mon adresse.",
+          { produit: T(p.nom), prix: p.prix });
 
   const style = (c) =>
     c.code2
@@ -131,24 +146,27 @@
      option (« Je préfère commander sur WhatsApp »).                   */
 
   const messageQuestion = (p, couleur) =>
-    `Bonjour MC Watches, j'ai une question sur ${p.nom}${couleur ? `, couleur ${couleur}` : ""}.`;
+    couleur
+      ? TPL("Bonjour MC Watches, j'ai une question sur {produit}, couleur {couleur}.",
+          { produit: T(p.nom), couleur: T(couleur) })
+      : TPL("Bonjour MC Watches, j'ai une question sur {produit}.", { produit: T(p.nom) });
 
   const messageDetaille = (p, couleur, qte, f) =>
     [
-      "Bonjour MC Watches, je souhaite passer commande :",
+      T("Bonjour MC Watches, je souhaite passer commande :"),
       "",
-      `Produit : ${p.nom}`,
-      couleur ? `Couleur : ${couleur}` : null,
-      `Quantité : ${qte}`,
-      `Prix : ${p.prix} DH (livraison gratuite)`,
-      `Total : ${prixTotal(p, qte)} DH`,
+      TPL("Produit : {produit}", { produit: T(p.nom) }),
+      couleur ? TPL("Couleur : {couleur}", { couleur: T(couleur) }) : null,
+      TPL("Quantité : {qte}", { qte: qte }),
+      TPL("Prix : {prix} DH (livraison gratuite)", { prix: p.prix }),
+      TPL("Total : {total} DH", { total: prixTotal(p, qte) }),
       "",
-      `Nom : ${f.prenom} ${f.nom}`,
-      `Téléphone : ${f.tel}`,
-      `Ville : ${f.ville}`,
-      `Adresse : ${f.adresse}`,
+      TPL("Nom : {client}", { client: `${f.prenom} ${f.nom}` }),
+      TPL("Téléphone : {tel}", { tel: f.tel }),
+      TPL("Ville : {ville}", { ville: f.ville }),
+      TPL("Adresse : {adresse}", { adresse: f.adresse }),
       "",
-      "Merci de confirmer ma commande."
+      T("Merci de confirmer ma commande.")
     ].filter((l) => l !== null).join("\n");
 
   /* ---------- Telephone : pays + numero ----------
@@ -336,13 +354,17 @@
       if (etat.panier) {
         const k = Panier.calcul();
         const lignes = Panier.lignes.map(function (l) {
-          return "• " + l.ref + (l.couleur ? " " + l.couleur : "") + " x" + l.qte;
+          return "• " + l.ref + (l.couleur ? " " + T(l.couleur) : "") + " x" + l.qte;
         }).join("\n");
         return lienWhatsApp(
-          "Bonjour MC Watches, je commande :\n" + lignes +
-          "\nTotal : " + k.total + " DH" +
-          (c.prenom ? "\n\nNom : " + c.prenom + " " + c.nom + "\nTéléphone : " + c.tel +
-                      "\nVille : " + c.ville + "\nAdresse : " + c.adresse : ""));
+          T("Bonjour MC Watches, je commande :") + "\n" + lignes +
+          "\n" + TPL("Total : {total} DH", { total: k.total }) +
+          (c.prenom
+            ? "\n\n" + TPL("Nom : {client}", { client: c.prenom + " " + c.nom }) +
+              "\n" + TPL("Téléphone : {tel}", { tel: c.tel }) +
+              "\n" + TPL("Ville : {ville}", { ville: c.ville }) +
+              "\n" + TPL("Adresse : {adresse}", { adresse: c.adresse })
+            : ""));
       }
       const complet = c.prenom && c.nom && c.tel && c.ville && c.adresse;
       return lienWhatsApp(complet ? messageDetaille(p, couleur, c.qte, c) : messageCommande(p, couleur));
@@ -643,13 +665,15 @@
 
     /* Le panier passe en premier et en bouton plein : c'est l'action
        qu'on veut voir choisie. Commander reste possible d'un seul clic. */
-    /* Deux actions par carte, pas trois : un bouton qui agit et un lien
-       pour en voir plus. « Commander » reste sur la fiche produit. */
+    /* Deux actions par carte, pas trois, et DEUX VRAIS BOUTONS de la
+       même taille : « Voir les détails » se voyait à peine en petit
+       lien. Le panier reste plein, le second bouton est cerné, pour
+       qu'on sache lequel est l'action principale.                   */
     const actions = avecCouleurs
       ? `<button type="button" class="btn btn-solid" data-panier>Ajouter au panier</button>
-         <a class="card-lien" data-details>Voir les détails</a>`
+         <a class="btn btn-ghost" data-details>Voir les détails</a>`
       : `<button type="button" class="btn btn-solid" data-panier>Ajouter au panier</button>
-         <a class="card-lien" data-wa target="_blank" rel="noopener">Poser une question</a>`;
+         <a class="btn btn-ghost" data-wa target="_blank" rel="noopener">Poser une question</a>`;
 
     const carte = html(`
       <article class="card">
@@ -1309,12 +1333,15 @@
       var contenus = Panier.lignes.map(function (l) { return { id: l.ref, quantity: l.qte }; });
       var nb = Panier.nbArticles();
       var lienMerci = lienWhatsApp(
-        "Bonjour MC Watches, je commande :\n" +
+        T("Bonjour MC Watches, je commande :") + "\n" +
         Panier.lignes.map(function (l) {
-          return "• " + l.ref + (l.couleur ? " " + l.couleur : "") + " x" + l.qte;
+          return "• " + l.ref + (l.couleur ? " " + T(l.couleur) : "") + " x" + l.qte;
         }).join("\n") +
-        "\nTotal : " + k.total + " DH\n\nNom : " + c.prenom + " " + c.nom +
-        "\nTéléphone : " + c.tel + "\nVille : " + c.ville + "\nAdresse : " + c.adresse);
+        "\n" + TPL("Total : {total} DH", { total: k.total }) +
+        "\n\n" + TPL("Nom : {client}", { client: c.prenom + " " + c.nom }) +
+        "\n" + TPL("Téléphone : {tel}", { tel: c.tel }) +
+        "\n" + TPL("Ville : {ville}", { ville: c.ville }) +
+        "\n" + TPL("Adresse : {adresse}", { adresse: c.adresse }));
 
       err.textContent = "";
       bouton.disabled = true;
