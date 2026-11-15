@@ -141,7 +141,7 @@ window.MC = {
       prix: 249,
       couleurs: [
         { nom: "Gris", code: "#6E7276",
-          photos: ["images/mc07/GRIS1.jpg", "images/mc07/GRIS2.jpg", "images/mc07/GRIS3.jpg", "images/mc07/GRIS4.jpg", "images/mc07/GRIS5.jpg"] }
+          photos: ["images/mc07/GRIS1.jpg", "images/mc07/GRIS2.jpg", "images/mc07/GRIS3.jpg", "images/mc07/GRIS4.jpg"] }
       ],
       photosCommunes: []
     },
