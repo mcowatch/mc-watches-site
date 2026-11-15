@@ -120,6 +120,32 @@ window.MC = {
       photosCommunes: ["images/mc05/DUO1.jpg", "images/mc05/DUO2.jpg", "images/mc05/DUO3.jpg", "images/mc05/DUO4.jpg", "images/mc05/DUO5.jpg"]
     },
     {
+      type: "montre",
+      categorie: "Montre pour homme",
+      reference: "MC-06",
+      nom: "Collection MC-06",
+      prix: 249,
+      couleurs: [
+        { nom: "Noir et or", code: "#171717", code2: "#C9A227",
+          photos: ["images/mc06/OR1.jpg", "images/mc06/OR2.jpg", "images/mc06/OR3.jpg", "images/mc06/OR4.jpg", "images/mc06/OR5.jpg"] },
+        { nom: "Noir", code: "#171717",
+          photos: ["images/mc06/NOIR1.jpg", "images/mc06/NOIR2.jpg", "images/mc06/NOIR3.jpg", "images/mc06/NOIR4.jpg"] }
+      ],
+      photosCommunes: ["images/mc06/DUO1.jpg", "images/mc06/DUO2.jpg"]
+    },
+    {
+      type: "montre",
+      categorie: "Montre pour homme",
+      reference: "MC-07",
+      nom: "Collection MC-07",
+      prix: 249,
+      couleurs: [
+        { nom: "Gris", code: "#6E7276",
+          photos: ["images/mc07/GRIS1.jpg", "images/mc07/GRIS2.jpg", "images/mc07/GRIS3.jpg", "images/mc07/GRIS4.jpg", "images/mc07/GRIS5.jpg"] }
+      ],
+      photosCommunes: []
+    },
+    {
       type: "boite",
       categorie: "Accessoire",
       reference: "Boîte de rangement - 6 montres",

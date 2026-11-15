@@ -157,6 +157,7 @@
 
     /* --- les couleurs --- */
     "Noir": "أسود",
+    "Noir et or": "أسود وذهبي",
     "Blanc": "أبيض",
     "Blanc et bleu": "أبيض وأزرق",
     "Vert": "أخضر",
