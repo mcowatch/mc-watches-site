@@ -848,6 +848,7 @@
             <span class="count" aria-live="polite"></span>
           </div>
           <div class="thumbs" role="group" aria-label="Choisir une photo"></div>
+          <p class="photo-note">Toutes les photos sont les nôtres : chaque montre est photographiée ici, telle que vous la recevrez.</p>
         </div>
 
         <div class="detail-info">

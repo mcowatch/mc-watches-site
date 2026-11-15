@@ -1465,6 +1465,8 @@ main { flex: 1 0 auto; }
   white-space: nowrap;
 }
 
+.photo-note { margin-top: 14px; color: var(--muted); font-size: 0.9375rem; line-height: 1.5; }
+
 .service-note { margin-top: 6px; color: var(--muted); font-size: 0.9375rem; line-height: 1.5; }
 .service-note a { text-underline-offset: 3px; }
 

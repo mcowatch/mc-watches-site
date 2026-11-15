@@ -156,6 +156,9 @@
     "Boîte de rangement - 12 montres": "علبة تخزين - 12 ساعة",
 
     /* --- les couleurs --- */
+    "Toutes les photos sont les nôtres : chaque montre est photographiée ici, telle que vous la recevrez.":
+      "كل الصور من تصويرنا: كل ساعة مصوّرة عندنا، كما ستصلك.",
+
     "Noir": "أسود",
     "Noir et or": "أسود وذهبي",
     "Blanc": "أبيض",
