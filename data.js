@@ -87,7 +87,9 @@ window.MC = {
         { nom: "Bleu avec cadran blanc", code: "#EDE9DC", code2: "#243D68",
           photos: ["images/mc03/BLEUBLANC1.jpg", "images/mc03/BLEUBLANC2.jpg", "images/mc03/BLEUBLANC3.jpg", "images/mc03/BLEUBLANC4.jpg", "images/mc03/BLEUBLANC5.jpg"] },
         { nom: "Bleu", code: "#243D68",
-          photos: ["images/mc03/BLEU1.jpg", "images/mc03/BLEU2.jpg", "images/mc03/BLEU3.jpg", "images/mc03/BLEU4.jpg", "images/mc03/BLEU5.jpg", "images/mc03/BLEU6.jpg", "images/mc03/BLEU7.jpg"] }
+          photos: ["images/mc03/BLEU1.jpg", "images/mc03/BLEU2.jpg", "images/mc03/BLEU3.jpg", "images/mc03/BLEU4.jpg", "images/mc03/BLEU5.jpg", "images/mc03/BLEU6.jpg", "images/mc03/BLEU7.jpg"] },
+        { nom: "Marron", code: "#7A4B2B",
+          photos: ["images/mc03/MARRON1.jpg", "images/mc03/MARRON2.jpg", "images/mc03/MARRON3.jpg", "images/mc03/MARRON4.jpg", "images/mc03/MARRON5.jpg", "images/mc03/MARRON6.jpg"] }
       ],
       photosCommunes: ["images/mc03/20261101_122552.jpg", "images/mc03/20261101_122644.jpg", "images/mc03/20261101_122757.jpg", "images/mc03/20261101_122911.jpg", "images/mc03/20261101_122917.jpg", "images/mc03/20261101_122936.jpg"]
     },

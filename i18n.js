@@ -165,6 +165,7 @@
     "Blanc et bleu": "أبيض وأزرق",
     "Vert": "أخضر",
     "Gris": "رمادي",
+    "Marron": "بني",
     "Bleu": "أزرق",
     "Bleu avec cadran blanc": "أزرق بميناء أبيض",
 
