@@ -665,14 +665,18 @@
 
     /* Le panier passe en premier et en bouton plein : c'est l'action
        qu'on veut voir choisie. Commander reste possible d'un seul clic. */
-    /* Deux actions par carte, pas trois, et DEUX VRAIS BOUTONS de la
+    /* Trois actions, dans l'ordre où on les choisit : le panier d'abord
+       et en bouton plein, « Commander » juste dessous pour qui veut
+       cette seule montre tout de suite, puis les détails. Tous de la
        même taille : « Voir les détails » se voyait à peine en petit
-       lien. Le panier reste plein, le second bouton est cerné, pour
-       qu'on sache lequel est l'action principale.                   */
+       lien. Seul le panier est plein, pour qu'on sache lequel est
+       l'action principale.                                          */
     const actions = avecCouleurs
       ? `<button type="button" class="btn btn-solid" data-panier>Ajouter au panier</button>
+         <button type="button" class="btn btn-ghost" data-order>Commander</button>
          <a class="btn btn-ghost" data-details>Voir les détails</a>`
       : `<button type="button" class="btn btn-solid" data-panier>Ajouter au panier</button>
+         <button type="button" class="btn btn-ghost" data-order>Commander</button>
          <a class="btn btn-ghost" data-wa target="_blank" rel="noopener">Poser une question</a>`;
 
     const carte = html(`
