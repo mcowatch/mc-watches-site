@@ -642,6 +642,12 @@
     return { afficher, reset: () => allerA(0), allerA };
   }
 
+  /* Les photos communes (les coloris ensemble) suivent chaque couleur,
+     sauf celle qui dit sansCommunes : elle n'y figure pas.           */
+  function communes(p, c) {
+    return c && c.sansCommunes ? [] : (p.photosCommunes || []);
+  }
+
   /* ---------- Carte produit (accueil et page produits) ---------- */
 
   function creerCarte(p) {
@@ -652,8 +658,8 @@
 
     const photos = () =>
       avecCouleurs ? (couleurChoisie
-            ? [...p.couleurs[ci].photos, ...(p.photosCommunes || [])]
-            : [...(p.photosCommunes || []), ...p.couleurs[ci].photos]) : p.photos;
+            ? [...p.couleurs[ci].photos, ...communes(p, p.couleurs[ci])]
+            : [...communes(p, p.couleurs[ci]), ...p.couleurs[ci].photos]) : p.photos;
     const alt = () => (avecCouleurs ? `${p.nom}, ${p.couleurs[ci].nom}` : p.nom);
 
     const pastilles = avecCouleurs
@@ -788,8 +794,8 @@
     // Une couleur dans l'adresse = le client a deja choisi. Sinon, les deux d'abord.
     let couleurChoisie = couleurDemandee >= 0;
     const photos = () => (couleurChoisie
-            ? [...p.couleurs[ci].photos, ...(p.photosCommunes || [])]
-            : [...(p.photosCommunes || []), ...p.couleurs[ci].photos]);
+            ? [...p.couleurs[ci].photos, ...communes(p, p.couleurs[ci])]
+            : [...communes(p, p.couleurs[ci]), ...p.couleurs[ci].photos]);
 
     /* Titre, description, JSON-LD */
     document.title = `${p.reference} - montre pour homme, ${prix(p.prix)} | MC Watches`;
