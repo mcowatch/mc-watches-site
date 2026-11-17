@@ -147,22 +147,7 @@ window.MC = {
       ],
       photosCommunes: []
     },
-         {
-      type: "montre",
-      categorie: "Montre pour homme",
-      reference: "MC-08",
-      nom: "Collection MC-08",
-      prix: 249,
-      couleurs: [
-        { nom: "Noir", code: "#171717",
-          photos: ["images/mc08/NOIR1.jpg", "images/mc08/NOIR2.jpg", "images/mc08/NOIR3.jpg", "images/mc01/NOIR4.jpg", "images/mc01/NOIR5.jpg", "images/mc01/NOIR6.jpg", "images/mc01/NOIR7.jpg", "images/mc01/NOIR8.jpg" ] },
-        { nom: "Gris", code: "#6E7276",
-          photos: ["images/mc08/gris1.jpg", "images/mc08/gris2.jpg", "images/mc08/gris3.jpg","images/mc08/gris4.jpg","images/mc08/gris5.jpg"] },
-        {nom: "Marron", code:1 "#7A4B2B", 
-          photos: ["images/mc08/MARRON1.jpg", "images/mc08/MARRON2.jpg","images/mc08/MARRON3.jpg","images/mc08/MARRON4.jpg","images/mc08/MARRON5.jpg", "images/mc08/MARRON6.jpg"] }
-      ],
-      photosCommunes: ["images/mc08/ALL1.jpg", "images/mc08/ALL2.jpg"]
-    },
+  
     {
       type: "boite",
       categorie: "Accessoire",
