@@ -48,6 +48,7 @@ window.MC = {
       categorie: "Montre pour homme",
       reference: "MC-01",
       nom: "Collection MC-01",
+      motcle: "Montre homme sport chic",
       description: "Un cadran rond à trois compteurs, dans un boîtier argenté qui se prolonge jusqu'au bracelet à maillons. Elle se porte aussi bien avec une chemise qu'avec un t-shirt. En noir, en blanc, ou en blanc avec des compteurs bleus.",
       prix: 249,
       couleurs: [
@@ -65,6 +66,7 @@ window.MC = {
       categorie: "Montre pour homme",
       reference: "MC-02",
       nom: "Collection MC-02",
+      motcle: "Montre homme vintage",
       description: "Un cadran strié, une fenêtre jour et date, et un bracelet argenté à maillons fins qui lui donne un air rétro, sans en faire trop. En vert, en blanc ou en noir.",
       prix: 229,
       couleurs: [
@@ -82,6 +84,7 @@ window.MC = {
       categorie: "Montre pour homme",
       reference: "MC-03",
       nom: "Collection MC-03",
+      motcle: "Montre carrée homme",
       description: "Un boîtier carré aux vis apparentes et des chiffres romains, sur un bracelet effet croco. Une montre habillée qui reste simple à porter tous les jours. En gris, en bleu avec cadran blanc, en bleu ou en marron.",
       prix: 249,
       couleurs: [
@@ -101,6 +104,7 @@ window.MC = {
       categorie: "Montre automatique pour homme",
       reference: "MC-04",
       nom: "Collection MC-04",
+      motcle: "Montre squelette automatique homme",
       description: "Un cadran ajouré qui laisse voir le mécanisme, entouré de chiffres romains, sur un bracelet argenté à maillons. Une montre automatique qui attire le regard. En noir ou en blanc.",
       prix: 299,
       couleurs: [
@@ -116,6 +120,7 @@ window.MC = {
       categorie: "Montre automatique pour homme",
       reference: "MC-05",
       nom: "Collection MC-05",
+      motcle: "Montre automatique homme",
       description: "Une ouverture dans le cadran laisse voir le mécanisme, dans un boîtier rond sur un bracelet argenté à maillons. Une montre automatique au dessin moderne. En noir ou en blanc.",
       prix: 299,
       couleurs: [
@@ -131,6 +136,7 @@ window.MC = {
       categorie: "Montre pour homme",
       reference: "MC-06",
       nom: "Collection MC-06",
+      motcle: "Montre carrée homme dorée ou noire",
       description: "Un boîtier carré aux vis apparentes, des chiffres romains et un bracelet noir texturé. La version noir et or porte une lunette dorée, la version noire reste toute en sobriété. Les deux se portent du matin au soir.",
       prix: 249,
       couleurs: [
@@ -146,6 +152,7 @@ window.MC = {
       categorie: "Montre pour homme",
       reference: "MC-07",
       nom: "Collection MC-07",
+      motcle: "Montre carrée homme grise",
       description: "Un boîtier carré aux angles adoucis, un cadran gris avec des chiffres romains et des aiguilles bleues, sur un bracelet noir. Une montre discrète, qui se remarque quand vous levez le bras.",
       prix: 249,
       couleurs: [
@@ -159,6 +166,7 @@ window.MC = {
       categorie: "Montre pour homme",
       reference: "MC-08",
       nom: "Collection MC-08",
+      motcle: "Montre classique homme",
       description: "Un boîtier rond, un cadran clair à chiffres romains et aiguilles bleues, et une couronne protégée par un arceau sur le côté. Sur un bracelet effet croco, en gris, en marron ou en noir.",
       prix: 249,
       couleurs: [

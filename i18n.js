@@ -46,6 +46,29 @@
 
     /* --- page d'accueil : haut de page --- */
     "Des montres pour homme, livrées partout au Maroc.": "ساعات رجالية، تُوصَّل إلى جميع أنحاء المغرب.",
+    /* --- mots-clés Google : titres, descriptions, étiquettes des montres --- */
+    "Montre homme au Maroc : boutique en ligne à Casablanca | MC Watches":
+      "ساعات رجالية في المغرب: متجر إلكتروني في الدار البيضاء | MC Watches",
+    "Montres homme au Maroc : modèles et prix | MC Watches":
+      "ساعات رجالية في المغرب: الموديلات والأسعار | MC Watches",
+    "Livraison gratuite au Maroc, paiement et retours | MC Watches":
+      "توصيل مجاني في المغرب، الدفع والإرجاع | MC Watches",
+    "Montre homme au Maroc | MC Watches":
+      "ساعة رجالية في المغرب | MC Watches",
+    "Montres homme à prix abordable, à commander en ligne. Livraison gratuite partout au Maroc, paiement à la livraison. Boutique basée à Casablanca.":
+      "ساعات رجالية بأسعار في المتناول، للطلب عبر الإنترنت. توصيل مجاني إلى جميع أنحاء المغرب، والدفع عند التسليم. متجر مقره الدار البيضاء.",
+    "Montres homme carrées, classiques ou automatiques, en plusieurs couleurs, et boîtes à montres. Livraison gratuite partout au Maroc, paiement à la livraison.":
+      "ساعات رجالية مربعة أو كلاسيكية أو أوتوماتيكية، بعدة ألوان، وعلب للساعات. توصيل مجاني إلى جميع أنحاء المغرب، والدفع عند التسليم.",
+    "Toutes nos montres.": "كل ساعاتنا.",
+    "Montre homme": "ساعة رجالية",
+    "Montre homme sport chic": "ساعة رجالية رياضية أنيقة",
+    "Montre homme vintage": "ساعة رجالية بطابع عتيق",
+    "Montre carrée homme": "ساعة رجالية مربعة",
+    "Montre squelette automatique homme": "ساعة رجالية أوتوماتيكية بميناء مفرّغ",
+    "Montre automatique homme": "ساعة رجالية أوتوماتيكية",
+    "Montre carrée homme dorée ou noire": "ساعة رجالية مربعة ذهبية أو سوداء",
+    "Montre carrée homme grise": "ساعة رجالية مربعة رمادية",
+    "Montre classique homme": "ساعة رجالية كلاسيكية",
     /* --- descriptions pour Google (balises meta des pages) --- */
     "Montres pour homme à prix abordables. Livraison gratuite partout au Maroc et paiement à la livraison. Boutique basée à Casablanca.":
       "ساعات رجالية بأسعار في المتناول. توصيل مجاني إلى جميع أنحاء المغرب والدفع عند التسليم. متجر مقره الدار البيضاء.",
@@ -400,8 +423,9 @@
       "ساعتان: $1 درهم بدل $2 درهم. كل ساعة إضافية تكلّف $3 درهم أقل."],
     [/^Collection (MC-\d+)$/, "مجموعة $1"],
     [/^Voir la photo (\d+)$/, "عرض الصورة $1"],
-    [/^(MC-\d+) - montre pour homme, (\d+) DH \| MC Watches$/,
-      "$1 - ساعة رجالية، $2 درهم | MC Watches"],
+    [/^(.+) (MC-\d+), (\d+) DH au Maroc \| MC Watches$/, function (m, quoi, ref, p) {
+      return texte(quoi) + " " + ref + "، " + p + " درهم في المغرب | MC Watches";
+    }],
     /* « Collection MC-01, Noir - photo 2 sur 7 » : chaque morceau à part.
        Ces trois motifs passent AVANT celui du nom + couleur seuls.      */
     [/^(.+) - photo (\d+) sur (\d+)$/, function (m, quoi, i, n) {

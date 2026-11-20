@@ -694,7 +694,7 @@
           <span class="count" aria-live="polite"></span>
         </div>
         <div class="card-body">
-          <p class="card-ref">${esc(p.categorie || "")}</p>
+          <p class="card-ref">${esc(p.motcle || p.categorie || "")}</p>
           <h3 class="card-title">${esc(p.nom)}</h3>
           <p class="card-price">${prix(p.prix)}</p>
           <p class="card-delivery">Livraison gratuite</p>
@@ -798,10 +798,10 @@
             : [...communes(p, p.couleurs[ci]), ...p.couleurs[ci].photos]);
 
     /* Titre, description, JSON-LD */
-    document.title = `${p.reference} - montre pour homme, ${prix(p.prix)} | MC Watches`;
+    document.title = `${p.motcle || "Montre homme"} ${p.reference}, ${prix(p.prix)} au Maroc | MC Watches`;
     const desc = document.querySelector('meta[name="description"]');
     if (desc) {
-      desc.content = `${p.nom} : ${p.couleurs.map((c) => c.nom.toLowerCase()).join(", ")}. ${prix(p.prix)}, livraison gratuite partout au Maroc, paiement à la livraison.`;
+      desc.content = `${p.motcle ? p.motcle + " " + p.reference : p.nom} : ${p.couleurs.map((c) => c.nom.toLowerCase()).join(", ")}. ${prix(p.prix)}, livraison gratuite partout au Maroc, paiement à la livraison.`;
     }
     /* Une adresse propre par modele, pour Google et les partages :
        canonical, versions FR / AR et balises Open Graph. */
@@ -842,7 +842,7 @@
     ld.textContent = JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Product",
-      name: p.nom,
+      name: p.motcle ? `${p.motcle} ${p.reference}` : p.nom,
       sku: p.reference,
       description: `${p.description ? p.description + " " : ""}${p.categorie || "Montre pour homme"} ${p.reference}, disponible en ${p.couleurs.map((c) => c.nom.toLowerCase()).join(", ")}. Livraison gratuite partout au Maroc, paiement à la livraison, échange ou retour sous 7 jours.`,
       image: p.couleurs.map((c) => `${MC.domaine}/${c.photos[0]}`),
@@ -928,7 +928,7 @@
         </div>
 
         <div class="detail-info">
-          <p class="card-ref">${esc(p.categorie || "")}</p>
+          <p class="card-ref">${esc(p.motcle || p.categorie || "")}</p>
           <h1>${esc(p.nom)}</h1>
           <p class="detail-price">${prix(p.prix)}</p>
           <p class="card-delivery">Livraison gratuite partout au Maroc</p>
