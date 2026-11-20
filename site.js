@@ -803,8 +803,37 @@
     if (desc) {
       desc.content = `${p.nom} : ${p.couleurs.map((c) => c.nom.toLowerCase()).join(", ")}. ${prix(p.prix)}, livraison gratuite partout au Maroc, paiement à la livraison.`;
     }
-    const canonical = document.querySelector('link[rel="canonical"]');
-    if (canonical) canonical.href = `${MC.domaine}/produit.html?ref=${encodeURIComponent(p.reference)}`;
+    /* Une adresse propre par modele, pour Google et les partages :
+       canonical, versions FR / AR et balises Open Graph. */
+    const urlFiche = `${MC.domaine}/produit.html?ref=${encodeURIComponent(p.reference)}`;
+    const lienHead = (rel, href, hreflang) => {
+      const sel = `link[rel="${rel}"]` + (hreflang ? `[hreflang="${hreflang}"]` : "");
+      let l = document.head.querySelector(sel);
+      if (!l) {
+        l = document.createElement("link");
+        l.rel = rel;
+        if (hreflang) l.hreflang = hreflang;
+        document.head.appendChild(l);
+      }
+      l.href = href;
+    };
+    const metaOg = (prop, content) => {
+      let m = document.head.querySelector(`meta[property="${prop}"]`);
+      if (!m) {
+        m = document.createElement("meta");
+        m.setAttribute("property", prop);
+        document.head.appendChild(m);
+      }
+      m.content = content;
+    };
+    lienHead("canonical", urlFiche);
+    lienHead("alternate", `${urlFiche}&lang=fr`, "fr");
+    lienHead("alternate", `${urlFiche}&lang=ar`, "ar");
+    lienHead("alternate", urlFiche, "x-default");
+    metaOg("og:url", urlFiche);
+    metaOg("og:title", document.title);
+    if (desc) metaOg("og:description", desc.content);
+    metaOg("og:image", `${MC.domaine}/${p.couleurs[0].photos[0]}`);
 
     const ld = document.createElement("script");
     ld.type = "application/ld+json";
@@ -813,17 +842,36 @@
       "@type": "Product",
       name: p.nom,
       sku: p.reference,
+      description: `${p.categorie || "Montre pour homme"} ${p.reference}, disponible en ${p.couleurs.map((c) => c.nom.toLowerCase()).join(", ")}. Livraison gratuite partout au Maroc, paiement à la livraison, échange ou retour sous 7 jours.`,
       image: p.couleurs.map((c) => `${MC.domaine}/${c.photos[0]}`),
       brand: { "@type": "Brand", name: "MC Watches" },
       offers: {
         "@type": "Offer",
         priceCurrency: "MAD",
         price: String(p.prix),
-        url: `${MC.domaine}/produit.html?ref=${encodeURIComponent(p.reference)}`,
+        url: urlFiche,
+        availability: "https://schema.org/InStock",
+        itemCondition: "https://schema.org/NewCondition",
+        seller: { "@type": "Organization", name: "MC Watches" },
         shippingDetails: {
           "@type": "OfferShippingDetails",
           shippingRate: { "@type": "MonetaryAmount", value: "0", currency: "MAD" },
-          shippingDestination: { "@type": "DefinedRegion", addressCountry: "MA" }
+          shippingDestination: { "@type": "DefinedRegion", addressCountry: "MA" },
+          deliveryTime: {
+            "@type": "ShippingDeliveryTime",
+            handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 1, unitCode: "DAY" },
+            transitTime: { "@type": "QuantitativeValue", minValue: 1, maxValue: 3, unitCode: "DAY" }
+          }
+        },
+        // Voir livraison.html : 7 jours, sans motif, frais a la charge du client
+        // (45 DH echange, 80 DH retour), gratuit si defaut ou erreur.
+        hasMerchantReturnPolicy: {
+          "@type": "MerchantReturnPolicy",
+          applicableCountry: "MA",
+          returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+          merchantReturnDays: 7,
+          returnMethod: "https://schema.org/ReturnByMail",
+          returnFees: "https://schema.org/ReturnFeesCustomerResponsibility"
         }
       }
     });
@@ -906,7 +954,7 @@
       thumbs.innerHTML = "";
       photos().forEach((src, i) => {
         const b = html(
-          `<button type="button" class="thumb" aria-label="Voir la photo ${i + 1}"><img src="${esc(src)}" width="160" height="120" loading="lazy" decoding="async" alt=""></button>`
+          `<button type="button" class="thumb" aria-label="Voir la photo ${i + 1}"><img src="${esc(src)}" width="160" height="120" loading="lazy" decoding="async" alt="${esc(`Montre homme ${p.reference} ${p.couleurs[ci].nom.toLowerCase()} - photo ${i + 1}`)}"></button>`
         );
         b.addEventListener("click", () => car.allerA(i));
         thumbs.appendChild(b);
