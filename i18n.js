@@ -46,6 +46,13 @@
 
     /* --- page d'accueil : haut de page --- */
     "Des montres pour homme, livrées partout au Maroc.": "ساعات رجالية، تُوصَّل إلى جميع أنحاء المغرب.",
+    /* --- descriptions pour Google (balises meta des pages) --- */
+    "Montres pour homme à prix abordables. Livraison gratuite partout au Maroc et paiement à la livraison. Boutique basée à Casablanca.":
+      "ساعات رجالية بأسعار في المتناول. توصيل مجاني إلى جميع أنحاء المغرب والدفع عند التسليم. متجر مقره الدار البيضاء.",
+    "Toutes nos montres pour homme en plusieurs couleurs, et nos boîtes de rangement. Livraison gratuite partout au Maroc, paiement à la livraison.":
+      "كل ساعاتنا الرجالية بعدة ألوان، وعلب تخزين الساعات. توصيل مجاني إلى جميع أنحاء المغرب، والدفع عند التسليم.",
+    "Livraison gratuite au Maroc : 24 à 48 h à Casablanca et Rabat, 3 jours ailleurs. Paiement à la livraison. Échange et retour sans motif sous 7 jours.":
+      "توصيل مجاني في المغرب: من 24 إلى 48 ساعة في الدار البيضاء والرباط، و3 أيام في باقي المدن. الدفع عند التسليم. تبديل أو إرجاع بدون سبب خلال 7 أيام.",
     "collections, plusieurs couleurs. La livraison est gratuite et vous payez à la réception.":
       "مجموعات، بعدة ألوان. التوصيل مجاني وتدفع عند التسلّم.",
     "Deux": "اثنتان",
@@ -527,6 +534,21 @@
     });
     var loc = document.querySelector('meta[property="og:locale"]');
     if (loc) loc.content = "ar_MA";
+    /* La version arabe est une page à part entière pour Google : quand
+       l'adresse demande l'arabe (?lang=ar), elle se désigne elle-même
+       comme adresse officielle. Avant, elle renvoyait vers la page
+       française, et Google ne montrait jamais la version arabe.     */
+    if (demande === "ar") {
+      ['link[rel="canonical"]', 'meta[property="og:url"]'].forEach(function (s) {
+        var el = document.querySelector(s);
+        if (!el) return;
+        var attr = el.tagName === "LINK" ? "href" : "content";
+        var v = el.getAttribute(attr);
+        if (v && v.indexOf("lang=ar") < 0) {
+          el.setAttribute(attr, v + (v.indexOf("?") < 0 ? "?" : "&") + "lang=ar");
+        }
+      });
+    }
   }
 
   /* Le choix de langue, dans l'en-tête, cerné de doré pour qu'on le

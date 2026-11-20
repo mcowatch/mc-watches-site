@@ -1,16 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Nouveau modele dans data.js ? Ajoutez sa ligne ici (copiez une ligne
-     produit.html?ref=... et changez la reference), puis changez lastmod. -->
+<!-- Nouveau modele dans data.js ? Ajoutez ses DEUX lignes ici (la francaise
+     et la ?lang=ar : copiez une paire produit.html?ref=... et changez la
+     reference), puis changez lastmod. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://www.mc-watches.com/</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://www.mc-watches.com/?lang=ar</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://www.mc-watches.com/produits.html</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://www.mc-watches.com/produits.html?lang=ar</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://www.mc-watches.com/livraison.html</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://www.mc-watches.com/livraison.html?lang=ar</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://www.mc-watches.com/produit.html?ref=MC-01</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://www.mc-watches.com/produit.html?ref=MC-01&amp;lang=ar</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://www.mc-watches.com/produit.html?ref=MC-02</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://www.mc-watches.com/produit.html?ref=MC-02&amp;lang=ar</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://www.mc-watches.com/produit.html?ref=MC-03</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://www.mc-watches.com/produit.html?ref=MC-03&amp;lang=ar</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://www.mc-watches.com/produit.html?ref=MC-04</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://www.mc-watches.com/produit.html?ref=MC-04&amp;lang=ar</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://www.mc-watches.com/produit.html?ref=MC-05</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://www.mc-watches.com/produit.html?ref=MC-05&amp;lang=ar</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://www.mc-watches.com/produit.html?ref=MC-06</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://www.mc-watches.com/produit.html?ref=MC-06&amp;lang=ar</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://www.mc-watches.com/produit.html?ref=MC-07</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://www.mc-watches.com/produit.html?ref=MC-07&amp;lang=ar</loc><lastmod>2026-11-20</lastmod></url>
   <url><loc>https://www.mc-watches.com/produit.html?ref=MC-08</loc><lastmod>2026-11-20</lastmod></url>
+  <url><loc>https://www.mc-watches.com/produit.html?ref=MC-08&amp;lang=ar</loc><lastmod>2026-11-20</lastmod></url>
 </urlset>

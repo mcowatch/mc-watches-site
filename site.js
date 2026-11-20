@@ -826,11 +826,13 @@
       }
       m.content = content;
     };
-    lienHead("canonical", urlFiche);
+    /* En arabe (?lang=ar), la fiche est sa propre adresse officielle. */
+    const urlPropre = params.get("lang") === "ar" ? `${urlFiche}&lang=ar` : urlFiche;
+    lienHead("canonical", urlPropre);
     lienHead("alternate", `${urlFiche}&lang=fr`, "fr");
     lienHead("alternate", `${urlFiche}&lang=ar`, "ar");
     lienHead("alternate", urlFiche, "x-default");
-    metaOg("og:url", urlFiche);
+    metaOg("og:url", urlPropre);
     metaOg("og:title", document.title);
     if (desc) metaOg("og:description", desc.content);
     metaOg("og:image", `${MC.domaine}/${p.couleurs[0].photos[0]}`);
@@ -876,6 +878,22 @@
       }
     });
     document.head.appendChild(ld);
+
+    /* Le fil d'Ariane pour Google : dans les résultats, la fiche
+       s'affiche « mc-watches.com › Montres › MC-03 » au lieu d'une
+       adresse brute avec ?ref=.                                  */
+    const fil = document.createElement("script");
+    fil.type = "application/ld+json";
+    fil.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Accueil", item: `${MC.domaine}/` },
+        { "@type": "ListItem", position: 2, name: "Montres", item: `${MC.domaine}/produits.html` },
+        { "@type": "ListItem", position: 3, name: p.reference, item: urlFiche }
+      ]
+    });
+    document.head.appendChild(fil);
 
     /* Les autres modèles */
     const autres = MC.produits
