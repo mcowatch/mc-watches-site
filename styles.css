@@ -904,6 +904,9 @@ button, a { -webkit-tap-highlight-color: transparent; }
   font-variant-numeric: tabular-nums;
 }
 
+/* Le petit texte de chaque montre, sous le prix. */
+.detail-desc { margin-top: 18px; max-width: 34em; line-height: 1.6; }
+
 .detail-info .swatch-group { margin-top: 28px; }
 
 .chips { display: flex; flex-wrap: wrap; gap: 10px; }

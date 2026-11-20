@@ -844,7 +844,7 @@
       "@type": "Product",
       name: p.nom,
       sku: p.reference,
-      description: `${p.categorie || "Montre pour homme"} ${p.reference}, disponible en ${p.couleurs.map((c) => c.nom.toLowerCase()).join(", ")}. Livraison gratuite partout au Maroc, paiement à la livraison, échange ou retour sous 7 jours.`,
+      description: `${p.description ? p.description + " " : ""}${p.categorie || "Montre pour homme"} ${p.reference}, disponible en ${p.couleurs.map((c) => c.nom.toLowerCase()).join(", ")}. Livraison gratuite partout au Maroc, paiement à la livraison, échange ou retour sous 7 jours.`,
       image: p.couleurs.map((c) => `${MC.domaine}/${c.photos[0]}`),
       brand: { "@type": "Brand", name: "MC Watches" },
       offers: {
@@ -933,6 +933,7 @@
           <p class="detail-price">${prix(p.prix)}</p>
           <p class="card-delivery">Livraison gratuite partout au Maroc</p>
           ${offreLot(p) ? `<p class="card-delivery" style="font-weight:600">2 montres : ${prix(prixTotal(p, 2))} au lieu de ${prix(p.prix * 2)}. Chaque montre en plus coûte ${REMISE_SUPP} DH de moins.</p>` : ""}
+          ${p.description ? `<p class="detail-desc">${esc(p.description)}</p>` : ""}
 
           <div class="swatch-group">
             <p class="swatch-label">Couleur : <strong data-couleur></strong></p>
