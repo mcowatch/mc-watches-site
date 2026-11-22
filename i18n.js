@@ -69,6 +69,7 @@
     "Montre carrée homme dorée ou noire": "ساعة رجالية مربعة ذهبية أو سوداء",
     "Montre carrée homme grise": "ساعة رجالية مربعة رمادية",
     "Montre classique homme": "ساعة رجالية كلاسيكية",
+    "Montre carrée homme bracelet acier": "ساعة رجالية مربعة بسوار معدني",
     /* --- descriptions pour Google (balises meta des pages) --- */
     "Montres pour homme à prix abordables. Livraison gratuite partout au Maroc et paiement à la livraison. Boutique basée à Casablanca.":
       "ساعات رجالية بأسعار في المتناول. توصيل مجاني إلى جميع أنحاء المغرب والدفع عند التسليم. متجر مقره الدار البيضاء.",
@@ -213,6 +214,8 @@
       "علبة مربعة بزوايا ناعمة، وميناء رمادي بأرقام رومانية وعقارب زرقاء، على سوار أسود. ساعة هادئة تُلاحظ حين ترفع ذراعك.",
     "Un boîtier rond, un cadran clair à chiffres romains et aiguilles bleues, et une couronne protégée par un arceau sur le côté. Sur un bracelet effet croco, en gris, en marron ou en noir.":
       "علبة دائرية، وميناء فاتح بأرقام رومانية وعقارب زرقاء، وتاج محمي بقوس على الجانب. على سوار بنقشة التمساح، بالرمادي أو البني أو الأسود.",
+    "Un boîtier carré aux vis apparentes, des chiffres romains et un bracelet argenté à maillons vissés. Une montre élégante qui se porte au bureau comme le week-end. En blanc, en bleu ou en vert.":
+      "علبة مربعة ببراغٍ ظاهرة، وأرقام رومانية، وسوار فضي اللون بحلقات مثبتة بالبراغي. ساعة أنيقة تُلبس في العمل كما في عطلة نهاية الأسبوع. متوفرة بالأبيض أو الأزرق أو الأخضر.",
     "Bleu": "أزرق",
     "Bleu avec cadran blanc": "أزرق بميناء أبيض",
 

@@ -214,6 +214,24 @@ window.MC = {
         "images/mc08/ALL2.jpg"
       ]
     },
+    {
+      type: "montre",
+      categorie: "Montre pour homme",
+      reference: "MC-09",
+      nom: "Collection MC-09",
+      motcle: "Montre carrée homme bracelet acier",
+      description: "Un boîtier carré aux vis apparentes, des chiffres romains et un bracelet argenté à maillons vissés. Une montre élégante qui se porte au bureau comme le week-end. En blanc, en bleu ou en vert.",
+      prix: 249,
+      couleurs: [
+        { nom: "Blanc", code: "#F4F1E8",
+          photos: ["images/mc09/BLANC1.jpg", "images/mc09/BLANC2.jpg", "images/mc09/BLANC3.jpg", "images/mc09/BLANC4.jpg", "images/mc09/BLANC5.jpg", "images/mc09/BLANC6.jpg"] },
+        { nom: "Bleu", code: "#243D68",
+          photos: ["images/mc09/BLEU1.jpg", "images/mc09/BLEU2.jpg", "images/mc09/BLEU3.jpg", "images/mc09/BLEU4.jpg", "images/mc09/BLEU5.jpg", "images/mc09/BLEU6.jpg", "images/mc09/BLEU7.jpg"] },
+        { nom: "Vert", code: "#3E7560",
+          photos: ["images/mc09/VERT1.jpg", "images/mc09/VERT2.jpg", "images/mc09/VERT3.jpg", "images/mc09/VERT4.jpg", "images/mc09/VERT5.jpg", "images/mc09/VERT6.jpg", "images/mc09/VERT7.jpg", "images/mc09/VERT8.jpg", "images/mc09/VERT9.jpg", "images/mc09/VERT10.jpg", "images/mc09/VERT11.jpg", "images/mc09/VERT12.jpg"] }
+      ],
+      photosCommunes: ["images/mc09/ALL1.jpg", "images/mc09/ALL2.jpg", "images/mc09/ALL3.jpg", "images/mc09/ALL4.jpg", "images/mc09/ALL5.jpg"]
+    },
 
     {
       type: "boite",
